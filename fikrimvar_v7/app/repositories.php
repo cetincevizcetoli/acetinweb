@@ -29,6 +29,7 @@ function project_row_to_view(array $row): array
 
 function public_projects(bool $archiveOnly=false): array
 {
+    $placement = $archiveOnly ? 'p.show_in_archive=1' : 'p.show_on_home=1';
     $sql="SELECT p.*, c.slug category_slug, c.title category_title, m.relative_path cover_path,
                   s.id story_id, s.status story_status, s.visibility story_visibility,
                   s.reading_time, s.title story_title, s.question story_question, s.summary story_summary,
@@ -37,9 +38,9 @@ function public_projects(bool $archiveOnly=false): array
            LEFT JOIN categories c ON c.id=p.category_id
            LEFT JOIN media m ON m.id=p.cover_media_id AND m.deleted_at IS NULL
            LEFT JOIN stories s ON s.project_id=p.id AND s.deleted_at IS NULL
-           WHERE p.deleted_at IS NULL AND p.visibility='public' ";
-    if ($archiveOnly) $sql.=' AND p.show_in_archive=1 ';
-    $sql.=" AND ((s.status='published' AND s.visibility='public') OR p.workshop_status='open')";
+           WHERE p.deleted_at IS NULL AND p.visibility='public' AND $placement ";
+    // Public placement is canonical on projects.*; story show_* columns are kept only for legacy compatibility.
+    $sql.=" AND s.status='published' AND s.visibility='public'";
     $sql.=' ORDER BY p.is_pinned DESC, p.sort_order ASC, COALESCE(p.updated_at,p.created_at) DESC';
     $rows=db()->query($sql)->fetchAll();
     $out=[];

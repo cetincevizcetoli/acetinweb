@@ -6,7 +6,7 @@ require __DIR__ . '/includes/atelier_widget.php';
 $site=setting('site',[]); $hero=setting('hero',[]); $manifesto=setting('manifesto',[]); $origin=setting('origin',[]);
 $atelierWidgetConfig=setting('atelier_widget',[]); $recentLimit=(int)setting('recent_updates_limit',4);
 $projects=public_projects(); $channels=channels(); $notes=public_notes(); $noteStatus=(string)($_GET['note'] ?? '');
-$focusStories=array_values(array_filter($projects,fn($p)=>($p['home_section'] ?? '')==='focus' && ($p['story_status'] ?? '')==='published'));
+$focusStories=array_values(array_filter($projects,fn($p)=>($p['home_section'] ?? '')==='focus'));
 usort($focusStories,fn($a,$b)=>($a['sort_order']<=>$b['sort_order']));
 $traceStories=array_values(array_filter($projects,fn($p)=>($p['home_section'] ?? '')==='trace'));
 usort($traceStories,fn($a,$b)=>($a['sort_order']<=>$b['sort_order']));

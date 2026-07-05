@@ -44,7 +44,10 @@ if (is_post()) {
         $savedLinkCount = 0;
         $type = (string)($_POST['type'] ?? 'text');
         $layout = (string)($_POST['layout'] ?? 'default');
-        $mediaId = (int)($_POST['primary_media_id'] ?? 0) ?: null;
+        $selectedPrimary = (int)($_POST['primary_media_id'] ?? 0);
+        assert_project_media_ids($projectId, $selectedPrimary ? [$selectedPrimary] : [], 'Birincil medya');
+        $selectedGalleryIds = assert_project_media_ids($projectId, $_POST['gallery_media_ids'] ?? [], 'Galeri medyası');
+        $mediaId = $selectedPrimary ?: null;
         $uploaded = save_uploaded_files($projectId, (string)$story['project_slug'], 'media_files');
         if ($uploaded && !$mediaId) $mediaId = $uploaded[0];
 
@@ -90,7 +93,7 @@ if (is_post()) {
         }
 
         db()->prepare('DELETE FROM story_section_media WHERE section_id=?')->execute([$sectionId]);
-        $gallery = array_values(array_unique(array_merge($uploaded, array_map('intval', $_POST['gallery_media_ids'] ?? []))));
+        $gallery = array_values(array_unique(array_merge($uploaded, $selectedGalleryIds)));
         foreach ($gallery as $i => $mid) {
             if (!$mid) continue;
             db()->prepare("INSERT INTO story_section_media(section_id,media_id,role,sort_order) VALUES (?,?,'gallery',?)")->execute([$sectionId, $mid, $i]);

@@ -20,8 +20,9 @@ if(is_post()){
       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
     $st->execute([$projectId,$slug,$workDate,$display,$title,trim(old('summary')),trim(old('tried')),trim(old('failed')),trim(old('decision')),trim(old('next_step')),trim(old('phase')) ?: 'Genel',checkbox('is_milestone'),$status,$visibility,checkbox('show_in_recent'),(float)($_POST['sort_order'] ?? 999),$status==='published'?now_sql():null]);
     $id=(int)db()->lastInsertId();
+    $existing=assert_project_media_ids($projectId,$_POST['existing_media_ids'] ?? [],'Mevcut medya');
     $uploaded=save_uploaded_files($projectId,(string)$project['slug']);
-    $existing=array_map('intval',$_POST['existing_media_ids'] ?? []);attach_update_media($id,array_merge($uploaded,$existing));
+    attach_update_media($id,$projectId,array_merge($uploaded,$existing));
     save_update_links($id,is_array($_POST['links'] ?? null)?$_POST['links']:[]);
     db()->prepare('UPDATE projects SET updated_at=CURRENT_TIMESTAMP WHERE id=?')->execute([$projectId]);
     db()->commit();admin_audit('create','update',$id,$title);flash('success','Atölye kaydı eklendi.');redirect('update-edit.php?id='.$id);

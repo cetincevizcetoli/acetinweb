@@ -71,8 +71,27 @@ function save_update_links(int $updateId,array $links): void
     db()->prepare("DELETE FROM links WHERE owner_type='update' AND owner_id=?")->execute([$updateId]);
     foreach($links as $i=>$l){$url=safe_external_url((string)($l['url']??''));if($url==='')continue;$title=trim((string)($l['title']??'')) ?: ucfirst((string)($l['type']??'Bağlantı'));$st=db()->prepare("INSERT INTO links(owner_type,owner_id,link_type,title,url,sort_order) VALUES ('update',?,?,?,?,?)");$st->execute([$updateId,trim((string)($l['type']??'external')),$title,$url,(int)$i]);}
 }
-function attach_update_media(int $updateId,array $mediaIds): void
+function assert_project_media_ids(int $projectId,array $mediaIds,string $context='Medya'): array
 {
+    $ids=array_values(array_unique(array_filter(array_map('intval',$mediaIds),fn($id)=>$id>0)));
+    if(!$ids) return [];
+    $placeholders=implode(',',array_fill(0,count($ids),'?'));
+    $st=db()->prepare("SELECT id,project_id FROM media WHERE id IN ($placeholders) AND deleted_at IS NULL");
+    $st->execute($ids);
+    $rows=$st->fetchAll();
+    $found=[];
+    foreach($rows as $row){
+        $found[(int)$row['id']]=(int)$row['project_id'];
+    }
+    foreach($ids as $mid){
+        if(!array_key_exists($mid,$found)) throw new RuntimeException($context.' bulunamadı veya silinmiş: #'.$mid);
+        if($found[$mid]!==$projectId) throw new RuntimeException($context.' bu projeye ait değil: #'.$mid);
+    }
+    return $ids;
+}
+function attach_update_media(int $updateId,int $projectId,array $mediaIds): void
+{
+    $mediaIds=assert_project_media_ids($projectId,$mediaIds,'Atölye medyası');
     $max=(int)(db()->query('SELECT COALESCE(MAX(sort_order),-1) FROM update_media WHERE update_id='.(int)$updateId)->fetchColumn());
     foreach(array_unique(array_map('intval',$mediaIds)) as $mid){if($mid<=0)continue;$st=db()->prepare('INSERT OR IGNORE INTO update_media(update_id,media_id,role,sort_order) VALUES (?,?,' . db()->quote('gallery') . ',?)');$st->execute([$updateId,$mid,++$max]);}
 }

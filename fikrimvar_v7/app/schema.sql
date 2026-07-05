@@ -128,8 +128,6 @@ CREATE TABLE settings (
   updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE sqlite_sequence(name,seq);
-
 CREATE TABLE stories (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   project_id INTEGER NOT NULL UNIQUE,
