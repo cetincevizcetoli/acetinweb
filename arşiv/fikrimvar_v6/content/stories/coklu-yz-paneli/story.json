@@ -1,0 +1,54 @@
+{
+  "slug": "coklu-yz-paneli",
+  "title": "Çoklu YZ Paneli",
+  "question": "Çoklu YZ Paneli",
+  "summary": "Aynı soruyu birden fazla yapay zekâya sırayla yönelten ve cevapları tek masada toplayan panel fikri.",
+  "kind": "story",
+  "category": "yz-yontem",
+  "category_label": "YZ ve yöntem",
+  "status": "fikir",
+  "status_label": "Fikir",
+  "type_label": "Arayüz Fikri",
+  "order": 13,
+  "started_at": null,
+  "updated_at": null,
+  "cover": "media/cover.svg",
+  "tags": [
+    "API",
+    "PHP",
+    "JavaScript"
+  ],
+  "homepage": false,
+  "blocks": [
+    {
+      "type": "opening",
+      "layout": "wide",
+      "label": "FİKRİN ÇIKIŞI",
+      "title": "Çoklu YZ Paneli",
+      "paragraphs": [
+        "Farklı modelleri ayrı sekmelerde değil ortak bir tartışma alanında kullanmak.",
+        "Aynı soruyu birden fazla yapay zekâya sırayla yönelten ve cevapları tek masada toplayan panel fikri."
+      ],
+      "image": "media/cover.svg",
+      "caption": "Çoklu YZ Paneli"
+    },
+    {
+      "type": "split",
+      "layout": "offset-right",
+      "label": "SÜREÇ",
+      "title": "Fikir ilerlerken ne değişti?",
+      "paragraphs": [
+        "Rol paylaşımı, cevap sırası ve ortak bağlamın nasıl korunacağı üzerine düşünülüyor."
+      ]
+    },
+    {
+      "type": "lesson",
+      "layout": "narrow-left",
+      "label": "BENDE KALAN",
+      "title": "Henüz başlamamış fakat #fikrimvar yaklaşımını doğrudan temsil eden proje fikirlerinden biri.",
+      "items": [
+        "Henüz başlamamış fakat #fikrimvar yaklaşımını doğrudan temsil eden proje fikirlerinden biri."
+      ]
+    }
+  ]
+}

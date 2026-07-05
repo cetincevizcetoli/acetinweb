@@ -1,0 +1,79 @@
+{
+  "slug": "cyrillic-flow",
+  "title": "Cyrillic Flow ve TTS Sözlük",
+  "question": "Bulgaristan yolculuğu öncesi Kiril alfabesini kendime göre nasıl öğrenebilirdim?",
+  "summary": "Kişisel bir öğrenme ihtiyacından doğan; Python, Gemini, ses üretimi ve web arayüzünü aynı zincirde buluşturan alfabe deneyi.",
+  "kind": "story",
+  "category": "ses-etkilesim",
+  "category_label": "Ses ve etkileşim",
+  "status": "arsiv",
+  "status_label": "Arşivde",
+  "type_label": "Dil / Ses",
+  "order": 14,
+  "started_at": null,
+  "updated_at": null,
+  "cover": "media/cover.svg",
+  "tags": [
+    "Python",
+    "ElevenLabs",
+    "JSON"
+  ],
+  "homepage": true,
+  "blocks": [
+    {
+      "type": "opening",
+      "layout": "hero-split",
+      "label": "KİŞİSEL İHTİYAÇ",
+      "title": "Bir yolculuk öncesi Kiril alfabesini öğrenmek istedim.",
+      "paragraphs": [
+        "Bulgaristan’a gitmeden önce Kiril alfabesini öğrenmek istedim. Aradığım kadar sade ve doğrudan bir araç bulamayınca kendim denemeye başladım.",
+        "İlk çalışan şey bir uygulama değil, Gemini’den kelime listesi alan ve veriyi JSON’a dönüştüren Python zinciriydi."
+      ],
+      "image": "media/cover.svg",
+      "caption": "Cyrillic Flow"
+    },
+    {
+      "type": "timeline",
+      "layout": "compact",
+      "label": "ÜRETİM ZİNCİRİ",
+      "title": "Veri, ses ve arayüz birbirini izledi.",
+      "items": [
+        {
+          "step": "01",
+          "title": "Python + Gemini",
+          "subtitle": "Kelime verisi",
+          "text": "Harfler, örnek kelimeler ve anlamlar JSON olarak üretildi."
+        },
+        {
+          "step": "02",
+          "title": "Ses üretimi",
+          "subtitle": "Telaffuz",
+          "text": "Kelime ve harf sesleri ayrı dosyalara dönüştürüldü."
+        },
+        {
+          "step": "03",
+          "title": "Web arayüzü",
+          "subtitle": "Deneyim",
+          "text": "Veri ve ses, sade bir öğrenme akışında buluştu."
+        },
+        {
+          "step": "04",
+          "title": "PWA fikri",
+          "subtitle": "Erişim",
+          "text": "Uygulamayı cihazda daha kolay kullanma yönü denendi."
+        }
+      ]
+    },
+    {
+      "type": "lesson",
+      "layout": "diagonal",
+      "label": "BENDE KALAN",
+      "title": "Bir öğrenme ihtiyacı, küçük bir içerik üretim bandına dönüştü.",
+      "items": [
+        "YZ yalnızca metin üretmedi; veri zincirinin bir parçası oldu.",
+        "Ses ve arayüz eklenince aynı veri başka bir deneyime dönüştü.",
+        "Kendi ihtiyacımdan başlayan proje, başka alfabelere açılabilecek bir fikir bıraktı."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "slug": "kaplumbaga-kabugu",
+  "title": "Kaplumbağa Kabuğu",
+  "question": "Dört hayvan ve tek bir kabuğun sürekliliğini nasıl korurum?",
+  "summary": "Aynı kabuğun farklı hayvanlara geçtiği kısa hikâyede karakter ve nesne sürekliliği deneyi.",
+  "kind": "story",
+  "category": "video-hareket",
+  "category_label": "Video ve hareket",
+  "status": "suruyor",
+  "status_label": "Üzerinde çalışıyorum",
+  "type_label": "Hikâye / Video",
+  "order": 8,
+  "started_at": null,
+  "updated_at": null,
+  "cover": "media/cover.svg",
+  "tags": [
+    "Storyboard",
+    "YZ Video",
+    "Montaj"
+  ],
+  "homepage": true,
+  "blocks": [
+    {
+      "type": "opening",
+      "layout": "wide",
+      "label": "FİKRİN ÇIKIŞI",
+      "title": "Dört hayvan ve tek bir kabuğun sürekliliğini nasıl korurum?",
+      "paragraphs": [
+        "Bir kaplumbağa kabuğunun farklı hayvanlara geçmesini anlatan kısa ve tutarlı bir hikâye kurmak.",
+        "Aynı kabuğun farklı hayvanlara geçtiği kısa hikâyede karakter ve nesne sürekliliği deneyi."
+      ],
+      "image": "media/cover.svg",
+      "caption": "Kaplumbağa Kabuğu"
+    },
+    {
+      "type": "split",
+      "layout": "offset-right",
+      "label": "SÜREÇ",
+      "title": "Fikir ilerlerken ne değişti?",
+      "paragraphs": [
+        "Sahne akışı, kamera hareketi, kabuk sürekliliği ve karakter tutarlılığı ayrı ayrı denendi."
+      ]
+    },
+    {
+      "type": "lesson",
+      "layout": "narrow-left",
+      "label": "BENDE KALAN",
+      "title": "Kısa videoda en zor şey tek tek güzel kareler değil, aynı hikâyeyi korumak.",
+      "items": [
+        "Hikâye ve görsel süreklilik problemleri hâlâ geliştiriliyor."
+      ]
+    }
+  ]
+}

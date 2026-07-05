@@ -1,0 +1,36 @@
+{
+  "schema_version": 2,
+  "slug": "neyzen-3d",
+  "title": "Neyzen: Görselden 3D Modele",
+  "question": "Bir görseli 3D modele hazırlarken neyi silmek, neyi korumak gerekir?",
+  "summary": "Bir figür kompozisyonunu temizleyip 3D üretime hazırlama, model ve doku zinciri deneyi.",
+  "category": "gorsel-render",
+  "category_label": "Görsel, render ve 3D",
+  "status": "denendi",
+  "status_label": "Denendi",
+  "type_label": "3D Süreç",
+  "order": 7,
+  "started_at": null,
+  "updated_at": null,
+  "cover": "media/cover.svg",
+  "tags": [
+    "InvokeAI",
+    "Hi3Dgen",
+    "3D"
+  ],
+  "homepage": false,
+  "public": true,
+  "workshop_question": null,
+  "workshop": {
+    "status": "none",
+    "started_at": null,
+    "ended_at": null,
+    "closing_state": null,
+    "closing_note": ""
+  },
+  "story": {
+    "status": "published",
+    "published_at": null,
+    "generated_from_updates": []
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "schema_version": 2,
+  "slug": "webbordro",
+  "title": "WebBordro / DeltaBordro",
+  "question": "Bir bordro programı neden üç kez yeniden yazılır?",
+  "summary": "Eşimin şirketindeki gerçek bir ihtiyaçla başladı. İlk Python sürümü, PHP masaüstü uygulaması, web sistemi ve daha sade DeltaBordro aynı soruya farklı zamanlarda verilmiş cevaplara dönüştü.",
+  "category": "kod-sistem",
+  "category_label": "Kod ve sistemler",
+  "status": "suruyor",
+  "status_label": "Gelişiyor",
+  "type_label": "Yaşayan sistem",
+  "order": 2,
+  "started_at": null,
+  "updated_at": null,
+  "cover": "media/cover.svg",
+  "tags": [
+    "Python",
+    "PHP",
+    "JavaScript",
+    "SQL",
+    "OOP",
+    "Yapay zekâ"
+  ],
+  "homepage": true,
+  "public": true,
+  "workshop_question": null,
+  "workshop": {
+    "status": "none",
+    "started_at": null,
+    "ended_at": null,
+    "closing_state": null,
+    "closing_note": ""
+  },
+  "story": {
+    "status": "published",
+    "published_at": null,
+    "generated_from_updates": []
+  }
+}

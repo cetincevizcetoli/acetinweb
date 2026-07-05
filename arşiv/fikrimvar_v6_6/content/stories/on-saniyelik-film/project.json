@@ -1,0 +1,36 @@
+{
+  "schema_version": 2,
+  "slug": "on-saniyelik-film",
+  "title": "10 Saniyelik Parçalardan Film",
+  "question": "10 Saniyelik Parçalardan Film",
+  "summary": "Her biri tek başına çalışan kısa sekansları zamanla daha uzun bir filme dönüştürme fikri.",
+  "category": "video-hareket",
+  "category_label": "Video ve hareket",
+  "status": "yarim",
+  "status_label": "Yarım kaldı",
+  "type_label": "Kurgu",
+  "order": 9,
+  "started_at": null,
+  "updated_at": null,
+  "cover": "media/cover.svg",
+  "tags": [
+    "Veo",
+    "Flow",
+    "Kurgu"
+  ],
+  "homepage": false,
+  "public": true,
+  "workshop_question": null,
+  "workshop": {
+    "status": "none",
+    "started_at": null,
+    "ended_at": null,
+    "closing_state": null,
+    "closing_note": ""
+  },
+  "story": {
+    "status": "published",
+    "published_at": null,
+    "generated_from_updates": []
+  }
+}

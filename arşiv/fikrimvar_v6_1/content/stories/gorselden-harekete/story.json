@@ -1,0 +1,39 @@
+{
+  "slug": "gorselden-harekete",
+  "title": "Görselden Harekete",
+  "question": "Bir görüntü farklı araçlardan geçerken ne kadar aynı kalabilir?",
+  "summary": "Blender ve InvokeAI katmanlarından başlayıp Flow ve Meta AI ile harekete uzanan canlı atölye. Sonuçtan çok, kararların ve süreklilik sorunlarının gün gün kaydı.",
+  "kind": "atelier",
+  "category": "video-hareket",
+  "category_label": "Video ve hareket",
+  "status": "suruyor",
+  "status_label": "Atölyede sürüyor",
+  "type_label": "Canlı atölye",
+  "order": 8.5,
+  "started_at": null,
+  "updated_at": null,
+  "cover": "media/cover.svg",
+  "tags": [
+    "Blender",
+    "InvokeAI",
+    "ControlNet",
+    "Flow",
+    "Meta AI"
+  ],
+  "homepage": true,
+  "workshop_question": "Teknik katmanlardan çıkan bir görüntüyü hareket ettirirken kimliğini ne kadar koruyabilirim?",
+  "blocks": [
+    {
+      "type": "opening",
+      "layout": "hero-split",
+      "label": "ATÖLYE SORUSU",
+      "title": "Bir görüntü, araç değiştirdikçe aynı görüntü kalabilir mi?",
+      "paragraphs": [
+        "Bu atölyede tek bir sonuç göstermiyorum. Blender’daki teknik katmanlardan InvokeAI üretimine, oradan Flow ve Meta AI hareket denemelerine uzanan zinciri gün gün kaydediyorum.",
+        "Proje, ben 'bu kadarı yeter' dediğim gün biter. Tamamlanması değil, öğrenmek istediğim yere gelmem kapanış ölçüsü."
+      ],
+      "image": "media/cover.svg",
+      "caption": "Görselden Harekete atölyesi"
+    }
+  ]
+}

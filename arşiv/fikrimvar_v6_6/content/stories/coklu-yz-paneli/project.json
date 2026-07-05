@@ -1,0 +1,36 @@
+{
+  "schema_version": 2,
+  "slug": "coklu-yz-paneli",
+  "title": "Çoklu YZ Paneli",
+  "question": "Çoklu YZ Paneli",
+  "summary": "Aynı soruyu birden fazla yapay zekâya sırayla yönelten ve cevapları tek masada toplayan panel fikri.",
+  "category": "yz-yontem",
+  "category_label": "YZ ve yöntem",
+  "status": "fikir",
+  "status_label": "Fikir",
+  "type_label": "Arayüz Fikri",
+  "order": 13,
+  "started_at": null,
+  "updated_at": null,
+  "cover": "media/cover.svg",
+  "tags": [
+    "API",
+    "PHP",
+    "JavaScript"
+  ],
+  "homepage": false,
+  "public": true,
+  "workshop_question": null,
+  "workshop": {
+    "status": "none",
+    "started_at": null,
+    "ended_at": null,
+    "closing_state": null,
+    "closing_note": ""
+  },
+  "story": {
+    "status": "published",
+    "published_at": null,
+    "generated_from_updates": []
+  }
+}

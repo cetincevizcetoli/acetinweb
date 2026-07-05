@@ -1,0 +1,36 @@
+{
+  "schema_version": 2,
+  "slug": "aof-sinav-v2",
+  "title": "AÖF Sınav Hazırlık",
+  "question": "Kendi ders çalışma biçimime uyan sınav uygulamasını nasıl kurdum?",
+  "summary": "Açıköğretim derslerinde soru, analiz, senkronizasyon ve mobil kullanım için geliştirilen sınav hazırlık uygulaması.",
+  "category": "ogrenme-egitim",
+  "category_label": "Öğrenme ve eğitim",
+  "status": "suruyor",
+  "status_label": "Üzerinde çalışıyorum",
+  "type_label": "PWA",
+  "order": 16,
+  "started_at": null,
+  "updated_at": null,
+  "cover": "media/cover.svg",
+  "tags": [
+    "PWA",
+    "PHP",
+    "JavaScript"
+  ],
+  "homepage": true,
+  "public": true,
+  "workshop_question": null,
+  "workshop": {
+    "status": "none",
+    "started_at": null,
+    "ended_at": null,
+    "closing_state": null,
+    "closing_note": ""
+  },
+  "story": {
+    "status": "published",
+    "published_at": null,
+    "generated_from_updates": []
+  }
+}

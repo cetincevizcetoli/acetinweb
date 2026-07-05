@@ -1,0 +1,36 @@
+{
+  "schema_version": 2,
+  "slug": "cyrillic-flow",
+  "title": "Cyrillic Flow ve TTS Sözlük",
+  "question": "Bulgaristan yolculuğu öncesi Kiril alfabesini kendime göre nasıl öğrenebilirdim?",
+  "summary": "Kişisel bir öğrenme ihtiyacından doğan; Python, Gemini, ses üretimi ve web arayüzünü aynı zincirde buluşturan alfabe deneyi.",
+  "category": "ses-etkilesim",
+  "category_label": "Ses ve etkileşim",
+  "status": "arsiv",
+  "status_label": "Arşivde",
+  "type_label": "Dil / Ses",
+  "order": 14,
+  "started_at": null,
+  "updated_at": null,
+  "cover": "media/cover.svg",
+  "tags": [
+    "Python",
+    "ElevenLabs",
+    "JSON"
+  ],
+  "homepage": true,
+  "public": true,
+  "workshop_question": null,
+  "workshop": {
+    "status": "none",
+    "started_at": null,
+    "ended_at": null,
+    "closing_state": null,
+    "closing_note": ""
+  },
+  "story": {
+    "status": "published",
+    "published_at": null,
+    "generated_from_updates": []
+  }
+}

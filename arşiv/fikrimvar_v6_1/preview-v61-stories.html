@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Ahmet Çetin'in çalışan, gelişen, yarım kalan ve kapanan proje, atölye ve yöntem kayıtları.">
+    <meta name="theme-color" content="#eee5d4">
+    <title>Bütün Hikâyeler | #FikrimVar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="assets/js/app.js" defer></script>
+</head>
+<body class="stories-page">
+<a class="skip-link" href="#stories-main">İçeriğe geç</a>
+<header class="inner-header">
+    <div class="shell inner-header-row">
+        <a class="brand" href="index.php"><span class="brand-name">AHMET ÇETİN</span><span class="brand-mark">#FikrimVar</span></a>
+        <nav aria-label="Hikâyeler sayfası menüsü"><a href="index.php#manifesto">Manifesto</a><a href="index.php#atolye">Atölye</a><a href="index.php">Ana sayfa</a></nav>
+    </div>
+</header>
+
+<main id="stories-main">
+    <section class="stories-hero-v6">
+        <div class="shell stories-hero-v6-grid">
+            <div data-reveal><p class="eyebrow">ATÖLYE DEFTERİ · 19 KAYIT</p><h1>Bütün<br><em>hikâyeler.</em></h1></div>
+            <div data-reveal>
+                <p>Bu sayfa bir başarı sıralaması değil. Çalışan sistemler, canlı atölyeler, yöntem notları ve yarım kalan yollar aynı kayıt defterinde duruyor.</p>
+                <p>Bir hikâyeyi açtığında yalnızca sonucu değil; neden başladığını, nerede zorlandığını, neyin değiştiğini ve bugün nerede durduğunu görürsün.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="stories-browser" data-story-index data-initial-category="all" data-initial-status="all">
+        <div class="shell">
+            <div class="story-filter-bar">
+                <div class="category-filter" role="group" aria-label="Çalışma alanı">
+                    <button class="is-active" type="button" data-story-category="all" aria-pressed="true">Tümü</button>
+                                        <button class="" type="button" data-story-category="kod-sistem" aria-pressed="false">Kod ve sistemler</button>
+                                        <button class="" type="button" data-story-category="gorsel-render" aria-pressed="false">Görsel, render ve 3D</button>
+                                        <button class="" type="button" data-story-category="video-hareket" aria-pressed="false">Video ve hareket</button>
+                                        <button class="" type="button" data-story-category="yz-yontem" aria-pressed="false">YZ ve yöntem</button>
+                                        <button class="" type="button" data-story-category="ses-etkilesim" aria-pressed="false">Ses ve etkileşim</button>
+                                        <button class="" type="button" data-story-category="ogrenme-egitim" aria-pressed="false">Öğrenme ve eğitim</button>
+                                    </div>
+                <div class="story-filter-tools">
+                    <label><span>Durum</span><select data-story-status>
+                        <option value="all">Tüm durumlar</option>
+                        <option value="calisiyor" >Çalışıyor</option><option value="suruyor" >Gelişiyor</option><option value="arsiv" >Arşivde</option><option value="denendi" >Denendi</option><option value="yarim" >Yarım kaldı</option><option value="not" >Not</option><option value="fikir" >Fikir</option><option value="tamamlandi" >Tamamlandı</option>                    </select></label>
+                    <label><span>Ara</span><input type="search" placeholder="Başlık, araç veya soru" data-story-search autocomplete="off"></label>
+                </div>
+            </div>
+
+            <div class="story-results-bar"><p><strong data-story-count>19</strong> kayıt</p><p>Yeni tarih eklenen kayıtlar öne gelir; diğerleri kendi düzen sırasını korur.</p></div>
+
+            <div class="stories-mosaic">
+                                <article class="mosaic-story mosaic-story--wide" data-story-card data-category="kod-sistem" data-status="calisiyor" data-search="ai-context YZ’ye aynı projeyi tekrar tekrar anlatmaktan sıkılınca ne olur? Büyük proje klasörlerini ayıklayıp tek bir okunabilir bağlam dosyasına dönüştüren küçük bir Python aracı. Kendi ihtiyacım için başladı; kullandıkça gelişti. Kod ve sistemler Çalışıyor Python CLI Markdown Token tahmini Git">
+                    <a href="hikaye.php?slug=ai-context">
+                        <figure><img src="content/stories/ai-context/media/cover.svg" alt="ai-context" loading="lazy"></figure>                        <div class="mosaic-story-copy">
+                            <p>Kod ve sistemler · Çalışıyor</p>
+                            <h2>YZ’ye aynı projeyi tekrar tekrar anlatmaktan sıkılınca ne olur?</h2>
+                            <span>Büyük proje klasörlerini ayıklayıp tek bir okunabilir bağlam dosyasına dönüştüren küçük bir Python aracı. Kendi ihtiyacım için başladı; kullandıkça gelişti.</span>
+                            <small>Python CLI <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></small>
+                        </div>
+                    </a>
+                </article>
+                                <article class="mosaic-story mosaic-story--tall" data-story-card data-category="kod-sistem" data-status="suruyor" data-search="WebBordro / DeltaBordro Bir bordro programı neden üç kez yeniden yazılır? Eşimin şirketindeki gerçek bir ihtiyaçla başladı. İlk Python sürümü, PHP masaüstü uygulaması, web sistemi ve daha sade DeltaBordro aynı soruya farklı zamanlarda verilmiş cevaplara dönüştü. Kod ve sistemler Gelişiyor Python PHP JavaScript SQL OOP Yapay zekâ">
+                    <a href="hikaye.php?slug=webbordro">
+                        <figure><img src="content/stories/webbordro/media/cover.svg" alt="WebBordro / DeltaBordro" loading="lazy"></figure>                        <div class="mosaic-story-copy">
+                            <p>Kod ve sistemler · Gelişiyor</p>
+                            <h2>Bir bordro programı neden üç kez yeniden yazılır?</h2>
+                            <span>Eşimin şirketindeki gerçek bir ihtiyaçla başladı. İlk Python sürümü, PHP masaüstü uygulaması, web sistemi ve daha sade DeltaBordro aynı soruya farklı zamanlarda verilmiş cevaplara dönüştü.</span>
+                            <small>Yaşayan sistem <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></small>
+                        </div>
+                    </a>
+                </article>
+                                <article class="mosaic-story mosaic-story--compact" data-story-card data-category="kod-sistem" data-status="arsiv" data-search="Coder-Asistan Kod yazan yapay zekâya neden dosyalarıma doğrudan dokunma izni vermedim? Farklı yapay zekâ modelleriyle kod, proje yapısı ve dokümantasyon üreten terminal asistanı. Kod ve sistemler Arşivde Python Gemini Hugging Face">
+                    <a href="hikaye.php?slug=coder-asistan">
+                        <figure><img src="content/stories/coder-asistan/media/cover.svg" alt="Coder-Asistan" loading="lazy"></figure>                        <div class="mosaic-story-copy">
+                            <p>Kod ve sistemler · Arşivde</p>
+                            <h2>Kod yazan yapay zekâya neden dosyalarıma doğrudan dokunma izni vermedim?</h2>
+                            <span>Farklı yapay zekâ modelleriyle kod, proje yapısı ve dokümantasyon üreten terminal asistanı.</span>
+                            <small>YZ Aracı <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></small>
+                        </div>
+                    </a>
+                </article>
+                                <article class="mosaic-story mosaic-story--offset" data-story-card data-category="kod-sistem" data-status="calisiyor" data-search="Üretim Takip Sistemi Bir ders projesi nasıl yıllarca yaşayan işyeri aracına dönüştü? Mehmet Fırat hocamın verdiği cesaretle işyerim için başladığım, hâlâ kullanılan ve aklıma geldikçe gelişen ilk büyük üretim projem. Kod ve sistemler Çalışıyor PHP MySQL JavaScript">
+                    <a href="hikaye.php?slug=uretim-takip">
+                        <figure><img src="content/stories/uretim-takip/media/cover.svg" alt="Üretim Takip Sistemi" loading="lazy"></figure>                        <div class="mosaic-story-copy">
+                            <p>Kod ve sistemler · Çalışıyor</p>
+                            <h2>Bir ders projesi nasıl yıllarca yaşayan işyeri aracına dönüştü?</h2>
+                            <span>Mehmet Fırat hocamın verdiği cesaretle işyerim için başladığım, hâlâ kullanılan ve aklıma geldikçe gelişen ilk büyük üretim projem.</span>
+                            <small>Ders / Proje <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></small>
+                        </div>
+                    </a>
+                </article>
+                                <article class="mosaic-story mosaic-story--wide" data-story-card data-category="gorsel-render" data-status="denendi" data-search="Saksoğan Bir kuş ile soğanı oyuncak gibi görünmeden nasıl birleştiririm? Bir saksağanın gövdesini soğana dönüştürürken anatomik mantığı ve gerçekçilik hissini koruma çalışması. Görsel, render ve 3D Denendi InvokeAI ControlNet Flux">
+                    <a href="hikaye.php?slug=saksogan">
+                        <figure><img src="content/stories/saksogan/media/cover.svg" alt="Saksoğan" loading="lazy"></figure>                        <div class="mosaic-story-copy">
+                            <p>Görsel, render ve 3D · Denendi</p>
+                            <h2>Bir kuş ile soğanı oyuncak gibi görünmeden nasıl birleştiririm?</h2>
+                            <span>Bir saksağanın gövdesini soğana dönüştürürken anatomik mantığı ve gerçekçilik hissini koruma çalışması.</span>
+                            <small>Görsel Deney <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></small>
+                        </div>
+                    </a>
+                </article>
+                                <article class="mosaic-story mosaic-story--tall" data-story-card data-category="gorsel-render" data-status="suruyor" data-search="Işık Çatlaklı Siluet Kendi çizgimi kaybetmeden yapay zekâyla yeni bir görsel dil kurabilir miyim? Karanlığı katı bir kabuk, beyaz ışığı ise ince çatlaklardan sızan bir yapı olarak ele alan kişisel görsel arayış. Görsel, render ve 3D Üzerinde çalışıyorum Krita InvokeAI Çizim">
+                    <a href="hikaye.php?slug=isik-catlakli-siluet">
+                        <figure><img src="content/stories/isik-catlakli-siluet/media/cover.svg" alt="Işık Çatlaklı Siluet" loading="lazy"></figure>                        <div class="mosaic-story-copy">
+                            <p>Görsel, render ve 3D · Üzerinde çalışıyorum</p>
+                            <h2>Kendi çizgimi kaybetmeden yapay zekâyla yeni bir görsel dil kurabilir miyim?</h2>
+                            <span>Karanlığı katı bir kabuk, beyaz ışığı ise ince çatlaklardan sızan bir yapı olarak ele alan kişisel görsel arayış.</span>
+                            <small>Görsel Dil <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></small>
+                        </div>
+                    </a>
+                </article>
+                                <article class="mosaic-story mosaic-story--compact" data-story-card data-category="gorsel-render" data-status="denendi" data-search="Neyzen: Görselden 3D Modele Bir görseli 3D modele hazırlarken neyi silmek, neyi korumak gerekir? Bir figür kompozisyonunu temizleyip 3D üretime hazırlama, model ve doku zinciri deneyi. Görsel, render ve 3D Denendi InvokeAI Hi3Dgen 3D">
+                    <a href="hikaye.php?slug=neyzen-3d">
+                        <figure><img src="content/stories/neyzen-3d/media/cover.svg" alt="Neyzen: Görselden 3D Modele" loading="lazy"></figure>                        <div class="mosaic-story-copy">
+                            <p>Görsel, render ve 3D · Denendi</p>
+                            <h2>Bir görseli 3D modele hazırlarken neyi silmek, neyi korumak gerekir?</h2>
+                            <span>Bir figür kompozisyonunu temizleyip 3D üretime hazırlama, model ve doku zinciri deneyi.</span>
+                            <small>3D Süreç <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></small>
+                        </div>
+                    </a>
+                </article>
+                                <article class="mosaic-story mosaic-story--offset" data-story-card data-category="video-hareket" data-status="suruyor" data-search="Kaplumbağa Kabuğu Dört hayvan ve tek bir kabuğun sürekliliğini nasıl korurum? Aynı kabuğun farklı hayvanlara geçtiği kısa hikâyede karakter ve nesne sürekliliği deneyi. Video ve hareket Üzerinde çalışıyorum Storyboard YZ Video Montaj">
+                    <a href="hikaye.php?slug=kaplumbaga-kabugu">
+                        <figure><img src="content/stories/kaplumbaga-kabugu/media/cover.svg" alt="Kaplumbağa Kabuğu" loading="lazy"></figure>                        <div class="mosaic-story-copy">
+                            <p>Video ve hareket · Üzerinde çalışıyorum</p>
+                            <h2>Dört hayvan ve tek bir kabuğun sürekliliğini nasıl korurum?</h2>
+                            <span>Aynı kabuğun farklı hayvanlara geçtiği kısa hikâyede karakter ve nesne sürekliliği deneyi.</span>
+                            <small>Hikâye / Video <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></small>
+                        </div>
+                    </a>
+                </article>
+                                <article class="mosaic-story mosaic-story--wide" data-story-card data-category="video-hareket" data-status="suruyor" data-search="Görselden Harekete Bir görüntü farklı araçlardan geçerken ne kadar aynı kalabilir? Blender ve InvokeAI katmanlarından başlayıp Flow ve Meta AI ile harekete uzanan canlı atölye. Sonuçtan çok, kararların ve süreklilik sorunlarının gün gün kaydı. Video ve hareket Atölyede sürüyor Blender InvokeAI ControlNet Flow Meta AI">
+                    <a href="atolye.php?slug=gorselden-harekete">
+                        <figure><img src="content/stories/gorselden-harekete/media/cover.svg" alt="Görselden Harekete" loading="lazy"></figure>                        <div class="mosaic-story-copy">
+                            <p>Video ve hareket · Atölyede sürüyor</p>
+                            <h2>Bir görüntü farklı araçlardan geçerken ne kadar aynı kalabilir?</h2>
+                            <span>Blender ve InvokeAI katmanlarından başlayıp Flow ve Meta AI ile harekete uzanan canlı atölye. Sonuçtan çok, kararların ve süreklilik sorunlarının gün gün kaydı.</span>
+                            <small>Canlı atölye <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></small>
+                        </div>
+                    </a>
+                </article>
+                                <article class="mosaic-story mosaic-story--tall" data-story-card data-category="video-hareket" data-status="yarim" data-search="10 Saniyelik Parçalardan Film 10 Saniyelik Parçalardan Film Her biri tek başına çalışan kısa sekansları zamanla daha uzun bir filme dönüştürme fikri. Video ve hareket Yarım kaldı Veo Flow Kurgu">
+                    <a href="hikaye.php?slug=on-saniyelik-film">
+                        <figure><img src="content/stories/on-saniyelik-film/media/cover.svg" alt="10 Saniyelik Parçalardan Film" loading="lazy"></figure>                        <div class="mosaic-story-copy">
+                            <p>Video ve hareket · Yarım kaldı</p>
+                            <h2>10 Saniyelik Parçalardan Film</h2>
+                            <span>Her biri tek başına çalışan kısa sekansları zamanla daha uzun bir filme dönüştürme fikri.</span>
+                            <small>Kurgu <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></small>
+                        </div>
+                    </a>
+                </article>
+                                <article class="mosaic-story mosaic-story--compact" data-story-card data-category="video-hareket" data-status="not" data-search="YZ Videosunda Patlama Fiziği YZ Videosunda Patlama Fiziği Patlama sahnesinde çevredeki nesnelerin hareketsiz kalmasını sorgulayan fizik ve anlatı düzeltmesi. Video ve hareket Not YZ Video Prompt Fizik">
+                    <a href="hikaye.php?slug=patlama-fizigi">
+                        <figure><img src="content/stories/patlama-fizigi/media/cover.svg" alt="YZ Videosunda Patlama Fiziği" loading="lazy"></figure>                        <div class="mosaic-story-copy">
+                            <p>Video ve hareket · Not</p>
+                            <h2>YZ Videosunda Patlama Fiziği</h2>
+                            <span>Patlama sahnesinde çevredeki nesnelerin hareketsiz kalmasını sorgulayan fizik ve anlatı düzeltmesi.</span>
+                            <small>Mantık Kontrolü <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></small>
+                        </div>
+                    </a>
+                </article>
+                                <article class="mosaic-story mosaic-story--offset" data-story-card data-category="yz-yontem" data-status="calisiyor" data-search="Tablet ve Krita Çalışma Düzeni Tableti masadan kaldırınca çizim neden daha rahatladı? Ekransız tableti dik konumlandırma ve fırça stabilizasyonunu kişisel çizim biçimine uyarlama. YZ ve yöntem Çalışıyor XP-Pen Krita Ergonomi">
+                    <a href="hikaye.php?slug=tablet-krita">
+                        <figure><img src="content/stories/tablet-krita/media/cover.svg" alt="Tablet ve Krita Çalışma Düzeni" loading="lazy"></figure>                        <div class="mosaic-story-copy">
+                            <p>YZ ve yöntem · Çalışıyor</p>
+                            <h2>Tableti masadan kaldırınca çizim neden daha rahatladı?</h2>
+                            <span>Ekransız tableti dik konumlandırma ve fırça stabilizasyonunu kişisel çizim biçimine uyarlama.</span>
+                            <small>Yöntem <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></small>
+                        </div>
+                    </a>
+                </article>
+                                <article class="mosaic-story mosaic-story--wide" data-story-card data-category="yz-yontem" data-status="not" data-search="ControlNet Ağırlık Bütçesi Birden fazla yönlendirme aynı anda neden birbirini bozuyor? Aynı anda çalışan yönlendirmeleri ortak bir ağırlık bütçesi gibi ele alma yaklaşımı. YZ ve yöntem Not InvokeAI ControlNet Flux">
+                    <a href="hikaye.php?slug=controlnet-butce">
+                        <figure><img src="content/stories/controlnet-butce/media/cover.svg" alt="ControlNet Ağırlık Bütçesi" loading="lazy"></figure>                        <div class="mosaic-story-copy">
+                            <p>YZ ve yöntem · Not</p>
+                            <h2>Birden fazla yönlendirme aynı anda neden birbirini bozuyor?</h2>
+                            <span>Aynı anda çalışan yönlendirmeleri ortak bir ağırlık bütçesi gibi ele alma yaklaşımı.</span>
+                            <small>İş Akışı <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></small>
+                        </div>
+                    </a>
+                </article>
+                                <article class="mosaic-story mosaic-story--tall" data-story-card data-category="yz-yontem" data-status="fikir" data-search="Çoklu YZ Paneli Çoklu YZ Paneli Aynı soruyu birden fazla yapay zekâya sırayla yönelten ve cevapları tek masada toplayan panel fikri. YZ ve yöntem Fikir API PHP JavaScript">
+                    <a href="hikaye.php?slug=coklu-yz-paneli">
+                        <figure><img src="content/stories/coklu-yz-paneli/media/cover.svg" alt="Çoklu YZ Paneli" loading="lazy"></figure>                        <div class="mosaic-story-copy">
+                            <p>YZ ve yöntem · Fikir</p>
+                            <h2>Çoklu YZ Paneli</h2>
+                            <span>Aynı soruyu birden fazla yapay zekâya sırayla yönelten ve cevapları tek masada toplayan panel fikri.</span>
+                            <small>Arayüz Fikri <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></small>
+                        </div>
+                    </a>
+                </article>
+                                <article class="mosaic-story mosaic-story--compact" data-story-card data-category="ses-etkilesim" data-status="arsiv" data-search="Cyrillic Flow ve TTS Sözlük Bulgaristan yolculuğu öncesi Kiril alfabesini kendime göre nasıl öğrenebilirdim? Kişisel bir öğrenme ihtiyacından doğan; Python, Gemini, ses üretimi ve web arayüzünü aynı zincirde buluşturan alfabe deneyi. Ses ve etkileşim Arşivde Python ElevenLabs JSON">
+                    <a href="hikaye.php?slug=cyrillic-flow">
+                        <figure><img src="content/stories/cyrillic-flow/media/cover.svg" alt="Cyrillic Flow ve TTS Sözlük" loading="lazy"></figure>                        <div class="mosaic-story-copy">
+                            <p>Ses ve etkileşim · Arşivde</p>
+                            <h2>Bulgaristan yolculuğu öncesi Kiril alfabesini kendime göre nasıl öğrenebilirdim?</h2>
+                            <span>Kişisel bir öğrenme ihtiyacından doğan; Python, Gemini, ses üretimi ve web arayüzünü aynı zincirde buluşturan alfabe deneyi.</span>
+                            <small>Dil / Ses <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></small>
+                        </div>
+                    </a>
+                </article>
+                                <article class="mosaic-story mosaic-story--offset" data-story-card data-category="ses-etkilesim" data-status="denendi" data-search="Etkileşimli Mektup ve Ses Kurgusu Etkileşimli Mektup ve Ses Kurgusu Animasyon, ses efektleri ve küçük etkileşimlerle ilerleyen kişisel web deneyleri. Ses ve etkileşim Denendi HTML JavaScript Ses">
+                    <a href="hikaye.php?slug=etkilesimli-mektup">
+                        <figure><img src="content/stories/etkilesimli-mektup/media/cover.svg" alt="Etkileşimli Mektup ve Ses Kurgusu" loading="lazy"></figure>                        <div class="mosaic-story-copy">
+                            <p>Ses ve etkileşim · Denendi</p>
+                            <h2>Etkileşimli Mektup ve Ses Kurgusu</h2>
+                            <span>Animasyon, ses efektleri ve küçük etkileşimlerle ilerleyen kişisel web deneyleri.</span>
+                            <small>Etkileşim <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></small>
+                        </div>
+                    </a>
+                </article>
+                                <article class="mosaic-story mosaic-story--wide" data-story-card data-category="ogrenme-egitim" data-status="suruyor" data-search="AÖF Sınav Hazırlık Kendi ders çalışma biçimime uyan sınav uygulamasını nasıl kurdum? Açıköğretim derslerinde soru, analiz, senkronizasyon ve mobil kullanım için geliştirilen sınav hazırlık uygulaması. Öğrenme ve eğitim Üzerinde çalışıyorum PWA PHP JavaScript">
+                    <a href="hikaye.php?slug=aof-sinav-v2">
+                        <figure><img src="content/stories/aof-sinav-v2/media/cover.svg" alt="AÖF Sınav Hazırlık" loading="lazy"></figure>                        <div class="mosaic-story-copy">
+                            <p>Öğrenme ve eğitim · Üzerinde çalışıyorum</p>
+                            <h2>Kendi ders çalışma biçimime uyan sınav uygulamasını nasıl kurdum?</h2>
+                            <span>Açıköğretim derslerinde soru, analiz, senkronizasyon ve mobil kullanım için geliştirilen sınav hazırlık uygulaması.</span>
+                            <small>PWA <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></small>
+                        </div>
+                    </a>
+                </article>
+                                <article class="mosaic-story mosaic-story--tall" data-story-card data-category="ogrenme-egitim" data-status="not" data-search="YZ ile Dinamik Müfredat YZ ile Dinamik Müfredat Ders kaynaklarını yapay zekâ ile tarayıp ihtiyaca göre öğrenme rotası çıkarma deneyi. Öğrenme ve eğitim Not NotebookLM YZ Araştırma">
+                    <a href="hikaye.php?slug=dinamik-mufredat">
+                        <figure><img src="content/stories/dinamik-mufredat/media/cover.svg" alt="YZ ile Dinamik Müfredat" loading="lazy"></figure>                        <div class="mosaic-story-copy">
+                            <p>Öğrenme ve eğitim · Not</p>
+                            <h2>YZ ile Dinamik Müfredat</h2>
+                            <span>Ders kaynaklarını yapay zekâ ile tarayıp ihtiyaca göre öğrenme rotası çıkarma deneyi.</span>
+                            <small>Öğrenme Yöntemi <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></small>
+                        </div>
+                    </a>
+                </article>
+                                <article class="mosaic-story mosaic-story--compact" data-story-card data-category="ogrenme-egitim" data-status="tamamlandi" data-search="Sipariş Analizinde R ve Python Sipariş Analizinde R ve Python Haftalık siparişlerden örüntü, ürün ilişkisi ve karar ağacı çıkarmaya yönelik veri analizi deneyi. Öğrenme ve eğitim Tamamlandı R Python Veri">
+                    <a href="hikaye.php?slug=siparis-r-python">
+                        <figure><img src="content/stories/siparis-r-python/media/cover.svg" alt="Sipariş Analizinde R ve Python" loading="lazy"></figure>                        <div class="mosaic-story-copy">
+                            <p>Öğrenme ve eğitim · Tamamlandı</p>
+                            <h2>Sipariş Analizinde R ve Python</h2>
+                            <span>Haftalık siparişlerden örüntü, ürün ilişkisi ve karar ağacı çıkarmaya yönelik veri analizi deneyi.</span>
+                            <small>Veri Analizi <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></small>
+                        </div>
+                    </a>
+                </article>
+                            </div>
+            <p class="story-no-results" data-story-empty hidden>Bu filtrelerle eşleşen bir kayıt bulunamadı.</p>
+        </div>
+    </section>
+</main>
+<footer class="site-footer"><div class="shell footer-inner"><p>© 2026 Ahmet Çetin · #FikrimVar</p><a href="index.php">Ana sayfaya dön <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div></footer>
+</body>
+</html>

@@ -1,0 +1,94 @@
+{
+  "site": {
+    "title": "Ahmet Çetin | #fikrimvar",
+    "description": "Ahmet Çetin'in yapay zekâyla tanıştıktan sonra başlayan kod, görsel, video, ses ve öğrenme denemelerini açık bir çalışma günlüğü olarak bir araya getiren kişisel alan.",
+    "year": "2026"
+  },
+  "hero": {
+    "eyebrow": "AHMET ÇETİN · AÇIK ÇALIŞMA GÜNLÜĞÜ",
+    "title": "#fikrimvar",
+    "lead": "Yapay zekâyla tanıştıktan sonra aklıma gelenleri denemeye başladım.",
+    "body": "Burası bir başarı vitrini değil. Çalışan sistemleri, bozulan denemeleri, öğrendiğim yöntemleri ve yarım kalan fikirleri aynı yerde tuttuğum kişisel çalışma günlüğü.",
+    "current_slugs": [
+      "webbordro",
+      "gorselden-harekete",
+      "ai-context"
+    ],
+    "other_slugs": [
+      "kaplumbaga-kabugu",
+      "isik-catlakli-siluet",
+      "tablet-krita",
+      "cyrillic-flow",
+      "neyzen-3d",
+      "aof-sinav-v2"
+    ]
+  },
+  "origin": {
+    "label": "BENİM İÇİN BAŞLANGIÇ",
+    "title": "Bir unvan aramadım. Bir fikrin gerçekten çalışıp çalışmayacağını görmek istedim.",
+    "intro": "Uzun yıllardır üretim ve iş dünyasının içindeyim. Kodlama, çizim, yapay zekâ ve video ise hayatıma daha sonra girdi. Kendimi yeni bir meslek adıyla tanımlamak yerine, aklıma takılanları çalışan bir şeye dönüştürmeye başladım.",
+    "mentor_title": "Mehmet Fırat hocamın verdiği cesaret",
+    "mentor_text": "Yapay zekâyla tanışmamda ve ilk büyük denemeye başlamamda Mehmet Fırat hocamın yeri ayrı. Her e-postama sabırla ve nazikçe cevap verdi. Verdiği cesaretle işyerim için bir üretim takip sistemi yapmaya başladım.",
+    "mentor_url": "https://avesis.anadolu.edu.tr/mfirat",
+    "mentor_link": "Akademik profilini aç",
+    "first_project_title": "İlk yaşayan proje: Üretim Takip Sistemi",
+    "first_project_text": "Bir ders ödevi olarak kalmadı. İşyerinde gerçek bir ihtiyaca cevap verdi, hâlâ çalışıyor ve aklıma yeni bir şey geldikçe gelişmeye devam ediyor. Sonraki bütün projeler için asıl eşik buydu: Bir fikrin yalnızca zihinde kalmak zorunda olmadığını gördüm."
+  },
+  "map": [
+    {
+      "id": "hikayeler",
+      "title": "Hikâyeler",
+      "text": "Bir fikir neden doğdu, nerede zorlandı ve bugün neye dönüştü?"
+    },
+    {
+      "id": "yontemler",
+      "title": "Yöntemler",
+      "text": "İşe yarayan ayarlar, iş akışları ve kişisel bulgular."
+    },
+    {
+      "id": "gorsel-gunluk",
+      "title": "Görsel günlük",
+      "text": "Eskizden render'a, katmandan harekete uzanan üretim parçaları."
+    },
+    {
+      "id": "yarim-kalanlar",
+      "title": "Yarım kalanlar",
+      "text": "Bitmediği için saklanmayan, başka bir denemeye iz bırakan işler."
+    }
+  ],
+  "current": {
+    "label": "ŞU SIRALAR MASAMDA",
+    "title": "Üç açık hikâye, üç farklı düşünme biçimi.",
+    "note": "Bunlar en iyi işlerim değil. Bugün kullandığım, geliştirdiğim veya yeniden düşündüğüm üç açık dosya."
+  },
+  "journal": {
+    "label": "MASANIN GERİ KALANI",
+    "title": "Tek bir alana sığmayan notlar.",
+    "text": "Bazısı proje, bazısı yöntem, bazısı yalnızca iyi bir soru. Hepsi aynı günlüğün parçası."
+  },
+  "closing": {
+    "label": "#FİKRİMVAR",
+    "title": "Bir fikri denemek için o alanın uzmanı olmayı beklemek zorunda değilsin.",
+    "text": "Burada kesin reçeteler değil, gerçek denemeler var. Belki içlerinden biri senin aklındaki fikre küçük bir kapı açar."
+  },
+  "channels": [
+    {
+      "id": "youtube",
+      "title": "YouTube",
+      "text": "Süreç videoları, montaj denemeleri ve uzun anlatımlar.",
+      "url": ""
+    },
+    {
+      "id": "instagram",
+      "title": "Instagram",
+      "text": "Kısa görsel notlar, çizimler ve deneme parçaları.",
+      "url": ""
+    },
+    {
+      "id": "github",
+      "title": "GitHub",
+      "text": "Çalışan kodlar, açık kaynak araçlar ve proje arşivi.",
+      "url": "https://github.com/cetincevizcetoli"
+    }
+  ]
+}

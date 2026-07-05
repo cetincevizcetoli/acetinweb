@@ -1,0 +1,175 @@
+{
+  "slug": "webbordro",
+  "title": "WebBordro / DeltaBordro",
+  "question": "Bir bordro programı neden üç kez yeniden yazılır?",
+  "summary": "Eşimin şirketindeki gerçek bir ihtiyaçla başladı. İlk Python sürümü, PHP masaüstü uygulaması, web sistemi ve daha sade DeltaBordro aynı soruya farklı zamanlarda verilmiş cevaplara dönüştü.",
+  "kind": "story",
+  "category": "kod-sistem",
+  "category_label": "Kod ve sistemler",
+  "status": "suruyor",
+  "status_label": "Gelişiyor",
+  "type_label": "Yaşayan sistem",
+  "order": 2,
+  "started_at": null,
+  "updated_at": null,
+  "cover": "media/cover.svg",
+  "tags": [
+    "Python",
+    "PHP",
+    "JavaScript",
+    "SQL",
+    "OOP",
+    "Yapay zekâ"
+  ],
+  "homepage": true,
+  "reading_time": "3–6 dk",
+  "blocks": [
+    {
+      "type": "opening",
+      "layout": "hero-split",
+      "label": "GERÇEK İHTİYAÇ",
+      "title": "Kodlamayı yeni öğrenirken, hata kabul etmeyen gerçek bir işin karşısına geçtim.",
+      "paragraphs": [
+        "WebBordro’nun hikâyesi bir ürün fikriyle değil, eşimin şirketindeki ihtiyaçla başladı. O sırada AÖF Bilgisayar bölümünün ikinci sınıfına yeni başlamıştım; web tasarımı ve kodlama dersleri yeni bitmişti.",
+        "Bu işi, öğrendiklerimi gerçek kullanımda sınayabileceğim bir meydan okuma olarak gördüm: gerçekten kullanılan bir programı kendim yapabilir miydim?"
+      ],
+      "quote": "İlk hedef büyük bir platform kurmak değildi. Şirketin işini gerçekten kolaylaştıran bir araç yapabilmekti.",
+      "image": "media/opening.svg",
+      "caption": "İlk ihtiyaçtan bugünkü sisteme uzanan yolun başlangıcı."
+    },
+    {
+      "type": "timeline",
+      "layout": "full-bleed",
+      "label": "DÖRT GÖVDE",
+      "title": "Aynı ihtiyaç, her sürümde başka bir ders verdi.",
+      "image": "media/evolution.svg",
+      "items": [
+        {
+          "step": "01",
+          "title": "İlk Python masaüstü",
+          "subtitle": "Geniş kapsamlı laboratuvar",
+          "text": "İzin, işten çıkış, tazminat ve başka personel işlemlerini taşıyan ilk büyük sürüm. Çalıştı, fakat ağırlaştı."
+        },
+        {
+          "step": "02",
+          "title": "PHP masaüstü",
+          "subtitle": "Şirkete kurulan sürüm",
+          "text": "İlk sürümden memnun kalmayınca PHP ile yeniden kurdum. Program artık gerçek iş akışının içinde yaşıyordu."
+        },
+        {
+          "step": "03",
+          "title": "WebBordro",
+          "subtitle": "Basit hesaptan web sistemine",
+          "text": "İlk web sürümü yalnızca hesap yapıyordu. Firma, kullanıcı, rapor ve yönetim katmanları ihtiyaç geldikçe eklendi."
+        },
+        {
+          "step": "04",
+          "title": "DeltaBordro",
+          "subtitle": "Daha sade OOP Python sürümü",
+          "text": "Eşim ve şirket daha sade bir araç isteyince sistemi küçültmek yerine yeniden yazdım. Bugün güzel ve kararlı çalışıyor."
+        }
+      ]
+    },
+    {
+      "type": "compare",
+      "layout": "offset",
+      "label": "İLK BÜYÜK DERS",
+      "title": "Çalışması yetmedi.",
+      "intro": "Bir program sonuç üretebilir ama doğru ürün olmayabilir. İlk sürüm çok şey yapıyordu; gerçek kullanıcı ise daha az karmaşa istedi.",
+      "left": {
+        "title": "İşe yarayanlar",
+        "items": [
+          "Gerçek iş akışında kullanıldı.",
+          "Birçok personel işlemini tek yerde topladı.",
+          "Büyük bir uygulamanın nasıl büyüdüğünü öğretti."
+        ]
+      },
+      "right": {
+        "title": "Değişenler",
+        "items": [
+          "Gereğinden fazla modül kullanım yükü oluşturdu.",
+          "Öğrendikçe ilk mimari kararlarımı sorguladım.",
+          "İlerleme bazen yeni özellik değil, sadeleşme oldu."
+        ]
+      }
+    },
+    {
+      "type": "questions",
+      "layout": "wide",
+      "label": "KODDAN DAHA ZOR OLANLAR",
+      "title": "Hikâyeyi özellikler değil, değişen kararlar taşıdı.",
+      "items": [
+        {
+          "question": "Çalışan program neden yeniden yazılır?",
+          "answer": "Çünkü çalışmak, bakımının kolay olduğu veya kullanıcıya doğru biçimde hizmet ettiği anlamına gelmez. Yeniden yazmak burada başarısızlık değil, öğrendiklerimi daha temiz bir yapıya taşıma kararıydı."
+        },
+        {
+          "question": "Web sürümü neden doğdu?",
+          "answer": "Masaüstünde çalışan hesabın kurulu olduğu bilgisayara bağlı kalmaması fikri web sürümünü doğurdu. İlk hâli küçüktü; gerçek ihtiyaç geldikçe büyüdü."
+        },
+        {
+          "question": "Kullanıcı neden daha az özellik istedi?",
+          "answer": "Geliştirici için kapsam güç gibi görünebilir. Günlük kullanıcı için hız, açıklık ve gereksiz adımların olmaması daha değerlidir. DeltaBordro bu geri bildirimin sonucudur."
+        }
+      ]
+    },
+    {
+      "type": "roles",
+      "layout": "cross",
+      "label": "YAPAY ZEKÂ VE BEN",
+      "title": "Yapay zekâ kodu hızlandırdı; ihtiyacı belirlemedi.",
+      "ai": [
+        "Kod taslakları ve alternatif çözümler üretti.",
+        "Hata nedenlerini araştırmaya ve büyük dosyaları incelemeye yardım etti.",
+        "Tekrarlayan kod, arayüz ve belgeleme işlerini hızlandırdı."
+      ],
+      "human": [
+        "Şirketin gerçekten neye ihtiyacı olduğuna karar verdim.",
+        "Hesapların ve iş akışının gerçek kullanımda doğru olup olmadığını kontrol ettim.",
+        "Fazla karmaşık önerileri reddettim ve gerektiğinde sistemi küçülttüm."
+      ],
+      "note": "Bu hikâyedeki en belirleyici kararlardan biri yeni özellik eklemek değil, daha sade bir sürüm yapmaktı."
+    },
+    {
+      "type": "status",
+      "layout": "wide",
+      "label": "BUGÜN NEREDE?",
+      "title": "Tek bir “en iyi sürüm” yok; her biri başka bir ihtiyacın kaydı.",
+      "items": [
+        {
+          "title": "İlk Python projesi",
+          "state": "Arşiv / öğrenme kaydı",
+          "text": "Çok modüllü ilk yaklaşım. Sonraki sürümlerin neyi değiştirmesi gerektiğini gösterdi."
+        },
+        {
+          "title": "PHP masaüstü",
+          "state": "Gerçek kullanım geçmişi",
+          "text": "Eşimin şirketine kurulan ve masaüstü kullanımını sınayan sürüm."
+        },
+        {
+          "title": "WebBordro",
+          "state": "Gelişiyor",
+          "text": "Basit hesap sayfasından daha kapsamlı bir web sistemine dönüşen yaşayan proje."
+        },
+        {
+          "title": "DeltaBordro",
+          "state": "Çalışıyor",
+          "text": "Daha sade ihtiyaca cevap veren hafif, nesne yönelimli Python sürümü."
+        }
+      ]
+    },
+    {
+      "type": "lesson",
+      "layout": "diagonal",
+      "label": "BENDE KALANLAR",
+      "title": "Programın özelliklerinden daha değerli olanlar.",
+      "items": [
+        "İlk çalışan sürüm, doğru sürüm olmak zorunda değil.",
+        "Gerçek kullanıcı bazen daha fazla özellik değil, daha az karmaşa ister.",
+        "Bir sistemi yeniden yazmak her zaman başarısızlık değildir.",
+        "Yapay zekâ kodu hızlandırabilir ama gerçek ihtiyacı kendi başına belirleyemez.",
+        "Gerçek kullanım, derslerde görünmeyen sorunları ortaya çıkarır."
+      ]
+    }
+  ]
+}

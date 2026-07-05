@@ -1,0 +1,23 @@
+{
+  "order": 1,
+  "slug": "gun-01",
+  "date": "2026-07-05",
+  "date_label": "05 Temmuz 2026",
+  "day": "Gün 01",
+  "phase": "Başlangıç",
+  "milestone": true,
+  "title": "Bugün ne değişti?",
+  "summary": "Bir cümlelik özet.",
+  "tried": "Ne denedim?",
+  "failed": "Ne çalışmadı?",
+  "decision": "Hangi kararı verdim?",
+  "next": "Sırada ne var?",
+  "media": {
+    "type": "image",
+    "src": "media/gun-01.svg",
+    "alt": "Gün 01 çalışmasının açıklaması"
+  },
+  "instagram_url": "",
+  "youtube_url": "",
+  "github_url": ""
+}

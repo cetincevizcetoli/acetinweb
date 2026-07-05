@@ -1,0 +1,54 @@
+{
+  "slug": "dinamik-mufredat",
+  "title": "YZ ile Dinamik Müfredat",
+  "question": "YZ ile Dinamik Müfredat",
+  "summary": "Ders kaynaklarını yapay zekâ ile tarayıp ihtiyaca göre öğrenme rotası çıkarma deneyi.",
+  "kind": "story",
+  "category": "ogrenme-egitim",
+  "category_label": "Öğrenme ve eğitim",
+  "status": "not",
+  "status_label": "Not",
+  "type_label": "Öğrenme Yöntemi",
+  "order": 17,
+  "started_at": null,
+  "updated_at": null,
+  "cover": "media/cover.svg",
+  "tags": [
+    "NotebookLM",
+    "YZ",
+    "Araştırma"
+  ],
+  "homepage": true,
+  "blocks": [
+    {
+      "type": "opening",
+      "layout": "wide",
+      "label": "FİKRİN ÇIKIŞI",
+      "title": "YZ ile Dinamik Müfredat",
+      "paragraphs": [
+        "Sabit bir ders sırası yerine eksiklere ve hedeflere göre değişen bir öğrenme planı kurmak.",
+        "Ders kaynaklarını yapay zekâ ile tarayıp ihtiyaca göre öğrenme rotası çıkarma deneyi."
+      ],
+      "image": "media/cover.svg",
+      "caption": "YZ ile Dinamik Müfredat"
+    },
+    {
+      "type": "split",
+      "layout": "offset-right",
+      "label": "SÜREÇ",
+      "title": "Fikir ilerlerken ne değişti?",
+      "paragraphs": [
+        "Kaynaklar parçalandı, sorular üretildi ve konu ilişkileri yeniden düzenlendi."
+      ]
+    },
+    {
+      "type": "lesson",
+      "layout": "narrow-left",
+      "label": "BENDE KALAN",
+      "title": "YZ’yi yalnızca cevap veren araç değil, bilgi madenciliği ortağı olarak kullanma yöntemi oluştu.",
+      "items": [
+        "YZ’yi yalnızca cevap veren araç değil, bilgi madenciliği ortağı olarak kullanma yöntemi oluştu."
+      ]
+    }
+  ]
+}

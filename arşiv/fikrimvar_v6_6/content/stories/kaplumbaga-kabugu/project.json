@@ -1,0 +1,36 @@
+{
+  "schema_version": 2,
+  "slug": "kaplumbaga-kabugu",
+  "title": "Kaplumbağa Kabuğu",
+  "question": "Dört hayvan ve tek bir kabuğun sürekliliğini nasıl korurum?",
+  "summary": "Aynı kabuğun farklı hayvanlara geçtiği kısa hikâyede karakter ve nesne sürekliliği deneyi.",
+  "category": "video-hareket",
+  "category_label": "Video ve hareket",
+  "status": "suruyor",
+  "status_label": "Üzerinde çalışıyorum",
+  "type_label": "Hikâye / Video",
+  "order": 8,
+  "started_at": null,
+  "updated_at": null,
+  "cover": "media/cover.svg",
+  "tags": [
+    "Storyboard",
+    "YZ Video",
+    "Montaj"
+  ],
+  "homepage": true,
+  "public": true,
+  "workshop_question": null,
+  "workshop": {
+    "status": "none",
+    "started_at": null,
+    "ended_at": null,
+    "closing_state": null,
+    "closing_note": ""
+  },
+  "story": {
+    "status": "published",
+    "published_at": null,
+    "generated_from_updates": []
+  }
+}

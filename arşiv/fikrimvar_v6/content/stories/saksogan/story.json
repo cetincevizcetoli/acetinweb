@@ -1,0 +1,54 @@
+{
+  "slug": "saksogan",
+  "title": "Saksoğan",
+  "question": "Bir kuş ile soğanı oyuncak gibi görünmeden nasıl birleştiririm?",
+  "summary": "Bir saksağanın gövdesini soğana dönüştürürken anatomik mantığı ve gerçekçilik hissini koruma çalışması.",
+  "kind": "story",
+  "category": "gorsel-render",
+  "category_label": "Görsel, render ve 3D",
+  "status": "denendi",
+  "status_label": "Denendi",
+  "type_label": "Görsel Deney",
+  "order": 5,
+  "started_at": null,
+  "updated_at": null,
+  "cover": "media/cover.svg",
+  "tags": [
+    "InvokeAI",
+    "ControlNet",
+    "Flux"
+  ],
+  "homepage": true,
+  "blocks": [
+    {
+      "type": "opening",
+      "layout": "wide",
+      "label": "FİKRİN ÇIKIŞI",
+      "title": "Bir kuş ile soğanı oyuncak gibi görünmeden nasıl birleştiririm?",
+      "paragraphs": [
+        "Saksağan ile soğanı, oyuncak gibi görünmeden tek bir canlı gövdesinde birleştirmek.",
+        "Bir saksağanın gövdesini soğana dönüştürürken anatomik mantığı ve gerçekçilik hissini koruma çalışması."
+      ],
+      "image": "media/cover.svg",
+      "caption": "Saksoğan"
+    },
+    {
+      "type": "split",
+      "layout": "offset-right",
+      "label": "SÜREÇ",
+      "title": "Fikir ilerlerken ne değişti?",
+      "paragraphs": [
+        "Baş, gövde, kuyruk, soğan oranı ve yönlendirme ağırlıkları tekrar tekrar ayarlandı."
+      ]
+    },
+    {
+      "type": "lesson",
+      "layout": "narrow-left",
+      "label": "BENDE KALAN",
+      "title": "Eğlenceli fikirlerde bile oran ve anatomi sonucu belirliyor.",
+      "items": [
+        "Farklı modellerin anatomik mantık ve stil üzerindeki etkisini gösteren bir görsel seri oluştu."
+      ]
+    }
+  ]
+}

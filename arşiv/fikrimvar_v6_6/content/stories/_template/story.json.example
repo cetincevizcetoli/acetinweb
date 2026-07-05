@@ -1,0 +1,14 @@
+{
+  "slug": "yeni-proje",
+  "title": "Yeni Proje",
+  "question": "Bu fikir neden doğdu ve başına ne geldi?",
+  "summary": "Düzenlenmiş hikâyenin kısa özeti.",
+  "category": "kod-sistem",
+  "category_label": "Kod ve sistemler",
+  "status": "tamamlandi",
+  "status_label": "Bu hâliyle bitti",
+  "type_label": "Proje hikâyesi",
+  "cover": "media/cover.svg",
+  "reading_time": "3 dakika",
+  "blocks": []
+}

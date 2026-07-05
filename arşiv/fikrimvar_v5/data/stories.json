@@ -1,0 +1,106 @@
+{
+  "webbordro": {
+    "slug": "webbordro",
+    "project_title": "WebBordro / DeltaBordro",
+    "title": "Aynı bordro ihtiyacı neden dört farklı gövdeye dönüştü?",
+    "dek": "Eşimin şirketindeki gerçek bir ihtiyaçla başladı. Kodlamayı yeni öğrenirken bunu bir meydan okuma olarak gördüm; çalışan ilk sürüm yetmeyince teknoloji, kapsam ve sadelik kararları defalarca değişti.",
+    "status": "Gelişiyor",
+    "reading_time": "3 dk",
+    "quick_facts": [
+      {"label": "Başlangıç", "value": "Eşimin şirketindeki gerçek ihtiyaç"},
+      {"label": "İlk biçim", "value": "Python masaüstü uygulaması"},
+      {"label": "Dönüşüm", "value": "PHP masaüstü → web → DeltaBordro"},
+      {"label": "Bugün", "value": "Çalışıyor ve gelişmeye devam ediyor"}
+    ],
+    "opening": {
+      "label": "NEDEN BAŞLADI?",
+      "title": "Derslerde öğrendiğim kodu, hata kabul etmeyen gerçek bir işte sınamak istedim.",
+      "paragraphs": [
+        "AÖF Bilgisayar bölümünün ikinci sınıfına yeni başlamıştım. Web tasarımı ve kodlama dersleri yeni bitmişti. Eşimin şirketinde bordro işlemlerini kolaylaştıracak bir programa ihtiyaç duyulunca bunu yalnızca bir yazılım isteği değil, kendime karşı bir meydan okuma olarak gördüm.",
+        "Hazır bir çözümü taklit etmek değil, gerçek kullanımın ne istediğini anlayıp çalışan bir şey kurmak istiyordum. İlk hedef büyük bir platform değildi; şirketin işini gerçekten kolaylaştıran bir araç yapabilmekti."
+      ]
+    },
+    "versions": [
+      {
+        "step": "01",
+        "name": "İlk Python sürümü",
+        "role": "Geniş kapsamlı ilk laboratuvar",
+        "text": "İzinlerden işten çıkışa, tazminat hesaplarından başka personel işlemlerine kadar çok sayıda modülü vardı. Çalışıyordu, fakat hem kod hem kullanım biçimi ağırlaştı."
+      },
+      {
+        "step": "02",
+        "name": "PHP masaüstü sürümü",
+        "role": "Gerçek işyerine kurulan sürüm",
+        "text": "İlk Python sürümünden memnun kalmayınca sistemi PHP ile yeniden kurdum ve eşimin şirketine yükledim. Program artık yalnızca benim bilgisayarımda değil, gerçek iş akışının içinde yaşıyordu."
+      },
+      {
+        "step": "03",
+        "name": "WebBordro",
+        "role": "Basit hesap sayfasından büyüyen web sistemi",
+        "text": "Web fikri sonradan geldi. İlk web sürümü yalnızca gerekli değerleri alıp hesap yapıyordu; firma, personel ve kullanıcı yapıları yoktu. İhtiyaçlar geldikçe sistem katmanlandı."
+      },
+      {
+        "step": "04",
+        "name": "DeltaBordro",
+        "role": "Daha sade ve hafif OOP Python sürümü",
+        "text": "Eşim ve şirket çalışanları daha sade bir programa ihtiyaç duyduklarını söyleyince ilk projeyi küçültmek yerine yeniden yazdım. DeltaBordro bugün çalışıyor ve ihtiyacı daha az yükle karşılıyor."
+      }
+    ],
+    "turning_point": {
+      "label": "İLK BÜYÜK DERS",
+      "title": "Çalışması yetmedi.",
+      "text": "Bir programın sonuç üretmesi, doğru ürün olduğu anlamına gelmiyor. İlk sürüm çok şey yapıyordu ama gerçek kullanıcı daha az karmaşa istiyordu. Bu proje bana özellik eklemenin her zaman ilerleme olmadığını gösterdi.",
+      "worked": [
+        "Gerçek iş akışında kullanılabilecek kadar işlevliydi.",
+        "Farklı personel işlemlerini tek yerde topluyordu.",
+        "Büyük bir uygulamanın nasıl büyüdüğünü öğretti."
+      ],
+      "changed": [
+        "Gereğinden fazla modül kullanım yükü oluşturdu.",
+        "Teknoloji ve mimari kararları öğrendikçe yeniden ele alındı.",
+        "Kullanıcı talebi sistemi büyütmekten çok sadeleştirmeye yöneltti."
+      ]
+    },
+    "questions": [
+      {
+        "question": "Çalışan bir program neden yeniden yazılır?",
+        "answer": "Çünkü ilk sürüm ihtiyacı karşılayabilir ama kod yapısı, kullanım biçimi veya bakım maliyeti yanlış yönde büyüyebilir. Yeniden yazmak burada başarısızlık değil, öğrenilenleri daha temiz bir yapıya taşıma kararıydı."
+      },
+      {
+        "question": "Web sürümü neden doğdu?",
+        "answer": "Masaüstünde çalışan hesabın kurulu olduğu bilgisayara bağlı kalmaması fikri web sürümünü doğurdu. İlk hali küçüktü; sistem, gerçek ihtiyaçlar geldikçe büyüdü."
+      },
+      {
+        "question": "Kullanıcı neden daha az özellik istedi?",
+        "answer": "Geliştirici için kapsam güç gibi görünebilir; günlük kullanıcı içinse hız, açıklık ve gereksiz adımların olmaması daha değerlidir. DeltaBordro bu geri bildirimin sonucu oldu."
+      }
+    ],
+    "ai_role": {
+      "title": "Yapay zekâ kodu hızlandırdı; ihtiyacı belirlemedi.",
+      "ai": [
+        "Kod taslakları ve alternatif çözüm yolları üretti.",
+        "Hata nedenlerini araştırmaya ve büyük dosyaları incelemeye yardım etti.",
+        "Tekrarlayan kod, arayüz ve belgeleme işlerini hızlandırdı."
+      ],
+      "ahmet": [
+        "Şirketin gerçekten neye ihtiyacı olduğuna karar verdim.",
+        "Hesapların ve iş akışının gerçek kullanımda doğru olup olmadığını kontrol ettim.",
+        "Fazla karmaşık önerileri reddettim ve gerektiğinde sistemi küçülttüm."
+      ],
+      "note": "Bu hikâyede en belirleyici karar yeni bir özellik eklemek değil, daha sade bir sürüm yapmaktı. Bu kararı kod üreten araç değil, kullanıcıyı ve işi bilen kişi verebildi."
+    },
+    "today": [
+      {"name": "İlk Python projesi", "state": "Arşiv ve öğrenme kaydı", "text": "Çok modüllü ilk yaklaşım; sonraki bütün sürümlerin neyi değiştirmesi gerektiğini gösterdi."},
+      {"name": "PHP masaüstü", "state": "Gerçek kullanım geçmişi", "text": "Eşimin şirketine kurulan ve masaüstü kullanımını sınayan sürüm."},
+      {"name": "WebBordro", "state": "Gelişiyor", "text": "Basit hesap sayfasından daha kapsamlı bir web sistemine dönüşen yaşayan proje."},
+      {"name": "DeltaBordro", "state": "Çalışıyor", "text": "Daha sade ihtiyaca cevap veren hafif, nesne yönelimli Python sürümü."}
+    ],
+    "lessons": [
+      "İlk çalışan sürüm, doğru sürüm olmak zorunda değil.",
+      "Gerçek kullanıcı bazen daha fazla özellik değil, daha az karmaşa ister.",
+      "Bir sistemi yeniden yazmak her zaman başarısızlık değildir.",
+      "Yapay zekâ kodu hızlandırabilir ama gerçek ihtiyacı kendi başına belirleyemez.",
+      "Derslerde öğrenilen bilgi, gerçek kullanımın baskısıyla başka bir şeye dönüşür."
+    ]
+  }
+}

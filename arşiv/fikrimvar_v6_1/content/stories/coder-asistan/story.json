@@ -1,0 +1,54 @@
+{
+  "slug": "coder-asistan",
+  "title": "Coder-Asistan",
+  "question": "Kod yazan yapay zekâya neden dosyalarıma doğrudan dokunma izni vermedim?",
+  "summary": "Farklı yapay zekâ modelleriyle kod, proje yapısı ve dokümantasyon üreten terminal asistanı.",
+  "kind": "story",
+  "category": "kod-sistem",
+  "category_label": "Kod ve sistemler",
+  "status": "arsiv",
+  "status_label": "Arşivde",
+  "type_label": "YZ Aracı",
+  "order": 3,
+  "started_at": null,
+  "updated_at": null,
+  "cover": "media/cover.svg",
+  "tags": [
+    "Python",
+    "Gemini",
+    "Hugging Face"
+  ],
+  "homepage": false,
+  "blocks": [
+    {
+      "type": "opening",
+      "layout": "wide",
+      "label": "FİKRİN ÇIKIŞI",
+      "title": "Kod yazan yapay zekâya neden dosyalarıma doğrudan dokunma izni vermedim?",
+      "paragraphs": [
+        "Tek bir modele bağlı kalmadan kod üretme ve proje kurma sürecini terminalden yönetmek.",
+        "Farklı yapay zekâ modelleriyle kod, proje yapısı ve dokümantasyon üreten terminal asistanı."
+      ],
+      "image": "media/cover.svg",
+      "caption": "Coder-Asistan"
+    },
+    {
+      "type": "split",
+      "layout": "offset-right",
+      "label": "SÜREÇ",
+      "title": "Fikir ilerlerken ne değişti?",
+      "paragraphs": [
+        "Model seçimi, dosya üretimi, mimari kurulum ve belgeleme akışları denendi."
+      ]
+    },
+    {
+      "type": "lesson",
+      "layout": "narrow-left",
+      "label": "BENDE KALAN",
+      "title": "Onay, yedek ve sınırlar eklenmeden otomasyon yalnızca hız değil risk de üretir.",
+      "items": [
+        "Daha sonra ai-context ve başka araçlara fikir veren bir çalışma oldu."
+      ]
+    }
+  ]
+}

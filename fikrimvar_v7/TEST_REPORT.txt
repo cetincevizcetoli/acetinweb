@@ -1,0 +1,33 @@
+#FikrimVar V7.0.0 - Test Raporu
+================================
+
+Tarih: 2026-07-05
+
+Kontroller
+----------
+- 31 PHP dosyası: php -l temiz
+- public/assets/js/app.js: node --check temiz
+- admin-local/assets/admin.js: node --check temiz
+- SQLite PRAGMA integrity_check: ok
+- SQLite PRAGMA foreign_key_check: 0 hata
+- CRUD simülasyonu: proje, Atölye kaydı, Hikâye, bölüm, alt öğe, sıralama,
+  yumuşak silme ve geri yükleme başarılı
+- Hero organik katman dosyaları: 7/7 mevcut ve boş değil
+- Hero HTML data-organic-hero katmanı: mevcut
+- Organik rastgele parlama JavaScript'i: mevcut
+- .hero-core--organic aspect-ratio düzeltmesi: mevcut
+
+Aktarılan veri
+--------------
+- Proje: 19
+- Atölye kaydı: 3
+- Hikâye: 19
+- Hikâye bölümü: 61
+- Bölüm alt öğesi: 70
+- Medya: 24
+
+Ortam sınırlaması
+-----------------
+Bu test ortamındaki PHP derlemesinde PDO_SQLite sürücüsü yoktur. Bu nedenle
+SQLite kullanan PHP sayfaları burada uçtan uca tarayıcıda çalıştırılamadı.
+XAMPP kurulumu için public/system-check.php eklenmiştir.

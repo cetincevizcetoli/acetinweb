@@ -1,0 +1,36 @@
+{
+  "schema_version": 2,
+  "slug": "siparis-r-python",
+  "title": "Sipariş Analizinde R ve Python",
+  "question": "Sipariş Analizinde R ve Python",
+  "summary": "Haftalık siparişlerden örüntü, ürün ilişkisi ve karar ağacı çıkarmaya yönelik veri analizi deneyi.",
+  "category": "ogrenme-egitim",
+  "category_label": "Öğrenme ve eğitim",
+  "status": "tamamlandi",
+  "status_label": "Tamamlandı",
+  "type_label": "Veri Analizi",
+  "order": 18,
+  "started_at": null,
+  "updated_at": null,
+  "cover": "media/cover.svg",
+  "tags": [
+    "R",
+    "Python",
+    "Veri"
+  ],
+  "homepage": false,
+  "public": true,
+  "workshop_question": null,
+  "workshop": {
+    "status": "none",
+    "started_at": null,
+    "ended_at": null,
+    "closing_state": null,
+    "closing_note": ""
+  },
+  "story": {
+    "status": "published",
+    "published_at": null,
+    "generated_from_updates": []
+  }
+}

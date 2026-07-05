@@ -1,0 +1,62 @@
+[
+  {
+    "slug": "ai-context",
+    "title": "ai-context",
+    "status": "Çalışıyor",
+    "category": "Kod / Araç",
+    "summary": "Proje klasörlerini yapay zekâya aktarılabilir, okunabilir bir bağlama dönüştüren komut satırı aracı.",
+    "thumbnail": "assets/img/projects/ai-context.svg",
+    "tools": ["Python", "CLI", "Git"],
+    "featured": true,
+    "order": 1,
+    "current": false,
+    "idea": "Uzun proje bağlamlarını her defasında elle hazırlamak yerine, tekrarlanabilir ve hızlı bir araç oluşturmak.",
+    "process": "Dosya ağacı, filtreler, token tahmini ve Markdown çıktısı adım adım eklendi.",
+    "result": "Kendi projelerimde kullandığım ve açık kaynak olarak yayımladığım çalışan bir CLI aracı."
+  },
+  {
+    "slug": "kaplumbaga-kabugu",
+    "title": "Kaplumbağa Kabuğu",
+    "status": "Gelişiyor",
+    "category": "Video / Hikâye",
+    "summary": "Aynı kabuğun farklı sahnelerde ve karakterlerde korunmasını amaçlayan kısa video ve süreklilik deneyi.",
+    "thumbnail": "assets/img/projects/kaplumbaga.svg",
+    "tools": ["Yapay zekâ", "Storyboard", "Video"],
+    "featured": true,
+    "order": 2,
+    "current": true,
+    "idea": "Bir kaplumbağa kabuğunun farklı hayvanlara geçmesini anlatan kısa ve tutarlı bir hikâye kurmak.",
+    "process": "Sahne akışı, kamera hareketi, kabuk sürekliliği ve karakter tutarlılığı ayrı ayrı denendi.",
+    "result": "Hikâye ve görsel süreklilik problemleri hâlâ geliştiriliyor."
+  },
+  {
+    "slug": "saksogan",
+    "title": "Saksoğan",
+    "status": "Denendi",
+    "category": "Görsel / YZ",
+    "summary": "Bir saksağanın gövdesini soğana dönüştürürken anatomik mantığı ve gerçekçilik hissini koruma çalışması.",
+    "thumbnail": "assets/img/projects/saksogan.svg",
+    "tools": ["InvokeAI", "ControlNet", "Flux"],
+    "featured": true,
+    "order": 3,
+    "current": false,
+    "idea": "Saksağan ile soğanı, oyuncak gibi görünmeden tek bir canlı gövdesinde birleştirmek.",
+    "process": "Baş, gövde, kuyruk, soğan oranı ve yönlendirme ağırlıkları tekrar tekrar ayarlandı.",
+    "result": "Farklı modellerin anatomik mantık ve stil üzerindeki etkisini gösteren bir görsel seri oluştu."
+  },
+  {
+    "slug": "tablet-krita-duzeni",
+    "title": "Tablet ve Krita Düzeni",
+    "status": "Kullanılıyor",
+    "category": "Yöntem / Çizim",
+    "summary": "Çizim tabletini dik konumlandırma ve fırça stabilizasyonunu kişisel çalışma biçimime uyarlama denemeleri.",
+    "thumbnail": "assets/img/projects/tablet.svg",
+    "tools": ["XP-Pen", "Krita", "Ergonomi"],
+    "featured": true,
+    "order": 4,
+    "current": false,
+    "idea": "Ekransız tablette çizim yaparken omuz hareketini ve kalem kontrolünü daha doğal hâle getirmek.",
+    "process": "Tablet açısı, klavye yerleşimi ve stabilizasyon gecikmesi farklı değerlerle test edildi.",
+    "result": "Dik tablet kullanımı ve yaklaşık 8–9 px stabilizasyon kişisel çalışma düzenimin parçası oldu."
+  }
+]

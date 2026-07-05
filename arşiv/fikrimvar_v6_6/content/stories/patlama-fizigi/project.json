@@ -1,0 +1,36 @@
+{
+  "schema_version": 2,
+  "slug": "patlama-fizigi",
+  "title": "YZ Videosunda Patlama Fiziği",
+  "question": "YZ Videosunda Patlama Fiziği",
+  "summary": "Patlama sahnesinde çevredeki nesnelerin hareketsiz kalmasını sorgulayan fizik ve anlatı düzeltmesi.",
+  "category": "video-hareket",
+  "category_label": "Video ve hareket",
+  "status": "not",
+  "status_label": "Not",
+  "type_label": "Mantık Kontrolü",
+  "order": 10,
+  "started_at": null,
+  "updated_at": null,
+  "cover": "media/cover.svg",
+  "tags": [
+    "YZ Video",
+    "Prompt",
+    "Fizik"
+  ],
+  "homepage": true,
+  "public": true,
+  "workshop_question": null,
+  "workshop": {
+    "status": "none",
+    "started_at": null,
+    "ended_at": null,
+    "closing_state": null,
+    "closing_note": ""
+  },
+  "story": {
+    "status": "published",
+    "published_at": null,
+    "generated_from_updates": []
+  }
+}

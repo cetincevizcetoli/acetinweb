@@ -1,0 +1,38 @@
+{
+  "schema_version": 2,
+  "slug": "ai-context",
+  "title": "ai-context",
+  "question": "YZ’ye aynı projeyi tekrar tekrar anlatmaktan sıkılınca ne olur?",
+  "summary": "Büyük proje klasörlerini ayıklayıp tek bir okunabilir bağlam dosyasına dönüştüren küçük bir Python aracı. Kendi ihtiyacım için başladı; kullandıkça gelişti.",
+  "category": "kod-sistem",
+  "category_label": "Kod ve sistemler",
+  "status": "calisiyor",
+  "status_label": "Çalışıyor",
+  "type_label": "Python CLI",
+  "order": 1,
+  "started_at": null,
+  "updated_at": null,
+  "cover": "media/cover.svg",
+  "tags": [
+    "Python",
+    "CLI",
+    "Markdown",
+    "Token tahmini",
+    "Git"
+  ],
+  "homepage": true,
+  "public": true,
+  "workshop_question": null,
+  "workshop": {
+    "status": "none",
+    "started_at": null,
+    "ended_at": null,
+    "closing_state": null,
+    "closing_note": ""
+  },
+  "story": {
+    "status": "published",
+    "published_at": null,
+    "generated_from_updates": []
+  }
+}

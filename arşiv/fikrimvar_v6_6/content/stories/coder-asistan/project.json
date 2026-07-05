@@ -1,0 +1,36 @@
+{
+  "schema_version": 2,
+  "slug": "coder-asistan",
+  "title": "Coder-Asistan",
+  "question": "Kod yazan yapay zekâya neden dosyalarıma doğrudan dokunma izni vermedim?",
+  "summary": "Farklı yapay zekâ modelleriyle kod, proje yapısı ve dokümantasyon üreten terminal asistanı.",
+  "category": "kod-sistem",
+  "category_label": "Kod ve sistemler",
+  "status": "arsiv",
+  "status_label": "Arşivde",
+  "type_label": "YZ Aracı",
+  "order": 3,
+  "started_at": null,
+  "updated_at": null,
+  "cover": "media/cover.svg",
+  "tags": [
+    "Python",
+    "Gemini",
+    "Hugging Face"
+  ],
+  "homepage": false,
+  "public": true,
+  "workshop_question": null,
+  "workshop": {
+    "status": "none",
+    "started_at": null,
+    "ended_at": null,
+    "closing_state": null,
+    "closing_note": ""
+  },
+  "story": {
+    "status": "published",
+    "published_at": null,
+    "generated_from_updates": []
+  }
+}

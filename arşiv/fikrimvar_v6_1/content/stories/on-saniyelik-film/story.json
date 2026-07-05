@@ -1,0 +1,54 @@
+{
+  "slug": "on-saniyelik-film",
+  "title": "10 Saniyelik Parçalardan Film",
+  "question": "10 Saniyelik Parçalardan Film",
+  "summary": "Her biri tek başına çalışan kısa sekansları zamanla daha uzun bir filme dönüştürme fikri.",
+  "kind": "story",
+  "category": "video-hareket",
+  "category_label": "Video ve hareket",
+  "status": "yarim",
+  "status_label": "Yarım kaldı",
+  "type_label": "Kurgu",
+  "order": 9,
+  "started_at": null,
+  "updated_at": null,
+  "cover": "media/cover.svg",
+  "tags": [
+    "Veo",
+    "Flow",
+    "Kurgu"
+  ],
+  "homepage": false,
+  "blocks": [
+    {
+      "type": "opening",
+      "layout": "wide",
+      "label": "FİKRİN ÇIKIŞI",
+      "title": "10 Saniyelik Parçalardan Film",
+      "paragraphs": [
+        "Büyük bir video üretimini kısa ve yönetilebilir parçalara bölmek.",
+        "Her biri tek başına çalışan kısa sekansları zamanla daha uzun bir filme dönüştürme fikri."
+      ],
+      "image": "media/cover.svg",
+      "caption": "10 Saniyelik Parçalardan Film"
+    },
+    {
+      "type": "split",
+      "layout": "offset-right",
+      "label": "SÜREÇ",
+      "title": "Fikir ilerlerken ne değişti?",
+      "paragraphs": [
+        "Sahne devamlılığı, geçişler ve aynı görsel dünyanın korunması araştırıldı."
+      ]
+    },
+    {
+      "type": "lesson",
+      "layout": "narrow-left",
+      "label": "BENDE KALAN",
+      "title": "Henüz açık bir deney alanı olarak bekliyor.",
+      "items": [
+        "Henüz açık bir deney alanı olarak bekliyor."
+      ]
+    }
+  ]
+}

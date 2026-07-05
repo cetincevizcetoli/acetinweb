@@ -1,0 +1,36 @@
+{
+  "schema_version": 2,
+  "slug": "dinamik-mufredat",
+  "title": "YZ ile Dinamik Müfredat",
+  "question": "YZ ile Dinamik Müfredat",
+  "summary": "Ders kaynaklarını yapay zekâ ile tarayıp ihtiyaca göre öğrenme rotası çıkarma deneyi.",
+  "category": "ogrenme-egitim",
+  "category_label": "Öğrenme ve eğitim",
+  "status": "not",
+  "status_label": "Not",
+  "type_label": "Öğrenme Yöntemi",
+  "order": 17,
+  "started_at": null,
+  "updated_at": null,
+  "cover": "media/cover.svg",
+  "tags": [
+    "NotebookLM",
+    "YZ",
+    "Araştırma"
+  ],
+  "homepage": true,
+  "public": true,
+  "workshop_question": null,
+  "workshop": {
+    "status": "none",
+    "started_at": null,
+    "ended_at": null,
+    "closing_state": null,
+    "closing_note": ""
+  },
+  "story": {
+    "status": "published",
+    "published_at": null,
+    "generated_from_updates": []
+  }
+}

@@ -1,0 +1,12 @@
+Elimde olan tek şey, bu sohbet boyunca bana gösterdiklerin — yani coder-asistan'ın gördüğüm kod ve doküman kesitleri. Baştan sona bir hikaye kuracak kadar geçmişini bilmiyorum, ama gördüklerimden çıkarabildiğim parçaları, sorularının sırasına göre toplayayım. Boşlukları sen dolduracaksın.
+İlk çalışan şey / büyüme anı
+Gördüğüm halinden anlaşılan, iş basit bir "AI'ya sor, kod yazsın" scriptinden çok daha ileri gitmiş. Karşıma çıktığında proje zaten şuydu: launcher.py ile çoklu proje yöneten, her projeye izole RAG hafızası (​.coder_memory, ChromaDB) tanımlayan, dosya işlemlerini onay + backup mekanizmasıyla koruyan bir sistem. Yani "büyüme" anını göremedim — ben seni zaten sistem aşamasındayken tanıdım.
+Zorlandığın yerler (kodun kendisinden okunanlar)
+
+JSON güvenilirliği: assistant.py'de en dikkat çeken evrim buydu. Önce clean_json_string basit bir regex temizliğiydi (```json bloklarını silip json.loads deniyordu, hata verirse eski formata çevirmeye çalışıyordu — kırılgan bir yapı). Sonra bana getirdiğin ikinci versiyonda bunu tamamen yeniden yazmışsın: satır satır kod bloğu yakalama, hata durumunda programı çökertmek yerine None dönüp kullanıcıya "tekrar denesin mi?" sorma. Bu, AI'nın tutarsız yanıt formatıyla gerçek bir mücadele izi.
+Rate limit / model bağımlılığı: extract_wait_time ve 429 hatasında kullanıcıya "bekle / model değiştir / iptal" seçeneği sunman, tek bir sağlayıcıya (muhtemelen önce sadece Gemini) bağlı kalmanın yarattığı bir sıkıntıdan doğmuş gibi duruyor — sonradan Groq, DeepSeek, HuggingFace adaptörleri eklenmiş.
+Güvenlik: is_safe_path fonksiyonu path traversal'a karşı — bu ihtiyacın "AI bana istemeden zarar verebilir" farkındalığından geldiğini tahmin ediyorum.
+Proje organizasyonu: migrate_projects.py'nin varlığı, başta projelerin ana dizine karışık şekilde durduğunu, sonradan my_projects/ altında izole etme kararı aldığını gösteriyor — yani bu bir sonradan-fark-edilen mimari sorunmuş.
+
+Sen vs AI (kodun kendi izinden)
+Sistemin AI'ya verdiği talimat (SYSTEM_INSTRUCTION) çok katı: "Sen bir JSON makinesisin, asla sohbet etme." Bu, senin bilinçli bir tasarım kararın gibi görünüyor — AI'nın serbest konuşmasına değil, dar ve kontrol edilebilir bir çıktıya zorlanması. Onay mekanizması, dry-run modu, backup sistemi — hepsi "AI karar versin ama son sözü ben söylerim" ilkesinin kod haline gelmiş hali.

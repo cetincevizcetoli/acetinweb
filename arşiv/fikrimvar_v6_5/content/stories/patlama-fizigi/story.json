@@ -1,0 +1,54 @@
+{
+  "slug": "patlama-fizigi",
+  "title": "YZ Videosunda Patlama Fiziği",
+  "question": "YZ Videosunda Patlama Fiziği",
+  "summary": "Patlama sahnesinde çevredeki nesnelerin hareketsiz kalmasını sorgulayan fizik ve anlatı düzeltmesi.",
+  "kind": "story",
+  "category": "video-hareket",
+  "category_label": "Video ve hareket",
+  "status": "not",
+  "status_label": "Not",
+  "type_label": "Mantık Kontrolü",
+  "order": 10,
+  "started_at": null,
+  "updated_at": null,
+  "cover": "media/cover.svg",
+  "tags": [
+    "YZ Video",
+    "Prompt",
+    "Fizik"
+  ],
+  "homepage": true,
+  "blocks": [
+    {
+      "type": "opening",
+      "layout": "wide",
+      "label": "FİKRİN ÇIKIŞI",
+      "title": "YZ Videosunda Patlama Fiziği",
+      "paragraphs": [
+        "Görsel olarak etkileyici bir sahnenin fiziksel mantığını da korumak.",
+        "Patlama sahnesinde çevredeki nesnelerin hareketsiz kalmasını sorgulayan fizik ve anlatı düzeltmesi."
+      ],
+      "image": "media/cover.svg",
+      "caption": "YZ Videosunda Patlama Fiziği"
+    },
+    {
+      "type": "split",
+      "layout": "offset-right",
+      "label": "SÜREÇ",
+      "title": "Fikir ilerlerken ne değişti?",
+      "paragraphs": [
+        "Patlama kuvveti, nesne tepkisi ve sahne sürekliliği yeniden tarif edildi."
+      ]
+    },
+    {
+      "type": "lesson",
+      "layout": "narrow-left",
+      "label": "BENDE KALAN",
+      "title": "YZ çıktısını yalnızca estetik değil mantık açısından da değerlendiren bir yöntem notu oluştu.",
+      "items": [
+        "YZ çıktısını yalnızca estetik değil mantık açısından da değerlendiren bir yöntem notu oluştu."
+      ]
+    }
+  ]
+}

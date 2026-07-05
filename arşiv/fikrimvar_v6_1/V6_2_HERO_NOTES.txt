@@ -1,0 +1,16 @@
+FikrimVar V6.2 Hero düzeltmesi
+
+Kök sorunlar:
+1) Organik katmanlar hero-shade katmanının altında kaldığı için parıltı bastırılıyordu.
+2) crack-1/2/3 görselleri %90'dan fazla aynı piksel alanını içeriyordu; bağımsız çatlak grupları değildi.
+3) Opaklık ve hareket değerleri gerçek tarayıcıda fark edilmeyecek kadar düşüktü.
+
+Bu sürümde:
+- Ana hero resmi shade altında korunur.
+- Çatlak ve tel katmanları shade üzerinde ayrı bir sahnede yaşar.
+- Üç gerçek, bölgesel çatlak maskesi üretildi.
+- Parıltı ve salınım görünür ama yavaş kalacak şekilde artırıldı.
+- V6.1'in hikâye, atölye ve içerik yapısı değiştirilmedi.
+
+Kopyalama:
+Bu klasörü ayrı bir V6.2 olarak çalıştırın. Mevcut V6.1 klasörünün üstüne yazmanız gerekmez.

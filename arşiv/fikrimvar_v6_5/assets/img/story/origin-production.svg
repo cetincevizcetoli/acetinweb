@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+<title id="title">Üretim takip sistemi şeması</title>
+<desc id="desc">Üretim akışı, makine adımları ve takip ekranını bir araya getiren soyut teknik çizim.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#16191d"/><stop offset="1" stop-color="#24272c"/></linearGradient>
+  <linearGradient id="rust" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#a84e2d"/><stop offset="1" stop-color="#d9a04c"/></linearGradient>
+  <pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse"><path d="M44 0H0V44" fill="none" stroke="#fff" stroke-opacity=".06"/></pattern>
+</defs>
+<rect width="1200" height="760" rx="26" fill="url(#bg)"/>
+<rect width="1200" height="760" rx="26" fill="url(#grid)"/>
+<g fill="none" stroke="#ded5c7" stroke-opacity=".34" stroke-width="2">
+  <rect x="86" y="112" width="430" height="476" rx="18"/>
+  <rect x="646" y="88" width="462" height="510" rx="18"/>
+</g>
+<g font-family="monospace" fill="#d6cdbf">
+  <text x="112" y="150" font-size="22" letter-spacing="3">ÜRETİM AKIŞI</text>
+  <text x="674" y="126" font-size="22" letter-spacing="3">TAKİP EKRANI</text>
+</g>
+<g>
+  <rect x="126" y="210" width="154" height="82" rx="12" fill="#22262b" stroke="#6f766f"/>
+  <rect x="326" y="210" width="154" height="82" rx="12" fill="#22262b" stroke="#6f766f"/>
+  <rect x="126" y="368" width="154" height="82" rx="12" fill="#22262b" stroke="#6f766f"/>
+  <rect x="326" y="368" width="154" height="82" rx="12" fill="#22262b" stroke="#6f766f"/>
+  <path d="M280 251h46M403 292v76M326 409h-46M203 368v-76" stroke="url(#rust)" stroke-width="5" stroke-linecap="round"/>
+  <g font-family="monospace" font-size="19" fill="#efe6d7" text-anchor="middle">
+    <text x="203" y="246">SİPARİŞ</text><text x="203" y="270" fill="#8f958f" font-size="14">açıldı</text>
+    <text x="403" y="246">ÜRETİM</text><text x="403" y="270" fill="#8f958f" font-size="14">başladı</text>
+    <text x="403" y="404">KONTROL</text><text x="403" y="428" fill="#8f958f" font-size="14">kaydedildi</text>
+    <text x="203" y="404">TESLİM</text><text x="203" y="428" fill="#8f958f" font-size="14">tamamlandı</text>
+  </g>
+</g>
+<g transform="translate(686 170)">
+  <rect width="380" height="356" rx="14" fill="#ece3d3"/>
+  <rect x="24" y="24" width="332" height="44" rx="8" fill="#1a1d21"/>
+  <circle cx="48" cy="46" r="6" fill="#d59b48"/><rect x="68" y="40" width="110" height="12" rx="6" fill="#b8b0a4"/>
+  <g fill="#d7cbbb"><rect x="24" y="92" width="94" height="94" rx="10"/><rect x="130" y="92" width="94" height="94" rx="10"/><rect x="236" y="92" width="120" height="94" rx="10"/></g>
+  <g fill="#b76842"><rect x="42" y="116" width="58" height="10" rx="5"/><rect x="148" y="116" width="58" height="10" rx="5"/><rect x="254" y="116" width="84" height="10" rx="5"/></g>
+  <g fill="#857d72"><rect x="42" y="142" width="44" height="26" rx="4"/><rect x="148" y="142" width="44" height="26" rx="4"/><rect x="254" y="142" width="72" height="26" rx="4"/></g>
+  <rect x="24" y="210" width="332" height="122" rx="10" fill="#f8f3e9" stroke="#c8baa6"/>
+  <path d="M42 294l48-36 44 14 48-52 46 34 50-24 54 18" fill="none" stroke="url(#rust)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <g fill="#8f877b"><circle cx="90" cy="258" r="4"/><circle cx="134" cy="272" r="4"/><circle cx="182" cy="220" r="4"/><circle cx="228" cy="254" r="4"/><circle cx="278" cy="230" r="4"/><circle cx="332" cy="248" r="4"/></g>
+</g>
+<g font-family="monospace" font-size="16" fill="#b7aea1">
+  <text x="88" y="640">MEHMET FIRAT HOCAMIN VERDİĞİ CESARETLE BAŞLADI</text>
+  <text x="88" y="674" fill="#d9a04c">HÂLÂ ÇALIŞIYOR · HÂLÂ GELİŞİYOR</text>
+</g>
+</svg>
