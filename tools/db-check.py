@@ -24,7 +24,7 @@ with sqlite3.connect(f"file:{db_uri}?mode=ro", uri=True) as con:
     print(f"Integrity: {integrity}")
     print(f"Bozuk yabancı anahtar: {len(foreign)}")
     for table in [
-        "projects", "updates", "stories", "story_sections",
+        "projects", "updates", "stories", "story_parts", "story_sections",
         "story_section_items", "media", "links", "notes", "admin_users"
     ]:
         count = con.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]

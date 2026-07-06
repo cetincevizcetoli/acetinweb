@@ -105,9 +105,11 @@ function story_by_project(int $projectId, bool $admin=false): ?array
 
 function story_sections(int $storyId): array
 {
-    $st=db()->prepare("SELECT ss.*, m.relative_path media_path, m.alt_text media_alt, m.caption media_caption,
+    $st=db()->prepare("SELECT ss.*, sp.title part_title, sp.subtitle part_subtitle, sp.description part_description, sp.anchor part_anchor, sp.sort_order part_sort_order,
+      m.relative_path media_path, m.alt_text media_alt, m.caption media_caption,
       m.media_type, m.mime_type media_mime_type, m.title media_title, m.original_name media_original_name
       FROM story_sections ss LEFT JOIN media m ON m.id=ss.media_id AND m.deleted_at IS NULL
+      LEFT JOIN story_parts sp ON sp.id=ss.part_id
       WHERE ss.story_id=? AND ss.deleted_at IS NULL ORDER BY ss.sort_order,ss.id");
     $st->execute([$storyId]); $sections=$st->fetchAll();
     $itemSt=db()->prepare("SELECT i.*, m.relative_path media_path, m.alt_text media_alt, m.caption media_caption, m.media_type
@@ -123,6 +125,13 @@ function story_sections(int $storyId): array
         $linkSt->execute([$s['id']]); $s['links']=$linkSt->fetchAll();
     }
     unset($s); return $sections;
+}
+
+function story_parts(int $storyId): array
+{
+    $st=db()->prepare('SELECT * FROM story_parts WHERE story_id=? ORDER BY sort_order,id');
+    $st->execute([$storyId]);
+    return $st->fetchAll();
 }
 
 function project_updates(int $projectId, bool $publishedOnly=true): array

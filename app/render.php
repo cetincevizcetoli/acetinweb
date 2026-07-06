@@ -125,7 +125,39 @@ function render_story_section_extras(array $section, string $type, bool $primary
     render_external_links(is_array($section['links'] ?? null) ? $section['links'] : []);
 }
 
-function render_story_section(array $section, int $index): void
+function story_section_kind_label(array $section): string
+{
+    $explicit = trim((string)($section['section_kind'] ?? ''));
+    if ($explicit !== '') return $explicit;
+
+    $type = (string)($section['type'] ?? '');
+    $rawLabel = (string)($section['label'] ?? '');
+    $label = function_exists('mb_strtolower') ? mb_strtolower($rawLabel, 'UTF-8') : strtolower($rawLabel);
+
+    if (str_contains($label, 'karar')) return 'Karar anı';
+    if (str_contains($label, 'hata') || str_contains($label, 'kriz') || str_contains($label, 'faciası')) return 'Sorun';
+    if (str_contains($label, 'ders') || str_contains($label, 'öğrend')) return 'Ders';
+    if (in_array($type, ['compare', 'code', 'questions'], true)) return 'Deneme';
+    if (in_array($type, ['timeline', 'status'], true)) return 'Harita';
+    if ($type === 'lesson') return 'Ders';
+    return 'Hikâye bölümü';
+}
+
+function render_story_section_identity(array $section, int $index, int $total = 0, array $context = []): void
+{
+    $number = str_pad((string)($index + 1), 2, '0', STR_PAD_LEFT);
+    $totalLabel = $total > 0 ? ' / ' . str_pad((string)$total, 2, '0', STR_PAD_LEFT) : '';
+    $stageLabel = trim((string)($context['stage_label'] ?? ''));
+    $kindLabel = trim((string)($context['kind_label'] ?? '')) ?: story_section_kind_label($section);
+
+    echo '<div class="story-block-identity">';
+    echo '<span>Bölüm ' . e($number . $totalLabel) . '</span>';
+    if ($stageLabel !== '') echo '<span>' . e($stageLabel) . '</span>';
+    echo '<span>' . e($kindLabel) . '</span>';
+    echo '</div>';
+}
+
+function render_story_section(array $section, int $index, int $total = 0, array $context = []): void
 {
     $type = (string)$section['type'];
     $layout = (string)$section['layout'];
@@ -137,6 +169,7 @@ function render_story_section(array $section, int $index): void
 
     echo '<section class="story-block story-block--' . e($type) . ' story-layout--' . e($layout) . '"' . $id . ' data-reveal>';
     echo '<span class="story-block-number" aria-hidden="true">' . e($number) . '</span>';
+    render_story_section_identity($section, $index, $total, $context);
 
     switch ($type) {
         case 'opening':

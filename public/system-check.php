@@ -3,24 +3,58 @@ declare(strict_types=1);
 
 require __DIR__ . '/../config/config.php';
 
+function fv7_system_check_is_local(): bool
+{
+    $ip = (string)($_SERVER['REMOTE_ADDR'] ?? '');
+    return $ip === '::1' || $ip === '127.0.0.1' || str_starts_with($ip, '127.');
+}
+
+if (!fv7_system_check_is_local()) {
+    http_response_code(403);
+    header('Content-Type: text/plain; charset=utf-8');
+    echo 'system-check disabled';
+    exit;
+}
+
+$integrity = 'Calistirilmadi';
+$foreignCount = null;
+$dbError = '';
+
+if (extension_loaded('pdo_sqlite') && is_file(FV7_DB)) {
+    try {
+        $pdo = new PDO('sqlite:' . FV7_DB, null, null, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        ]);
+        $pdo->exec('PRAGMA foreign_keys=ON');
+        $integrity = (string)$pdo->query('PRAGMA integrity_check')->fetchColumn();
+        $foreignCount = count($pdo->query('PRAGMA foreign_key_check')->fetchAll());
+    } catch (Throwable $e) {
+        $dbError = $e->getMessage();
+    }
+}
+
 $checks = [
     ['PDO SQLite', extension_loaded('pdo_sqlite'), 'XAMPP php.ini icinde extension=pdo_sqlite etkin olmali.'],
     ['Veritabani', is_file(FV7_DB), FV7_DB],
     ['Storage yazilabilir', is_writable(FV7_STORAGE), FV7_STORAGE],
     ['Uploads yazilabilir', is_writable(FV7_UPLOAD_ROOT), 'Medya yuklemek icin public/uploads yazilabilir olmali.'],
+    ['SQLite integrity_check', $integrity === 'ok', $integrity],
+    ['SQLite foreign_key_check', $foreignCount === 0, $foreignCount === null ? ($dbError ?: 'Calistirilmadi') : (string)$foreignCount],
 ];
 ?><!doctype html>
 <html lang="tr">
 <head>
     <meta charset="utf-8">
-    <title>FikrimVar V7 Sistem Kontrolu</title>
+    <title>FikrimVar V8 Sistem Kontrolu</title>
     <style>
         body{font-family:system-ui;background:#101318;color:#eee;padding:40px;max-width:800px;margin:auto}
         .ok{color:#81d49c}.bad{color:#ff8d7a}li{padding:12px;border-bottom:1px solid #333}
     </style>
 </head>
 <body>
-<h1>FikrimVar V7 Sistem Kontrolu</h1>
+<h1>FikrimVar V8 Sistem Kontrolu</h1>
+<p>Bu sayfa yalnizca local ortamda calisir. Canlida 403 donmelidir.</p>
 <ul>
     <?php foreach ($checks as [$name, $ok, $note]): ?>
         <li class="<?= $ok ? 'ok' : 'bad' ?>">

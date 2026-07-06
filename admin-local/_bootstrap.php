@@ -5,7 +5,7 @@ require_once __DIR__ . '/../app/bootstrap.php';
 function admin_is_local(): bool
 {
     $ip=(string)($_SERVER['REMOTE_ADDR'] ?? '');
-    return in_array($ip,['127.0.0.1','::1','localhost'],true) || PHP_SAPI==='cli-server';
+    return $ip==='::1' || $ip==='127.0.0.1' || str_starts_with($ip,'127.');
 }
 if(FV7_ADMIN_LOCAL_ONLY && !admin_is_local()) { http_response_code(403); exit('Bu yönetim paneli yalnızca yerel bilgisayarda çalışacak şekilde kilitlidir.'); }
 
@@ -22,7 +22,7 @@ function admin_audit(string $action,string $entityType,int $entityId=0,string $d
 function admin_head(string $title): void { $u=admin_user(); $flashes=pull_flashes(); ?>
 <!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title><?= e($title) ?> · FikrimVar V7</title><link rel="stylesheet" href="assets/admin.css"><script src="assets/admin.js" defer></script></head><body><header class="admin-header"><a class="admin-brand" href="index.php"><strong>#FikrimVar</strong><span>V7 · SQLite içerik yönetimi</span></a><?php if($u): ?><nav><a href="index.php">Projeler</a><a href="project-new.php">Yeni proje</a><a href="ordering.php">Yayın ve sıra</a><a href="media.php">Medya</a><a href="notes.php">Notlar</a><a href="settings.php">Ayarlar</a><a href="backup.php">Yedek</a><a href="../public/" target="_blank">Siteyi aç</a><a href="logout.php">Çıkış</a></nav><?php endif; ?></header><main class="admin-main"><?php foreach($flashes as $f): ?><div class="flash flash-<?= e($f['type']) ?>"><?= e($f['message']) ?></div><?php endforeach; ?>
 <?php }
-function admin_foot(): void { ?></main><footer class="admin-footer"><span>Yerel panel · Veritabanı: <?= e(FV7_DB) ?></span><a href="system.php">Sistem kontrolü</a></footer></body></html><?php }
+function admin_foot(): void { ?></main><footer class="admin-footer"><span>Yerel panel</span><a href="system.php">Sistem kontrolü</a></footer></body></html><?php }
 
 function upload_limits(): array { return ['image'=>FV7_IMAGE_MAX_BYTES,'video'=>FV7_VIDEO_MAX_BYTES,'audio'=>FV7_OTHER_MAX_BYTES,'file'=>FV7_OTHER_MAX_BYTES]; }
 function detect_media_type(string $mime): string {

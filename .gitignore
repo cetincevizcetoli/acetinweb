@@ -1,8 +1,16 @@
 config/local.php
+.env
+*.sqlite
+*.sqlite-*
+*.db
+*.bak
+*.bak-*
+*.zip
+storage/
+backups/
 storage/*.sqlite
 storage/*.bak*
 storage/*.sqlite.bak*
-*.zip
 arşiv/
 *_BACKUP_*/
 _backups/

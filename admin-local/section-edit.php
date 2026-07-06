@@ -22,6 +22,7 @@ if (!$story) { http_response_code(404); exit('Hikâye yok.'); }
 
 $projectId = (int)$story['project_id'];
 $projectMedia = project_media_admin($projectId);
+$parts = story_parts($storyId);
 $items = [];
 $links = [];
 $selectedGallery = [];
@@ -44,6 +45,14 @@ if (is_post()) {
         $savedLinkCount = 0;
         $type = (string)($_POST['type'] ?? 'text');
         $layout = (string)($_POST['layout'] ?? 'default');
+        $partId = ((int)($_POST['part_id'] ?? 0)) ?: null;
+        if ($partId !== null) {
+            $st = db()->prepare('SELECT COUNT(*) FROM story_parts WHERE id=? AND story_id=?');
+            $st->execute([$partId, $storyId]);
+            if ((int)$st->fetchColumn() !== 1) {
+                throw new RuntimeException('Secilen surec parcasi bu hikayeye ait degil.');
+            }
+        }
         $selectedPrimary = (int)($_POST['primary_media_id'] ?? 0);
         assert_project_media_ids($projectId, $selectedPrimary ? [$selectedPrimary] : [], 'Birincil medya');
         $selectedGalleryIds = assert_project_media_ids($projectId, $_POST['gallery_media_ids'] ?? [], 'Galeri medyası');
@@ -52,17 +61,19 @@ if (is_post()) {
         if ($uploaded && !$mediaId) $mediaId = $uploaded[0];
 
         if ($id) {
-            $st = db()->prepare('UPDATE story_sections SET type=?,layout=?,label=?,title=?,body_text=?,quote_text=?,intro_text=?,note_text=?,code_text=?,media_id=?,sort_order=?,updated_at=CURRENT_TIMESTAMP WHERE id=?');
+            $st = db()->prepare('UPDATE story_sections SET part_id=?,section_kind=?,type=?,layout=?,label=?,title=?,body_text=?,quote_text=?,intro_text=?,note_text=?,code_text=?,media_id=?,sort_order=?,updated_at=CURRENT_TIMESTAMP WHERE id=?');
             $st->execute([
+                $partId, trim((string)($_POST['section_kind'] ?? '')),
                 $type, $layout, trim(old('label')), trim(old('title')), trim(old('body_text')),
                 trim(old('quote_text')), trim(old('intro_text')), trim(old('note_text')),
                 old('code_text'), $mediaId, (int)($_POST['sort_order'] ?? 999), $id
             ]);
             $sectionId = $id;
         } else {
-            $st = db()->prepare('INSERT INTO story_sections(story_id,type,layout,label,title,body_text,quote_text,intro_text,note_text,code_text,media_id,sort_order) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)');
+            $st = db()->prepare('INSERT INTO story_sections(story_id,part_id,section_kind,type,layout,label,title,body_text,quote_text,intro_text,note_text,code_text,media_id,sort_order) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
             $st->execute([
-                $storyId, $type, $layout, trim(old('label')), trim(old('title')), trim(old('body_text')),
+                $storyId, $partId, trim((string)($_POST['section_kind'] ?? '')),
+                $type, $layout, trim(old('label')), trim(old('title')), trim(old('body_text')),
                 trim(old('quote_text')), trim(old('intro_text')), trim(old('note_text')),
                 old('code_text'), $mediaId, (int)($_POST['sort_order'] ?? 999)
             ]);
@@ -150,6 +161,17 @@ $types = [
     'gallery' => 'Galeri', 'video' => 'Video', 'code' => 'Kod / terminal'
 ];
 
+$sectionKinds = [
+    '' => 'Otomatik belirle',
+    'Kivilcim' => 'Kivilcim',
+    'Karar' => 'Karar',
+    'Donum noktasi' => 'Donum noktasi',
+    'Deney' => 'Deney',
+    'Sonuc' => 'Sonuc',
+    'Ders' => 'Ders',
+    'Not' => 'Not',
+];
+
 admin_head($id ? 'Bölümü düzenle' : 'Yeni bölüm');
 ?>
 <div class="page-head">
@@ -178,6 +200,8 @@ admin_head($id ? 'Bölümü düzenle' : 'Yeni bölüm');
                 <div class="field"><label>Yerleşim</label><select name="layout"><?php foreach (['default','wide','hero-split','full-bleed','offset','cross','diagonal'] as $v): ?><option <?= ($section['layout'] ?? 'default') === $v ? 'selected' : '' ?>><?= $v ?></option><?php endforeach; ?></select></div>
                 <div class="field"><label>Etiket</label><input name="label" value="<?= e($section['label'] ?? '') ?>" placeholder="BAŞLANGIÇ"></div>
                 <div class="field"><label>Sıra</label><input type="number" name="sort_order" value="<?= e((string)($section['sort_order'] ?? 999)) ?>"></div>
+                <div class="field"><label>Süreç parçası</label><select name="part_id"><option value="">Yok / otomatik akış</option><?php foreach ($parts as $part): ?><option value="<?= (int)$part['id'] ?>" <?= (int)($section['part_id'] ?? 0) === (int)$part['id'] ? 'selected' : '' ?>><?= e($part['title']) ?></option><?php endforeach; ?></select><small>Uzun hikâyelerde bölümün süreç haritasındaki yerini belirler.</small></div>
+                <div class="field"><label>Bölüm türü</label><select name="section_kind"><?php foreach ($sectionKinds as $k => $v): ?><option value="<?= e($k) ?>" <?= (string)($section['section_kind'] ?? '') === $k ? 'selected' : '' ?>><?= e($v) ?></option><?php endforeach; ?></select><small>Boş bırakılırsa tür mevcut bölüm tipinden okunur.</small></div>
                 <div class="field full"><label>Başlık</label><input name="title" value="<?= e($section['title'] ?? '') ?>"></div>
                 <div class="field full"><label>Ana metin</label><textarea name="body_text" rows="8"><?= e($section['body_text'] ?? '') ?></textarea><small>Paragrafları boş satırla ayır.</small></div>
                 <div class="field full"><label>Alıntı</label><textarea name="quote_text"><?= e($section['quote_text'] ?? '') ?></textarea></div>

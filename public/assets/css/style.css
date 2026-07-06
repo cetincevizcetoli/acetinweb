@@ -468,11 +468,31 @@ button { color: inherit; }
 .story-paths small { display: block; margin-top: 4px; color: var(--muted); font-size: 9px; }
 .story-hero-v6-media { margin: 0; padding: 16px; background: var(--night); box-shadow: var(--shadow); transform: rotate(.6deg); }
 .story-hero-v6-media img { width: 100%; aspect-ratio: 4/3; object-fit: cover; }
+.process-map { padding-top: 58px; padding-bottom: 8px; }
+.process-map-head { display: grid; grid-template-columns: minmax(160px,2fr) minmax(0,5fr) minmax(280px,5fr); gap: 28px; align-items: start; padding-bottom: 24px; border-bottom: 1px solid var(--line); }
+.process-map-head h2 { margin: 0; font: 650 clamp(2rem,3vw,3.4rem)/1.05 var(--serif); letter-spacing: -.035em; }
+.process-map-head p:last-child { margin: 0; color: var(--muted); font-size: 14px; }
+.process-map-links { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); border-left: 1px solid var(--line); }
+.process-map-links a { display: grid; gap: 8px; min-height: 116px; padding: 14px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); text-decoration: none; }
+.process-map-links small, .process-map-cards span, .story-stage-marker span, .story-block-identity span { color: var(--rust); font: 650 9px/1 var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+.process-map-links strong { font: 650 19px/1.05 var(--serif); }
+.process-map-links span { color: var(--muted); font: 500 10px/1 var(--mono); }
+.process-map-cards { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 14px; margin-top: 18px; }
+.process-map-cards article { padding: 16px 0 0; border-top: 2px solid var(--ink); }
+.process-map-cards h3 { margin: 8px 0 7px; font: 650 21px/1.05 var(--serif); }
+.process-map-cards p { margin: 0; color: var(--muted); font-size: 12px; }
 
 /* Story blocks: compact editorial grid, not a tower of giant scenes */
 .story-composition { display: grid; grid-template-columns: repeat(12,minmax(0,1fr)); gap: 42px 28px; padding-top: 82px; padding-bottom: 90px; }
 .story-block { position: relative; grid-column: 1 / -1; display: grid; grid-template-columns: repeat(12,minmax(0,1fr)); gap: 28px; padding-top: 34px; border-top: 1px solid var(--line); }
 .story-block-number { position: absolute; top: 10px; right: 0; color: rgba(29,24,18,.22); font: 600 10px/1 var(--mono); }
+.story-block-identity { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px; margin: -18px 72px 2px 0; }
+.story-block-identity span { display: inline-flex; min-height: 24px; align-items: center; padding: 0 8px; color: var(--muted); border: 1px solid var(--line); background: var(--paper-2); }
+.story-block-identity span:first-child { color: var(--rust); background: transparent; }
+.story-stage-marker { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(120px,2fr) minmax(0,5fr) minmax(160px,2fr); gap: 28px; align-items: end; padding: 28px 0 22px; border-top: 3px solid var(--ink); border-bottom: 1px solid var(--line); }
+.story-stage-marker h2 { margin: 0; font: 650 clamp(2.3rem,4vw,4.4rem)/.96 var(--serif); letter-spacing: -.045em; }
+.story-stage-marker p { margin: 0; color: var(--muted); font-size: 14px; }
+.story-stage-marker span { justify-self: end; padding: 8px 10px; color: var(--ink); border: 1px solid var(--line); }
 .story-block-copy { grid-column: 1 / span 6; }
 .story-block-copy h2, .story-block-heading h2 { margin: 0 0 18px; font: 650 clamp(2.25rem,3.8vw,4.4rem)/1.02 var(--serif); letter-spacing: -.045em; }
 .story-block-copy p, .story-block-heading > p:not(.eyebrow) { max-width: 690px; margin: 0 0 13px; color: var(--muted); font-size: 14px; }
@@ -679,7 +699,12 @@ body.notes-open { overflow: hidden; }
   .trace-ribbon { grid-template-columns: 1fr; }
   .all-stories-gateway { grid-template-columns: 150px 1fr 34px; }
   .story-hero-v6-media { max-width: 620px; }
+  .process-map-head { grid-template-columns: 1fr; }
+  .process-map-links, .process-map-cards { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .story-composition { grid-template-columns: 1fr; }
+  .story-stage-marker { grid-template-columns: 1fr 1fr; }
+  .story-stage-marker .eyebrow { grid-column: 1 / -1; }
+  .story-stage-marker span { justify-self: start; }
   .story-block, .story-block--lesson, .story-block--code { grid-column: 1; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
   .story-block-copy, .story-block-heading { grid-column: 1; }
   .story-block-media, .timeline-map, .compare-plane, .question-stack, .role-cross, .status-orbit, .story-gallery, .story-block--video video { grid-column: 2; }
@@ -739,7 +764,14 @@ body.notes-open { overflow: hidden; }
   .story-hero-v6-copy h1 { font-size: 3rem; }
   .story-paths { grid-template-columns: 1fr; }
   .story-hero-v6-media { transform: none; }
+  .process-map { padding-top: 42px; }
+  .process-map-links, .process-map-cards { grid-template-columns: 1fr; }
+  .process-map-links a { min-height: 0; }
   .story-composition { padding: 58px 0 68px; gap: 50px; }
+  .story-stage-marker { display: block; }
+  .story-stage-marker h2 { margin: 8px 0 12px; }
+  .story-stage-marker span { display: inline-flex; margin-top: 12px; }
+  .story-block-identity { margin-right: 0; }
   .story-block, .story-block--lesson, .story-block--code { display: block; }
   .story-block-media, .timeline-map, .compare-plane, .question-stack, .role-cross, .status-orbit, .story-gallery, .story-block--video video { margin-top: 28px; }
   .timeline-track, .compare-plane, .role-cross, .status-orbit, .story-gallery { grid-template-columns: 1fr; }
@@ -1203,6 +1235,22 @@ body.atelier-widget-open { overflow: hidden; }
 .story-file-link svg { width: 18px; height: 18px; flex: 0 0 auto; }
 
 @media (max-width: 850px) {
+  .process-map,
+  .process-map *,
+  .story-composition,
+  .story-composition *,
+  .story-block,
+  .story-stage-marker {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .story-block-copy h2,
+  .story-block-heading h2,
+  .story-stage-marker h2,
+  .process-map h2,
+  .process-map h3 {
+    overflow-wrap: anywhere;
+  }
   .story-extra-media,
   .story-video-media,
   .story-section-intro,
