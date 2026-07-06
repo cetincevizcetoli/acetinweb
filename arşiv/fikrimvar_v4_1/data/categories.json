@@ -1,8 +1,0 @@
-[
-  {"id":"kod-sistem","order":1,"number":"01","title":"Kod ve Sistemler","short":"İhtiyaçtan doğan araçlar, uygulamalar ve mimari denemeler.","accent":"#a24b2a"},
-  {"id":"gorsel-render","order":2,"number":"02","title":"Görsel, Render ve Sanat","short":"Çizim, karakter, 3D ve görsel üretim süreçleri.","accent":"#2e6860"},
-  {"id":"video-hareket","order":3,"number":"03","title":"Video, Animasyon ve Montaj","short":"Hikâye, süreklilik, sahne ve hareket denemeleri.","accent":"#7a4b7f"},
-  {"id":"yz-yontem","order":4,"number":"04","title":"Yapay Zekâ ve Yöntem","short":"Model kullanımı, iş akışları, promptlar ve araçları uyarlama.","accent":"#8b6b1e"},
-  {"id":"ses-etkilesim","order":5,"number":"05","title":"Ses, Müzik ve Etkileşim","short":"TTS, ses kurgusu ve etkileşimli küçük deneyler.","accent":"#32688b"},
-  {"id":"ogrenme-egitim","order":6,"number":"06","title":"Öğrenme ve Eğitim","short":"AÖF projeleri, dinamik müfredat ve öğrenme sistemleri.","accent":"#7d3a33"}
-]

@@ -1,0 +1,26 @@
+# FikrimVar V7 · Medya ve Bağlantı Düzeltmesi
+
+Bu yama veritabanını değiştirmez.
+
+Düzeltilen sorunlar:
+- Açılış / metin+görsel bölümünde birincil video artık img etiketiyle değil video etiketiyle gösterilir.
+- Birincil ses ve dosya türleri doğru bileşenle gösterilir.
+- Galeri / ek medya bütün bölüm türlerinde görüntülenir.
+- Bölüm bağlantıları yalnızca Video türünde değil bütün bölüm türlerinde görünür.
+- Giriş/açıklama, kenar notu ve kod alanları doluysa bölüm türünden bağımsız kaybolmaz.
+- Şemasız bağlantılar (youtube.com/...) otomatik olarak https:// ile tamamlanır.
+- Geçersiz bağlantı artık sessizce silinmez; admin ekranda hata verir.
+- Kayıt sonrası kaç medya ve kaç bağlantının kaydedildiği bildirilir.
+- Bölüm düzenleme ekranına Önizle bağlantısı eklenir.
+
+Kurulum:
+ZIP içindeki klasör yapısını mevcut acetinweb kökünün üzerine kopyalayın.
+Veritabanı dosyanıza ve uploads klasörünüze dokunulmaz.
+Ctrl+F5 ile sert yenileme yapın.
+
+Değişen dosyalar:
+- app/bootstrap.php
+- app/repositories.php
+- app/render.php
+- admin-local/section-edit.php
+- public/assets/css/style.css

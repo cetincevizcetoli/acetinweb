@@ -1,0 +1,11 @@
+config/local.php
+storage/*.sqlite
+storage/*.bak*
+storage/*.sqlite.bak*
+*.zip
+arşiv/
+*_BACKUP_*/
+_backups/
+fikrimvar_v7/storage/
+.DS_Store
+Thumbs.db

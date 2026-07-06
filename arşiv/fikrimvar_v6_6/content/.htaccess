@@ -1,4 +1,0 @@
-<FilesMatch "\.(json|example)$">
-    Require all denied
-</FilesMatch>
-Options -Indexes
