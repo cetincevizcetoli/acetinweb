@@ -5,6 +5,16 @@
 - Canli sunucuda document root dogrudan `public/` olmalidir.
 - `app/`, `config/`, `tools/`, `admin-local/`, `storage/`, `_backups/`, `.git/` web root disinda kalmalidir.
 - Eger hosting zorunlu olarak proje kokunu web root yaparsa kok `.htaccess` korumalari aktif olmalidir.
+- Proje koku web root olursa `/.htaccess` hassas klasorleri ve dosyalari kapatir.
+- `public/` web root olursa `/public/.htaccess` directory listing, dotfile ve yedek/db uzantilarini kapatir.
+
+## Ortam ayari
+
+- Uygulama kodu local ve canli icin ayni kalmalidir.
+- `config/config.php` once ortam degiskenlerini ve `config/local.php` dosyasini okur.
+- `config/local.php` yoksa local XAMPP icin `C:/xampp/acetinweb_private/storage`, canli Plesk icin proje kokunun yanindaki `acetinweb_private/storage` yolu otomatik denenir.
+- Canlida tercih edilen DB yolu: `/var/www/vhosts/acetin.com.tr/acetinweb_private/storage/fikrimvar.sqlite`.
+- Ortama ozel fark gerekiyorsa sadece `config/local.php` veya ortam degiskeni degisir; uygulama dosyalari degismez.
 
 ## Private storage
 
