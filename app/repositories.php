@@ -16,79 +16,22 @@ function channels(): array
 
 function project_row_to_view(array $row): array
 {
-    $row['slug']=(string)$row['slug'];
-    $row['project_title']=$row['project_title'] ?? $row['title'] ?? '';
-    $row['category']=$row['category_slug'] ?? '';
-    $row['category_label']=$row['category_title'] ?? '';
-    $row['cover']=media_url($row['cover_path'] ?? '');
-    $row['kind']=($row['workshop_status'] ?? 'none')==='open' ? 'atelier' : 'story';
-    $row['public'] = ($row['visibility'] ?? '')==='public';
-    $row['homepage']=(bool)($row['show_on_home'] ?? false);
-    $row['order']=$row['sort_order'] ?? 999;
-    return $row;
+    return ProjectRepository::rowToView($row);
 }
 
 function public_projects(bool $archiveOnly=false): array
 {
-    $placement = $archiveOnly ? 'p.show_in_archive=1' : 'p.show_on_home=1';
-    $projectVisibility = VisibilityService::publicProjectSql('p');
-    $storyVisibility = VisibilityService::publishedPublicStorySql('s');
-    $sql="SELECT p.*, c.slug category_slug, c.title category_title, m.relative_path cover_path,
-                  s.id story_id, s.status story_status, s.visibility story_visibility,
-                  s.reading_time, s.title story_title, s.question story_question, s.summary story_summary,
-                  s.show_on_home story_show_on_home, s.show_in_archive story_show_in_archive, s.sort_order story_sort_order
-           FROM projects p
-           LEFT JOIN categories c ON c.id=p.category_id
-           LEFT JOIN media m ON m.id=p.cover_media_id AND m.deleted_at IS NULL
-           LEFT JOIN stories s ON s.project_id=p.id AND s.deleted_at IS NULL
-           WHERE $projectVisibility AND $placement ";
-    // Public placement is canonical on projects.*; story show_* columns are kept only for legacy compatibility.
-    $sql.=" AND $storyVisibility";
-    $sql.=' ORDER BY p.is_pinned DESC, p.sort_order ASC, COALESCE(p.updated_at,p.created_at) DESC';
-    $rows=db()->query($sql)->fetchAll();
-    $out=[];
-    foreach ($rows as $r) {
-        $r['project_title']=$r['title'];
-        if (($r['story_status'] ?? '')==='published') {
-            $r['title']=$r['story_title'] ?: $r['title'];
-            $r['question']=$r['story_question'] ?: $r['question'];
-            $r['summary']=$r['story_summary'] ?: $r['summary'];
-        }
-        $out[$r['slug']]=project_row_to_view($r);
-    }
-    return $out;
+    return ProjectRepository::publicList($archiveOnly);
 }
 
 function project_by_slug(string $slug, bool $admin=false): ?array
 {
-    $sql="SELECT p.*, c.slug category_slug, c.title category_title, m.relative_path cover_path,
-                  s.id story_id, s.status story_status, s.visibility story_visibility,
-                  s.title story_title, s.question story_question, s.summary story_summary,
-                  s.reading_time, s.show_on_home story_show_on_home, s.show_in_archive story_show_in_archive,
-                  s.is_pinned story_is_pinned, s.sort_order story_sort_order, s.published_at story_published_at
-           FROM projects p
-           LEFT JOIN categories c ON c.id=p.category_id
-           LEFT JOIN media m ON m.id=p.cover_media_id AND m.deleted_at IS NULL
-           LEFT JOIN stories s ON s.project_id=p.id AND s.deleted_at IS NULL
-           WHERE p.slug=? AND p.deleted_at IS NULL";
-    if (!$admin) $sql.=" AND " . VisibilityService::publicReadableProjectSql('p');
-    $st=db()->prepare($sql); $st->execute([$slug]); $r=$st->fetch();
-    if (!$r) return null;
-    $r['project_title']=$r['title'];
-    if (($r['story_status'] ?? '')==='published') {
-        $r['title']=$r['story_title'] ?: $r['title'];
-        $r['question']=$r['story_question'] ?: $r['question'];
-        $r['summary']=$r['story_summary'] ?: $r['summary'];
-    }
-    $r=project_row_to_view($r);
-    $r['tags']=project_tags((int)$r['id']);
-    return $r;
+    return ProjectRepository::findBySlug($slug, $admin);
 }
 
 function project_tags(int $projectId): array
 {
-    $st=db()->prepare('SELECT t.name FROM tags t JOIN project_tags pt ON pt.tag_id=t.id WHERE pt.project_id=? ORDER BY t.name');
-    $st->execute([$projectId]); return array_column($st->fetchAll(),'name');
+    return ProjectRepository::tags($projectId);
 }
 
 function story_url(array $project): string
@@ -100,40 +43,17 @@ function story_url(array $project): string
 
 function story_by_project(int $projectId, bool $admin=false): ?array
 {
-    $sql='SELECT * FROM stories WHERE project_id=? AND deleted_at IS NULL';
-    if (!$admin) $sql.=" AND " . VisibilityService::publishedReadableStorySql('stories');
-    $st=db()->prepare($sql); $st->execute([$projectId]); return $st->fetch() ?: null;
+    return StoryRepository::findByProject($projectId, $admin);
 }
 
 function story_sections(int $storyId): array
 {
-    $st=db()->prepare("SELECT ss.*, sp.title part_title, sp.subtitle part_subtitle, sp.description part_description, sp.anchor part_anchor, sp.sort_order part_sort_order,
-      m.relative_path media_path, m.alt_text media_alt, m.caption media_caption,
-      m.media_type, m.mime_type media_mime_type, m.title media_title, m.original_name media_original_name
-      FROM story_sections ss LEFT JOIN media m ON m.id=ss.media_id AND m.deleted_at IS NULL
-      LEFT JOIN story_parts sp ON sp.id=ss.part_id
-      WHERE ss.story_id=? AND ss.deleted_at IS NULL ORDER BY ss.sort_order,ss.id");
-    $st->execute([$storyId]); $sections=$st->fetchAll();
-    $itemSt=db()->prepare("SELECT i.*, m.relative_path media_path, m.alt_text media_alt, m.caption media_caption, m.media_type
-      FROM story_section_items i LEFT JOIN media m ON m.id=i.media_id AND m.deleted_at IS NULL
-      WHERE i.section_id=? ORDER BY i.sort_order,i.id");
-    $mediaSt=db()->prepare("SELECT sm.*,m.relative_path,m.alt_text,m.caption,m.media_type,m.title
-      FROM story_section_media sm JOIN media m ON m.id=sm.media_id AND m.deleted_at IS NULL
-      WHERE sm.section_id=? ORDER BY sm.sort_order,sm.id");
-    $linkSt=db()->prepare("SELECT * FROM links WHERE owner_type='story_section' AND owner_id=? ORDER BY sort_order,id");
-    foreach ($sections as &$s) {
-        $itemSt->execute([$s['id']]); $s['items']=$itemSt->fetchAll();
-        $mediaSt->execute([$s['id']]); $s['media']=$mediaSt->fetchAll();
-        $linkSt->execute([$s['id']]); $s['links']=$linkSt->fetchAll();
-    }
-    unset($s); return $sections;
+    return StoryRepository::sections($storyId);
 }
 
 function story_parts(int $storyId): array
 {
-    $st=db()->prepare('SELECT * FROM story_parts WHERE story_id=? ORDER BY sort_order,id');
-    $st->execute([$storyId]);
-    return $st->fetchAll();
+    return StoryRepository::parts($storyId);
 }
 
 function project_updates(int $projectId, bool $publishedOnly=true): array
@@ -242,14 +162,5 @@ function count_public(string $kind): int
 
 function admin_projects(string $filter='all'): array
 {
-    $where='p.deleted_at IS NULL';
-    if ($filter==='trash') $where='p.deleted_at IS NOT NULL';
-    elseif ($filter==='workshop') $where.=" AND p.workshop_status IN ('open','paused')";
-    elseif ($filter==='published') $where.=" AND s.status='published'";
-    elseif ($filter==='draft') $where.=" AND (s.status='draft' OR s.id IS NULL)";
-    $sql="SELECT p.*,c.title category_title,m.relative_path cover_path,s.id story_id,s.status story_status,s.visibility story_visibility,s.published_at story_published_at,
-      (SELECT COUNT(*) FROM updates u WHERE u.project_id=p.id AND u.deleted_at IS NULL) update_count
-      FROM projects p LEFT JOIN categories c ON c.id=p.category_id LEFT JOIN media m ON m.id=p.cover_media_id
-      LEFT JOIN stories s ON s.project_id=p.id AND s.deleted_at IS NULL WHERE $where ORDER BY p.is_pinned DESC,p.sort_order,p.updated_at DESC";
-    return db()->query($sql)->fetchAll();
+    return ProjectRepository::adminList($filter);
 }

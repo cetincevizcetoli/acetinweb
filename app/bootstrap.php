@@ -105,15 +105,11 @@ function pull_flashes(): array { $v=$_SESSION['flash'] ?? []; unset($_SESSION['f
 
 function setting(string $key, mixed $default=[]): mixed
 {
-    $stmt=db()->prepare('SELECT value FROM settings WHERE key=?'); $stmt->execute([$key]);
-    $raw=$stmt->fetchColumn(); if ($raw===false) return $default;
-    $decoded=json_decode((string)$raw,true); return json_last_error()===JSON_ERROR_NONE ? $decoded : $raw;
+    return SettingsRepository::get($key, $default);
 }
 function save_setting(string $key, mixed $value): void
 {
-    $json=json_encode($value,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_THROW_ON_ERROR);
-    $stmt=db()->prepare('INSERT INTO settings(key,value,updated_at) VALUES (?,?,CURRENT_TIMESTAMP) ON CONFLICT(key) DO UPDATE SET value=excluded.value, updated_at=CURRENT_TIMESTAMP');
-    $stmt->execute([$key,$json]);
+    SettingsRepository::save($key, $value);
 }
 
 function media_url(?string $path): string
@@ -140,7 +136,10 @@ function icon(string $name): string
 }
 
 require_once __DIR__ . '/Service/VisibilityService.php';
+require_once __DIR__ . '/Repository/ProjectRepository.php';
+require_once __DIR__ . '/Repository/StoryRepository.php';
 require_once __DIR__ . '/Repository/LinkRepository.php';
+require_once __DIR__ . '/Repository/SettingsRepository.php';
 require_once __DIR__ . '/repositories.php';
 require_once __DIR__ . '/LinkRenderer.php';
 require_once __DIR__ . '/render.php';

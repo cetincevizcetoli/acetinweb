@@ -183,12 +183,12 @@ Neden onemli:
 `app/repositories.php` buyudukce yeni gelen biri hangi sorgunun hangi sayfayi
 besledigini anlamakta zorlanir.
 
-- [ ] `ProjectRepository` olustur.
-- [ ] `StoryRepository` olustur.
+- [x] `ProjectRepository` olustur.
+- [x] `StoryRepository` olustur.
 - [ ] `UpdateRepository` olustur.
 - [ ] `MediaRepository` olustur.
 - [x] `LinkRepository` olustur.
-- [ ] `SettingsRepository` olustur.
+- [x] `SettingsRepository` olustur.
 - [ ] Eski fonksiyonlar gecici olarak repository metodlarina delege etsin.
 - [ ] Sonra kullanilan public/admin sayfalari tek tek yeni repository metodlarina gecsin.
 
