@@ -139,6 +139,7 @@ function icon(string $name): string
     return $icons[$name] ?? '';
 }
 
+require_once __DIR__ . '/Service/VisibilityService.php';
 require_once __DIR__ . '/repositories.php';
 require_once __DIR__ . '/LinkRenderer.php';
 require_once __DIR__ . '/render.php';

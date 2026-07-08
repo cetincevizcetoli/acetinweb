@@ -59,6 +59,29 @@ Main temiz mi?
 Canliya henuz gondermuyoruz.
 ```
 
+## Ahmet'e her adimda soylenmesi gereken kisa ozet
+
+Codex her refactor isinin basinda ve sonunda Ahmet'e sunlari kisa ve net
+hatirlatacak:
+
+```text
+Su an branch: codex/architecture-refactor
+Main: calisan ana hat, dokunmuyoruz.
+Sunucuya refactor bitene kadar dosya gondermiyoruz.
+Ben commit'e kadar hazirlarim.
+Push gerekiyorsa Ahmet terminalde sadece git push calistiracak.
+```
+
+Eger aktif branch `codex/architecture-refactor` degilse refactor isine
+baslanmaz. Once branch durumu netlestirilir.
+
+Eger canliya dosya gonderme konusu acilirsa once su hatirlatilir:
+
+```text
+Refactor bitmedi. Canliya gondermiyoruz.
+Canliya cikis en sonda ayri planla yapilacak.
+```
+
 Refactor bittiginde bunu hatirlat:
 
 ```text

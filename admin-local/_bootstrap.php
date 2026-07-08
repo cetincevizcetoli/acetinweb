@@ -74,7 +74,7 @@ function admin_yes_no(bool $value): string { return $value ? 'Evet' : 'Hayır'; 
 
 function admin_story_public(?array $story): bool
 {
-    return $story && ($story['status'] ?? '')==='published' && ($story['visibility'] ?? '')==='public' && empty($story['deleted_at']);
+    return VisibilityService::storyIsPublishedPublic($story);
 }
 
 function admin_next_sort_order(string $scope, string $homeSection='none'): float
@@ -118,6 +118,21 @@ function admin_project_sort_conflicts(int $projectId,float $sortOrder,bool $show
 
 function admin_render_visibility_summary(array $project, ?array $story=null): void
 {
+    $homeVisible = VisibilityService::homeVisible($project, $story);
+    $archiveVisible = VisibilityService::archiveVisible($project, $story);
+    $widgetVisible = VisibilityService::widgetVisible($project);
+    ?>
+    <section class="panel">
+        <h2>Neden gorunmuyor?</h2>
+        <div class="list">
+            <div class="list-row"><span>Ana sayfa</span><strong><?= e($homeVisible ? 'Gorunur' : 'Gorunmez') ?></strong><small><?= e(VisibilityService::homeReason($project, $story)) ?></small></div>
+            <div class="list-row"><span>Hikayeler sayfasi</span><strong><?= e($archiveVisible ? 'Gorunur' : 'Gorunmez') ?></strong><small><?= e(VisibilityService::archiveReason($project, $story)) ?></small></div>
+            <div class="list-row"><span>Atolye penceresi</span><strong><?= e($widgetVisible ? 'Gorunur' : 'Gorunmez') ?></strong><small><?= e(VisibilityService::widgetReason($project)) ?></small></div>
+        </div>
+        <p class="help">Kontrol zinciri VisibilityService tarafindan hesaplanir. Ana sayfa/Hikayeler icin hikaye yayimlanmis/public olmalidir; Atolye penceresi hikaye yayinindan bagimsizdir.</p>
+    </section>
+    <?php
+    return;
     $projectPublic=($project['visibility'] ?? '')==='public' && empty($project['deleted_at']);
     $storyPublic=admin_story_public($story);
     $homeSection=(string)($project['home_section'] ?? 'none');

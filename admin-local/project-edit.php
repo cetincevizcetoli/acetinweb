@@ -18,7 +18,7 @@ if(is_post()){
         $title=trim(old('title')); $slug=safe_slug(old('slug')); if($title===''||$slug==='') throw new RuntimeException('Başlık ve slug gerekli.');
         $workshopStatus=(string)($_POST['workshop_status'] ?? 'none');
         if(checkbox('show_in_widget')){
-            if(!in_array($workshopStatus,['open','paused'],true)) throw new RuntimeException('Atölye penceresinde göstermek için Atölye durumu Açık veya Beklemede olmalı.');
+            if(!VisibilityService::workshopStatusAllowsWidget($workshopStatus)) throw new RuntimeException('Atölye penceresinde göstermek için Atölye durumu Açık veya Beklemede olmalı.');
         }
         $showHome=checkbox('show_on_home'); $showArchive=checkbox('show_in_archive'); $homeSection=(string)($_POST['home_section'] ?? 'none');
         $sortOrder=admin_resolve_project_sort_order((string)($_POST['sort_order'] ?? ''),$showHome,$homeSection,$showArchive);

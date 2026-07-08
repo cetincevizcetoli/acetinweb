@@ -11,6 +11,7 @@ if(is_post()){
         try{
             db()->beginTransaction();
             $workshop=$mode==='workshop'?'open':'none'; $visibility=(string)($_POST['visibility'] ?? 'private');
+            if(checkbox('show_in_widget') && !VisibilityService::workshopStatusAllowsWidget($workshop)) throw new RuntimeException('Atölye penceresinde göstermek için Atölye açık veya beklemede olmalı.');
             $showHome=checkbox('show_on_home'); $showArchive=checkbox('show_in_archive'); $homeSection=(string)($_POST['home_section'] ?? 'none');
             $sortOrder=admin_resolve_project_sort_order((string)($_POST['sort_order'] ?? ''),$showHome,$homeSection,$showArchive);
             $st=db()->prepare("INSERT INTO projects(slug,title,question,summary,category_id,status,status_label,type_label,visibility,workshop_status,workshop_question,show_on_home,show_in_archive,show_in_widget,home_section,sort_order,started_at)

@@ -21,6 +21,9 @@ yapiya tasimaktir.
 Ahmet bu kurali ozellikle unutabilir. Her refactor isine baslamadan once bu bolum
 kontrol edilir ve kullaniciya hatirlatilir.
 
+Kisa ve zorunlu hatirlatma metni icin ayrica kok dizindeki
+`REFACTOR_GIT_RULES.md` dosyasi okunur.
+
 ### Branch karari
 
 - `main`: Calisan, canliya cikmaya uygun ana hat.
@@ -160,12 +163,12 @@ Neden onemli:
 Ana sayfa, Hikayeler sayfasi, Atolye penceresi ve detay erisimi ayni kavramlari
 farkli yerlerden kontrol ediyor. Bunu tek servis anlatmali.
 
-- [ ] `app/Service/VisibilityService.php` ekle.
-- [ ] Ana sayfa gorunurluk kuralini servise tasi.
-- [ ] Hikayeler sayfasi gorunurluk kuralini servise tasi.
-- [ ] Atolye penceresi kuralini servise tasi.
+- [x] `app/Service/VisibilityService.php` ekle.
+- [x] Ana sayfa gorunurluk kuralini servise tasi.
+- [x] Hikayeler sayfasi gorunurluk kuralini servise tasi.
+- [x] Atolye penceresi kuralini servise tasi.
 - [ ] Hikaye detay erisim kuralini servise tasi.
-- [ ] Admin "neden gorunmuyor?" kutusu bu servisi kullansin.
+- [x] Admin "neden gorunmuyor?" kutusu bu servisi kullansin.
 - [ ] Eski sorgularin davranisi degismeden test et.
 
 Kabul olcutu:
