@@ -139,6 +139,8 @@ require_once __DIR__ . '/Service/VisibilityService.php';
 require_once __DIR__ . '/Repository/ProjectRepository.php';
 require_once __DIR__ . '/Repository/StoryRepository.php';
 require_once __DIR__ . '/Repository/LinkRepository.php';
+require_once __DIR__ . '/Repository/MediaRepository.php';
+require_once __DIR__ . '/Repository/UpdateRepository.php';
 require_once __DIR__ . '/Repository/SettingsRepository.php';
 require_once __DIR__ . '/repositories.php';
 require_once __DIR__ . '/LinkRenderer.php';

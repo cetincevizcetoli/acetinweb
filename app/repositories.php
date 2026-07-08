@@ -58,27 +58,12 @@ function story_parts(int $storyId): array
 
 function project_updates(int $projectId, bool $publishedOnly=true): array
 {
-    $sql='SELECT * FROM updates WHERE project_id=? AND deleted_at IS NULL';
-    if ($publishedOnly) $sql.=" AND status='published' AND visibility IN ('public','unlisted')";
-    $sql.=' ORDER BY COALESCE(work_date,created_at),sort_order,id';
-    $st=db()->prepare($sql); $st->execute([$projectId]); $rows=$st->fetchAll();
-    foreach ($rows as &$r) {
-        $r['media']=update_media((int)$r['id']);
-        $r['links']=owner_links('update',(int)$r['id']);
-        $r['_id']=$r['slug'];
-        $r['date_label']=$r['display_label'] ?: ($r['work_date'] ? date('d.m.Y',strtotime($r['work_date'])) : '');
-        $r['day']=$r['display_label'];
-        $r['next']=$r['next_step'];
-    }
-    unset($r); return $rows;
+    return UpdateRepository::forProject($projectId, $publishedOnly);
 }
 
 function update_media(int $updateId): array
 {
-    $st=db()->prepare("SELECT um.*,m.relative_path,m.alt_text,m.caption,m.media_type,m.title,m.mime_type
-      FROM update_media um JOIN media m ON m.id=um.media_id AND m.deleted_at IS NULL
-      WHERE um.update_id=? ORDER BY um.sort_order,um.id");
-    $st->execute([$updateId]); return $st->fetchAll();
+    return MediaRepository::forUpdate($updateId);
 }
 
 function owner_links(string $type, int $ownerId): array
@@ -88,30 +73,7 @@ function owner_links(string $type, int $ownerId): array
 
 function recent_updates(int $limit=4): array
 {
-    $limit=max(1,min(20,$limit));
-    $sql="SELECT u.*, p.slug project_slug,p.title project_title,p.question project_question,p.summary project_summary,
-                  p.status_label,p.type_label,p.workshop_status,p.visibility,p.id project_id,
-                  c.slug category_slug,c.title category_title,m.relative_path cover_path,
-                  s.status story_status,s.reading_time
-      FROM updates u JOIN projects p ON p.id=u.project_id AND p.deleted_at IS NULL
-      LEFT JOIN categories c ON c.id=p.category_id
-      LEFT JOIN media m ON m.id=p.cover_media_id AND m.deleted_at IS NULL
-      LEFT JOIN stories s ON s.project_id=p.id AND s.deleted_at IS NULL
-      WHERE u.deleted_at IS NULL AND u.status='published' AND u.visibility='public' AND u.show_in_recent=1 AND p.visibility='public'
-      ORDER BY COALESCE(u.work_date,u.published_at,u.created_at) DESC,u.id DESC LIMIT ".$limit;
-    $rows=db()->query($sql)->fetchAll(); $out=[];
-    foreach ($rows as $u) {
-        $p=project_row_to_view([
-            'id'=>$u['project_id'],'slug'=>$u['project_slug'],'title'=>$u['project_title'],'question'=>$u['project_question'],
-            'summary'=>$u['project_summary'],'status_label'=>$u['status_label'],'type_label'=>$u['type_label'],
-            'workshop_status'=>$u['workshop_status'],'visibility'=>$u['visibility'],'category_slug'=>$u['category_slug'],
-            'category_title'=>$u['category_title'],'cover_path'=>$u['cover_path'],'story_status'=>$u['story_status'],'reading_time'=>$u['reading_time']
-        ]);
-        $u['links']=owner_links('update',(int)$u['id']);
-        $u['_id']=$u['slug']; $u['date_label']=$u['display_label'] ?: ($u['work_date'] ? date('d.m.Y',strtotime($u['work_date'])) : '');
-        $out[]=['update'=>$u,'story'=>$p];
-    }
-    return $out;
+    return UpdateRepository::recent($limit);
 }
 
 function widget_workshops(): array

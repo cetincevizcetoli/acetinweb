@@ -58,7 +58,7 @@ function save_uploaded_files(int $projectId,string $projectSlug,string $field='m
     }
     return $saved;
 }
-function project_media_admin(int $projectId): array { $st=db()->prepare('SELECT * FROM media WHERE project_id=? AND deleted_at IS NULL ORDER BY created_at DESC,id DESC');$st->execute([$projectId]);return $st->fetchAll(); }
+function project_media_admin(int $projectId): array { return MediaRepository::forProjectAdmin($projectId); }
 function soft_delete_project(int $id): void { $st=db()->prepare('UPDATE projects SET deleted_at=CURRENT_TIMESTAMP,updated_at=CURRENT_TIMESTAMP WHERE id=?');$st->execute([$id]); }
 
 function admin_home_section_label(?string $section): string
@@ -197,6 +197,8 @@ function save_update_links(int $updateId,array $links): void
 }
 function assert_project_media_ids(int $projectId,array $mediaIds,string $context='Medya'): array
 {
+    return MediaRepository::assertProjectMediaIds($projectId, $mediaIds, $context);
+
     $ids=array_values(array_unique(array_filter(array_map('intval',$mediaIds),fn($id)=>$id>0)));
     if(!$ids) return [];
     $placeholders=implode(',',array_fill(0,count($ids),'?'));
@@ -215,6 +217,9 @@ function assert_project_media_ids(int $projectId,array $mediaIds,string $context
 }
 function attach_update_media(int $updateId,int $projectId,array $mediaIds): void
 {
+    MediaRepository::attachToUpdate($updateId, $projectId, $mediaIds);
+    return;
+
     $mediaIds=assert_project_media_ids($projectId,$mediaIds,'Atölye medyası');
     $max=(int)(db()->query('SELECT COALESCE(MAX(sort_order),-1) FROM update_media WHERE update_id='.(int)$updateId)->fetchColumn());
     foreach(array_unique(array_map('intval',$mediaIds)) as $mid){if($mid<=0)continue;$st=db()->prepare('INSERT OR IGNORE INTO update_media(update_id,media_id,role,sort_order) VALUES (?,?,' . db()->quote('gallery') . ',?)');$st->execute([$updateId,$mid,++$max]);}

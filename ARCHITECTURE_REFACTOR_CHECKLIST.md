@@ -16,6 +16,26 @@ yapiya tasimaktir.
 - Buyuk refactor yerine "moduler adalar" acilir.
 - Eski fonksiyonlar hemen silinmez; gerekirse yeni siniflara kopru olur.
 
+## 2026-07-08 refactor turu kapanis notu
+
+Bu turda hedeflenen guvenli cekirdek tamamlandi:
+
+- Gorunurluk kurallari `VisibilityService` altinda toplandi.
+- Link, proje, hikaye, atolye kaydi, medya ve ayarlar icin repository katmani acildi.
+- Eski public/admin fonksiyonlari geriye uyumluluk icin korundu ve yeni repository siniflarina delege edildi.
+- Klasor ve veri akisini anlatan `SYSTEM_OVERVIEW.md` eklendi.
+
+Bu turda bilerek zorlanmayan isler:
+
+- Upload davranisini `UploadService` altina tamamen tasimak.
+- Public render katmanini `View/` altinda bolmek.
+- Admin controller/view ayrimini yapmak.
+- Deploy manifest uretimini servis sinifina tasimak.
+
+Neden ertelendi: Bunlar calisan admin akisini ve public render ciktisini daha
+genis etkileyen islerdir. Ayrica bir sonraki refactor turunda, ayri commitler ve
+ayri testlerle alinmalidir.
+
 ## Git ve yayin guvenlik kurali
 
 Ahmet bu kurali ozellikle unutabilir. Her refactor isine baslamadan once bu bolum
@@ -138,7 +158,7 @@ Bu klasorlerin hepsi hemen acilmak zorunda degildir. Ihtiyac dogdukca eklenir.
 - [ ] SQLite `foreign_key_check` bos.
 - [ ] PHP syntax tum dosyalarda temiz.
 - [ ] JS syntax temiz.
-- [ ] Mevcut klasor ve veri akisini anlatan kisa not guncellendi.
+- [x] Mevcut klasor ve veri akisini anlatan kisa not guncellendi.
 
 ## Faz 1 - Link sistemi modulu
 
@@ -185,11 +205,11 @@ besledigini anlamakta zorlanir.
 
 - [x] `ProjectRepository` olustur.
 - [x] `StoryRepository` olustur.
-- [ ] `UpdateRepository` olustur.
-- [ ] `MediaRepository` olustur.
+- [x] `UpdateRepository` olustur.
+- [x] `MediaRepository` olustur.
 - [x] `LinkRepository` olustur.
 - [x] `SettingsRepository` olustur.
-- [ ] Eski fonksiyonlar gecici olarak repository metodlarina delege etsin.
+- [x] Eski fonksiyonlar gecici olarak repository metodlarina delege etsin.
 - [ ] Sonra kullanilan public/admin sayfalari tek tek yeni repository metodlarina gecsin.
 
 Kabul olcutu:
@@ -271,6 +291,10 @@ Bu dosya sunlari anlatir:
 - Canliya yayin akisi nasil yapilir?
 - Yeni gelistirici nereden baslamali?
 - Hangi dosyalara dokunurken dikkatli olunmali?
+
+Durum:
+
+- [x] `SYSTEM_OVERVIEW.md` olusturuldu.
 
 ## Her fazdan sonra calistirilacak kontrol listesi
 
