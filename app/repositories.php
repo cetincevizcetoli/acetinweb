@@ -163,8 +163,7 @@ function update_media(int $updateId): array
 
 function owner_links(string $type, int $ownerId): array
 {
-    $st=db()->prepare('SELECT * FROM links WHERE owner_type=? AND owner_id=? ORDER BY sort_order,id');
-    $st->execute([$type,$ownerId]); return $st->fetchAll();
+    return LinkRepository::findByOwner($type, $ownerId);
 }
 
 function recent_updates(int $limit=4): array

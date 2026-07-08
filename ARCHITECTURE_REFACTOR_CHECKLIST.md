@@ -147,8 +147,8 @@ Durum: Baslandi.
 - [x] Link render mantigi ayri dosyaya tasindi.
 - [x] Link kartlari public tarafta daha anlamli hale geldi.
 - [x] YouTube/Vimeo/SoundCloud/dogrudan ses-video linkleri icin player mantigi basladi.
-- [ ] LinkRepository ekle.
-- [ ] Admin link kaydetme islemlerini LinkRepository uzerinden gecir.
+- [x] LinkRepository ekle.
+- [x] Admin link kaydetme islemlerini LinkRepository uzerinden gecir.
 - [ ] Link provider tespitini test eden kucuk tekrar calistirilabilir test ekle.
 - [ ] README veya SYSTEM_OVERVIEW icinde link akisini anlat.
 
@@ -187,7 +187,7 @@ besledigini anlamakta zorlanir.
 - [ ] `StoryRepository` olustur.
 - [ ] `UpdateRepository` olustur.
 - [ ] `MediaRepository` olustur.
-- [ ] `LinkRepository` olustur.
+- [x] `LinkRepository` olustur.
 - [ ] `SettingsRepository` olustur.
 - [ ] Eski fonksiyonlar gecici olarak repository metodlarina delege etsin.
 - [ ] Sonra kullanilan public/admin sayfalari tek tek yeni repository metodlarina gecsin.

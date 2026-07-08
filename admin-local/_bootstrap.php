@@ -193,8 +193,7 @@ function admin_link_title(string $title,string $type,string $url): string
 }
 function save_update_links(int $updateId,array $links): void
 {
-    db()->prepare("DELETE FROM links WHERE owner_type='update' AND owner_id=?")->execute([$updateId]);
-    foreach($links as $i=>$l){$url=safe_external_url((string)($l['url']??''));if($url==='')continue;$type=trim((string)($l['type']??'external'));$title=admin_link_title((string)($l['title']??''),$type,$url);$st=db()->prepare("INSERT INTO links(owner_type,owner_id,link_type,title,url,sort_order) VALUES ('update',?,?,?,?,?)");$st->execute([$updateId,$type,$title,$url,(int)$i]);}
+    LinkRepository::replaceForOwner('update', $updateId, $links, fn($title,$type,$url) => admin_link_title((string)$title, (string)$type, (string)$url));
 }
 function assert_project_media_ids(int $projectId,array $mediaIds,string $context='Medya'): array
 {

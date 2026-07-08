@@ -113,6 +113,9 @@ if (is_post()) {
             }
         }
 
+        if (class_exists(LinkRepository::class)) {
+            $savedLinkCount = LinkRepository::replaceForOwner('story_section', $sectionId, is_array($_POST['links'] ?? null) ? $_POST['links'] : [], fn($title,$type,$url) => admin_link_title((string)$title, (string)$type, (string)$url));
+        } else {
         db()->prepare("DELETE FROM links WHERE owner_type='story_section' AND owner_id=?")->execute([$sectionId]);
         foreach ($_POST['links'] ?? [] as $i => $l) {
             $rawUrl = trim((string)($l['url'] ?? ''));
@@ -127,6 +130,7 @@ if (is_post()) {
                     (int)$i,
                 ]);
             $savedLinkCount++;
+        }
         }
 
         db()->commit();

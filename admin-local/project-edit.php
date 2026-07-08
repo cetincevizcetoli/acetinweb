@@ -31,8 +31,7 @@ if(is_post()){
         // cover existing/new
         $new=save_uploaded_files($id,$slug,'cover_upload'); $coverId=$new[0] ?? (int)($_POST['cover_media_id'] ?? 0); if($coverId) db()->prepare('UPDATE projects SET cover_media_id=? WHERE id=?')->execute([$coverId,$id]);
         // project links replace
-        db()->prepare("DELETE FROM links WHERE owner_type='project' AND owner_id=?")->execute([$id]);
-        foreach($_POST['links'] ?? [] as $i=>$l){$url=safe_external_url((string)($l['url']??''));if($url==='')continue;$type=trim((string)($l['type']??'external'));$title=admin_link_title((string)($l['title']??''),$type,$url);db()->prepare("INSERT INTO links(owner_type,owner_id,link_type,title,url,sort_order) VALUES ('project',?,?,?,?,?)")->execute([$id,$type,$title,$url,(int)$i]);}
+        LinkRepository::replaceForOwner('project', $id, is_array($_POST['links'] ?? null) ? $_POST['links'] : [], fn($title,$type,$url) => admin_link_title((string)$title, (string)$type, (string)$url));
         db()->commit(); admin_audit('update','project',$id,$title); flash('success','Proje kaydedildi.');
         foreach(admin_project_sort_conflicts($id,$sortOrder,$showHome,$homeSection,$showArchive) as $warning) flash('warning',$warning);
         redirect('project-edit.php?id='.$id);
