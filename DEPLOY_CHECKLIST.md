@@ -2,10 +2,12 @@
 
 ## Web root
 
-- Canli sunucuda document root dogrudan `public/` olmalidir.
+- Canli sunucuda domain document root dogrudan `public/` olmalidir.
+- Kullanici `https://www.acetin.com.tr/` actiginda site acilmali, URL'de `/public/` gorunmemelidir.
 - `app/`, `config/`, `tools/`, `admin-local/`, `storage/`, `_backups/`, `.git/` web root disinda kalmalidir.
 - Eger hosting zorunlu olarak proje kokunu web root yaparsa kok `.htaccess` korumalari aktif olmalidir.
 - Proje koku web root olursa `/.htaccess` hassas klasorleri ve dosyalari kapatir.
+- Koku web root yapmak ikinci tercihtir. Bu durumda kok `.htaccess` public klasorune internal rewrite yapar ve hassas klasorleri deny eder.
 - `public/` web root olursa `/public/.htaccess` directory listing, dotfile ve yedek/db uzantilarini kapatir.
 
 ## Ortam ayari
@@ -35,6 +37,13 @@
 - `public/system-check.php` yalnizca local loopback IP'lerinden calismalidir.
 - Canli domainde 403 veya `system-check disabled` mesaji donmelidir.
 - Canli ortamda DB yolu, storage yolu veya server bilgisi sizdirmamalidir.
+
+## Deploy manifest
+
+- `public/deploy-manifest.json` public URL'de acilabilir ama sade olmalidir.
+- Public manifest DB hash'i, DB boyutu, local/sunucu path, `app/`, `config/` veya detayli dosya listesi icermemelidir.
+- Detayli manifest sadece local/admin tarafinda ve private storage altinda tutulur.
+- Canli kontrol icin public manifestte yalnizca version, generated_at, release_hash ve public_assets_hash gibi ozet alanlar kalmalidir.
 
 ## Uploads ve medya
 
@@ -86,6 +95,42 @@ Ileride admin medya ekranina buyuk dosya uyarisi eklenmesi onerilir. Ornek uyari
 - `public/uploads/` klasorunu yedekle.
 - Canliya yuklenecek dosya listesini kontrol et.
 - Gereksiz local backup, zip ve test dosyalarini canli pakete dahil etme.
+
+## Canli dosya ayrimi
+
+Canliya yukle:
+
+- `public/`
+- `app/`
+- `config/config.php`
+- `config/local.example.php`
+- `.htaccess`
+- `index.php`
+- `robots.txt`
+- `sitemap.xml`
+- `VERSION.txt`
+- `public/uploads/`
+- sade `public/deploy-manifest.json`
+
+Canlida elle olustur:
+
+- `config/local.php`
+- public disinda private storage klasoru
+- `fikrimvar.sqlite`
+- backup klasoru
+- gerekli dosya izinleri
+
+Canliya yukleme:
+
+- `.git/`
+- `config/local.php`
+- `.env`
+- SQLite/DB/backup/zip/sql dosyalari
+- `admin-local/` canlida kullanilmayacaksa
+- `tools/`
+- `mocap/`
+- `archive/` veya `arsiv/`
+- gelistirme dokumanlari ve prompt dosyalari
 
 ## Ilk test URL'leri
 

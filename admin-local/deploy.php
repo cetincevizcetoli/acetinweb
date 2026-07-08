@@ -111,6 +111,11 @@ function deploy_manifest(): array
         'code' => array_column($codeFiles, 'sha256', 'path'),
         'uploads' => array_column($uploadFiles, 'sha256', 'path'),
     ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+    $manifest['public_assets_hash'] = hash('sha256', json_encode([
+        'code' => array_column(array_filter($codeFiles, fn($r) => str_starts_with((string)$r['path'], 'public/')), 'sha256', 'path'),
+        'uploads' => count($uploadFiles),
+    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+    $manifest['release_hash'] = hash('sha256', (string)$manifest['local_hash']);
     return $manifest;
 }
 
@@ -118,14 +123,14 @@ function deploy_public_manifest(array $manifest): array
 {
     return [
         'site' => $manifest['site'],
-        'schema' => $manifest['schema'],
+        'schema' => 2,
         'generated_at' => $manifest['generated_at'],
         'version' => $manifest['version'],
         'code_commit' => $manifest['code_commit'],
-        'local_hash' => $manifest['local_hash'],
-        'db' => $manifest['db'],
-        'code_files' => $manifest['code_files'],
-        'uploads' => $manifest['uploads'],
+        'release_hash' => $manifest['release_hash'],
+        'public_assets_hash' => $manifest['public_assets_hash'],
+        'code_file_count' => count($manifest['code_files']),
+        'upload_file_count' => count($manifest['uploads']),
     ];
 }
 
@@ -236,8 +241,8 @@ function deploy_append_log(string $status, array $localManifest, ?array $remoteM
     $row = [
         'status' => $status,
         'created_at' => now_sql(),
-        'local_hash' => (string)$localManifest['local_hash'],
-        'remote_hash' => (string)($remoteManifest['local_hash'] ?? ''),
+        'local_hash' => (string)($localManifest['release_hash'] ?? $localManifest['local_hash'] ?? ''),
+        'remote_hash' => (string)($remoteManifest['release_hash'] ?? $remoteManifest['local_hash'] ?? ''),
         'note' => $note,
     ];
     file_put_contents(deploy_log_file(), json_encode($row, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL, FILE_APPEND | LOCK_EX);
@@ -258,10 +263,11 @@ if (is_post()) {
         if ($action === 'write_manifest' || $action === 'mark_deployed') {
             $publicManifest = deploy_public_manifest($localManifest);
             $json = json_encode($publicManifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
-            file_put_contents(FV7_PUBLIC . '/deploy-manifest.json', $json . PHP_EOL);
             $dir = FV7_STORAGE . '/deploy-manifests';
             if (!is_dir($dir)) mkdir($dir, 0775, true);
-            file_put_contents($dir . '/deploy-' . date('Ymd-His') . '.json', $json . PHP_EOL);
+            file_put_contents(FV7_PUBLIC . '/deploy-manifest.json', $json . PHP_EOL);
+            file_put_contents($dir . '/public-deploy-' . date('Ymd-His') . '.json', $json . PHP_EOL);
+            file_put_contents($dir . '/detail-deploy-' . date('Ymd-His') . '.json', json_encode($localManifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR) . PHP_EOL);
 
             $status = $action === 'mark_deployed' ? 'marked_deployed' : 'prepared';
             deploy_append_log($status, $localManifest, $remoteManifest, $note);
@@ -274,16 +280,18 @@ if (is_post()) {
     }
 }
 
-$codeDiff = $remoteManifest ? deploy_compare_files($localManifest['code_files'], $remoteManifest['code_files'] ?? []) : null;
-$uploadDiff = $remoteManifest ? deploy_compare_files($localManifest['uploads'], $remoteManifest['uploads'] ?? []) : null;
-$dbDifferent = $remoteManifest ? (($localManifest['db']['sha256'] ?? '') !== ($remoteManifest['db']['sha256'] ?? '')) : null;
+$remoteHasDetailedManifest = $remoteManifest && isset($remoteManifest['code_files'], $remoteManifest['uploads'], $remoteManifest['db']);
+$codeDiff = $remoteHasDetailedManifest ? deploy_compare_files($localManifest['code_files'], $remoteManifest['code_files'] ?? []) : null;
+$uploadDiff = $remoteHasDetailedManifest ? deploy_compare_files($localManifest['uploads'], $remoteManifest['uploads'] ?? []) : null;
+$dbDifferent = $remoteHasDetailedManifest ? (($localManifest['db']['sha256'] ?? '') !== ($remoteManifest['db']['sha256'] ?? '')) : null;
 $dbDirection = '';
 if ($remoteManifest && $dbDifferent) {
     $localMtime = (int)($localManifest['db']['mtime'] ?? 0);
     $remoteMtime = (int)($remoteManifest['db']['mtime'] ?? 0);
     $dbDirection = $localMtime > $remoteMtime ? 'Local DB daha yeni gorunuyor.' : ($localMtime < $remoteMtime ? 'Canli DB daha yeni gorunuyor.' : 'DB hash farkli, tarih ayni gorunuyor.');
 }
-$sameAsLive = $remoteManifest && (($localManifest['local_hash'] ?? '') === ($remoteManifest['local_hash'] ?? ''));
+$remoteReleaseHash = (string)($remoteManifest['release_hash'] ?? $remoteManifest['local_hash'] ?? '');
+$sameAsLive = $remoteManifest && $remoteReleaseHash !== '' && (($localManifest['release_hash'] ?? '') === $remoteReleaseHash || ($localManifest['local_hash'] ?? '') === $remoteReleaseHash);
 $codeChangeCount = $codeDiff ? count($codeDiff['new']) + count($codeDiff['changed']) + count($codeDiff['remote_only']) : 0;
 $uploadChangeCount = $uploadDiff ? count($uploadDiff['new']) + count($uploadDiff['changed']) + count($uploadDiff['remote_only']) : 0;
 $deployStatusTitle = !$remoteManifest ? 'Canli kontrol dosyasi okunamiyor' : ($sameAsLive ? 'Local ve canli ayni' : 'Local ve canli farkli');
@@ -295,7 +303,7 @@ if (!$remoteManifest) {
 } elseif ($dbDifferent === true && $codeChangeCount === 0 && $uploadChangeCount === 0) {
     $nextStep = 'Sadece SQLite DB farkli gorunuyor. Yayin paketini hazirla, sonra fikrimvar.sqlite ve public/deploy-manifest.json dosyasini birlikte canliya gonder.';
 } else {
-    $nextStep = 'Fark listesine bak; degisen DB, medya veya kod dosyalarini canliya gonder.';
+    $nextStep = $remoteHasDetailedManifest ? 'Fark listesine bak; degisen DB, medya veya kod dosyalarini canliya gonder.' : 'Canli kontrol dosyasi guvenli ozet formatinda. Degisen dosyalari yereldeki diff ve yayin planina gore gonder.';
 }
 
 $logs = deploy_read_logs();
@@ -323,9 +331,9 @@ admin_head('Yayin Merkezi');
     <p class="flash <?= e($deployStatusClass) ?>"><?= e($deployStatusTitle) ?></p>
     <div class="list">
         <div class="list-row"><span>Canli kontrol dosyasi</span><strong><?= $remoteManifest ? 'Okundu' : 'Okunamadi' ?></strong><small><?= e($remoteUrl ?: 'Calisan kontrol dosyasi adresi bulunamadi') ?></small></div>
-        <div class="list-row"><span>DB</span><strong><?= $dbDifferent === null ? 'Karsilastirilamadi' : ($dbDifferent ? 'Farkli' : 'Ayni') ?></strong><small><?= e($dbDirection ?: 'Kontrol dosyasi okunursa DB hash karsilastirilir') ?></small></div>
-        <div class="list-row"><span>Kod</span><strong><?= $codeDiff ? ($codeChangeCount . ' fark') : 'Karsilastirilamadi' ?></strong><small>app, public ve kok yayin dosyalari</small></div>
-        <div class="list-row"><span>Medya</span><strong><?= $uploadDiff ? ($uploadChangeCount . ' fark') : 'Karsilastirilamadi' ?></strong><small>public/uploads icindeki dosyalar</small></div>
+        <div class="list-row"><span>DB</span><strong><?= $dbDifferent === null ? 'Public manifestte gizli' : ($dbDifferent ? 'Farkli' : 'Ayni') ?></strong><small><?= e($dbDirection ?: 'DB hash ve boyut bilgisi public manifestte yayinlanmaz') ?></small></div>
+        <div class="list-row"><span>Kod</span><strong><?= $codeDiff ? ($codeChangeCount . ' fark') : 'Public manifestte detay yok' ?></strong><small>Detayli liste sadece local/private manifestte tutulur</small></div>
+        <div class="list-row"><span>Medya</span><strong><?= $uploadDiff ? ($uploadChangeCount . ' fark') : 'Public manifestte detay yok' ?></strong><small>public/uploads icindeki dosya listesi public URL'de yayinlanmaz</small></div>
         <div class="list-row"><span>Sonraki adim</span><strong><?= e($nextStep) ?></strong><small></small></div>
     </div>
 </section>
@@ -334,7 +342,7 @@ admin_head('Yayin Merkezi');
     <h2>Yayin kurallari</h2>
     <p class="help">Local ana kaynaktir. Canli DB uzerinde elle degisiklik yapilmaz. Canliya gondermeden once DB ve `public/uploads/` yedegi alinir. Admin panel canlida tutulmaz.</p>
     <div class="list">
-        <div class="list-row"><span>DB local</span><strong><?= e(FV7_DB) ?></strong><small><?= e(substr((string)$localManifest['db']['sha256'], 0, 16)) ?></small></div>
+        <div class="list-row"><span>DB local</span><strong><?= e(FV7_DB) ?></strong><small>Hash sadece admin/local ekranda gorunur; public manifestte yoktur.</small></div>
         <div class="list-row"><span>DB canli hedef</span><strong><?= e(DEPLOY_LIVE_DB_TARGET) ?></strong><small>Bu dosya elle/SFTP ile gonderilir.</small></div>
         <div class="list-row"><span>Canli kontrol dosyasi</span><strong><?= e($remoteUrl ?: DEPLOY_REMOTE_MANIFEST_URL) ?></strong><small><?= e($remoteError ?: 'Okundu') ?></small></div>
     </div>
@@ -359,7 +367,7 @@ admin_head('Yayin Merkezi');
 <section class="panel" style="margin-top:20px">
     <h2>Sonuc</h2>
     <?php if (!$remoteManifest): ?>
-        <p class="help">Canli kontrol dosyasi okunamadigi icin local ile sunucu ayni mi kesin soylenemiyor. Once public/deploy-manifest.json dosyasinin canlida JSON olarak acilmasini sagla.</p>
+        <p class="help">Canli kontrol dosyasi okunamadigi icin local ile sunucu ayni mi kesin soylenemiyor. Once public/deploy-manifest.json dosyasinin canlida sade JSON olarak acilmasini sagla.</p>
     <?php elseif ($sameAsLive): ?>
         <p class="flash flash-success">Local ve canli ayni gorunuyor.</p>
     <?php else: ?>
@@ -375,12 +383,12 @@ admin_head('Yayin Merkezi');
             <div class="list-row"><span>1</span><strong>SQLite DB</strong><small><?= $dbDifferent === false ? 'Ayni gorunuyor' : 'Gondermeden once yedek al' ?></small></div>
             <div class="list-row"><span>2</span><strong>public/uploads/</strong><small><?= $uploadDiff ? (count($uploadDiff['new']) . ' yeni, ' . count($uploadDiff['changed']) . ' degisen') : 'Canli kontrol dosyasi yok; tum gerekli medya kontrol edilmeli' ?></small></div>
             <div class="list-row"><span>3</span><strong>Kod/public dosyalari</strong><small><?= $codeDiff ? (count($codeDiff['new']) . ' yeni, ' . count($codeDiff['changed']) . ' degisen') : 'Git/FTP ile guncel kod gonderilmeli' ?></small></div>
-            <div class="list-row"><span>4</span><strong>public/deploy-manifest.json</strong><small>Yayin paketini hazirla butonu uretir; canliya bunu da gonder.</small></div>
+            <div class="list-row"><span>4</span><strong>public/deploy-manifest.json</strong><small>Sade public kontrol dosyasidir; DB hash veya ic dosya listesi icermez.</small></div>
         </div>
     </section>
     <section class="panel">
         <h2>Yayin paketi hazirla</h2>
-        <p class="help">Bu buton mevcut local durumu kayda alir ve public/deploy-manifest.json kontrol dosyasini yeniler. Sonra degisen dosyalari ve bu kontrol dosyasini canliya gonderirsin.</p>
+        <p class="help">Bu buton mevcut local durumu kayda alir, detayli manifesti private storage altinda saklar ve public/deploy-manifest.json icin sade kontrol dosyasi uretir.</p>
         <form method="post">
             <?= csrf_field() ?>
             <div class="field"><label>Not</label><textarea name="note" placeholder="Orn: ai-context hikaye guncellendi, 2 medya eklendi"></textarea></div>

@@ -9,7 +9,7 @@ function fv7_system_check_is_local(): bool
     return $ip === '::1' || $ip === '127.0.0.1' || str_starts_with($ip, '127.');
 }
 
-if (!fv7_system_check_is_local()) {
+if (!fv7_system_check_is_local() && !FV7_ALLOW_SYSTEM_CHECK) {
     http_response_code(403);
     header('Content-Type: text/plain; charset=utf-8');
     echo 'system-check disabled';
