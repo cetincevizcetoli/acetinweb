@@ -122,7 +122,7 @@ if (is_post()) {
                 ->execute([
                     $sectionId,
                     trim((string)($l['type'] ?? 'external')),
-                    trim((string)($l['title'] ?? '')) ?: 'Bağlantı',
+                    admin_link_title((string)($l['title'] ?? ''), (string)($l['type'] ?? 'external'), $url),
                     $url,
                     (int)$i,
                 ]);
@@ -243,7 +243,8 @@ admin_head($id ? 'Bölümü düzenle' : 'Yeni bölüm');
 
         <aside class="panel">
             <h2>Bağlantılar</h2>
-            <div id="section-links" class="repeat-list"><?php foreach ($links as $i => $l): ?><div class="repeat-row"><select name="links[<?= $i ?>][type]"><?php foreach (['youtube','instagram','github','website','download','external'] as $t): ?><option <?= $l['link_type'] === $t ? 'selected' : '' ?>><?= $t ?></option><?php endforeach; ?></select><input name="links[<?= $i ?>][title]" value="<?= e($l['title']) ?>"><input name="links[<?= $i ?>][url]" value="<?= e($l['url']) ?>"><button class="danger" type="button" data-repeat-remove>Sil</button></div><?php endforeach; ?></div>
+            <p class="help">Baslik bos kalirsa sistem kaynagi tanir. YouTube, Vimeo, SoundCloud ve dogrudan MP4/MP3 linkleri public tarafta player olarak gorunur.</p>
+            <div id="section-links" class="repeat-list"><?php foreach ($links as $i => $l): ?><div class="repeat-row"><select name="links[<?= $i ?>][type]"><?php foreach (['youtube','vimeo','soundcloud','instagram','github','website','download','external'] as $t): ?><option <?= $l['link_type'] === $t ? 'selected' : '' ?>><?= $t ?></option><?php endforeach; ?></select><input name="links[<?= $i ?>][title]" value="<?= e($l['title']) ?>"><input name="links[<?= $i ?>][url]" value="<?= e($l['url']) ?>"><button class="danger" type="button" data-repeat-remove>Sil</button></div><?php endforeach; ?></div>
             <button class="secondary" type="button" data-repeat-add="#section-links" data-template="#link-template">+ Bağlantı ekle</button>
         </aside>
     </div>
@@ -266,5 +267,5 @@ admin_head($id ? 'Bölümü düzenle' : 'Yeni bölüm');
     </div>
 </template>
 
-<template id="link-template"><div class="repeat-row"><select name="links[__INDEX__][type]"><option>youtube</option><option>instagram</option><option>github</option><option>website</option><option>download</option><option>external</option></select><input name="links[__INDEX__][title]" placeholder="Başlık"><input name="links[__INDEX__][url]" placeholder="https://"><button class="danger" type="button" data-repeat-remove>Sil</button></div></template>
+<template id="link-template"><div class="repeat-row"><select name="links[__INDEX__][type]"><option>youtube</option><option>vimeo</option><option>soundcloud</option><option>instagram</option><option>github</option><option>website</option><option>download</option><option>external</option></select><input name="links[__INDEX__][title]" placeholder="Başlık"><input name="links[__INDEX__][url]" placeholder="https://"><button class="danger" type="button" data-repeat-remove>Sil</button></div></template>
 <?php admin_foot(); ?>

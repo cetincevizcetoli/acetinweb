@@ -169,10 +169,17 @@ function unique_update_slug(int $projectId,string $base,int $ignoreId=0): string
     $base=safe_slug($base) ?: 'kayit-'.date('Ymd-His'); $slug=$base; $i=2;
     while(true){$st=db()->prepare('SELECT COUNT(*) FROM updates WHERE project_id=? AND slug=? AND id<>?');$st->execute([$projectId,$slug,$ignoreId]);if((int)$st->fetchColumn()===0)return $slug;$slug=$base.'-'.$i++;}
 }
+function admin_link_title(string $title,string $type,string $url): string
+{
+    $title=trim($title);
+    if($title!=='') return $title;
+    $model=LinkRenderer::fromRow(['title'=>'','link_type'=>$type,'url'=>$url]);
+    return $model ? $model->title : 'Baglanti';
+}
 function save_update_links(int $updateId,array $links): void
 {
     db()->prepare("DELETE FROM links WHERE owner_type='update' AND owner_id=?")->execute([$updateId]);
-    foreach($links as $i=>$l){$url=safe_external_url((string)($l['url']??''));if($url==='')continue;$title=trim((string)($l['title']??'')) ?: ucfirst((string)($l['type']??'Bağlantı'));$st=db()->prepare("INSERT INTO links(owner_type,owner_id,link_type,title,url,sort_order) VALUES ('update',?,?,?,?,?)");$st->execute([$updateId,trim((string)($l['type']??'external')),$title,$url,(int)$i]);}
+    foreach($links as $i=>$l){$url=safe_external_url((string)($l['url']??''));if($url==='')continue;$type=trim((string)($l['type']??'external'));$title=admin_link_title((string)($l['title']??''),$type,$url);$st=db()->prepare("INSERT INTO links(owner_type,owner_id,link_type,title,url,sort_order) VALUES ('update',?,?,?,?,?)");$st->execute([$updateId,$type,$title,$url,(int)$i]);}
 }
 function assert_project_media_ids(int $projectId,array $mediaIds,string $context='Medya'): array
 {

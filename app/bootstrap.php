@@ -140,4 +140,5 @@ function icon(string $name): string
 }
 
 require_once __DIR__ . '/repositories.php';
+require_once __DIR__ . '/LinkRenderer.php';
 require_once __DIR__ . '/render.php';

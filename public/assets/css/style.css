@@ -1125,6 +1125,19 @@ body.atelier-widget-open { overflow: hidden; }
 .content-links { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 14px; }
 .content-links a { display: inline-flex; align-items: center; gap: 7px; padding: 8px 11px; border: 1px solid currentColor; border-radius: 999px; text-decoration: none; font: 600 .73rem var(--mono); }
 .content-links svg { width: 14px; height: 14px; }
+.content-link-cards { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 12px; margin-top: 16px; }
+.content-link-card { overflow: hidden; border: 1px solid rgba(41,31,22,.18); background: rgba(255,255,255,.46); }
+.content-link-player { aspect-ratio: 16 / 9; background: #080a0d; }
+.content-link-player iframe,
+.content-link-player video { width: 100%; height: 100%; display: block; border: 0; background: #080a0d; }
+.content-link-audio { padding: 16px; border-bottom: 1px solid rgba(41,31,22,.12); background: rgba(255,255,255,.35); }
+.content-link-audio audio { width: 100%; display: block; }
+.content-link-card-main { display: grid; gap: 7px; padding: 14px 15px; text-decoration: none; color: inherit; }
+.content-link-card-main span { color: var(--rust); font: 700 .68rem/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+.content-link-card-main strong { font: 650 clamp(1rem,1.8vw,1.25rem)/1.1 var(--serif); }
+.content-link-card-main small { color: var(--muted); overflow-wrap: anywhere; font: 500 .72rem/1.35 var(--mono); }
+.content-link-card-main em { display: inline-flex; align-items: center; gap: 7px; margin-top: 3px; font: 650 .72rem/1 var(--mono); font-style: normal; }
+.content-link-card-main svg { width: 14px; height: 14px; }
 .atelier-audio-stage { min-height: 280px; display: grid; place-items: center; padding: 30px; background: radial-gradient(circle at center,rgba(229,168,59,.16),transparent 60%),#10141a; }
 .atelier-audio-stage audio { width: min(560px,90%); }
 @media (max-width: 760px) {
@@ -1216,7 +1229,8 @@ body.atelier-widget-open { overflow: hidden; }
   grid-column: 5 / -1;
 }
 
-.story-block > .content-links {
+.story-block > .content-links,
+.story-block > .content-link-cards {
   grid-column: 2 / -1;
   align-self: start;
 }
@@ -1256,7 +1270,8 @@ body.atelier-widget-open { overflow: hidden; }
   .story-section-intro,
   .story-section-note,
   .story-section-code,
-  .story-block > .content-links {
+  .story-block > .content-links,
+  .story-block > .content-link-cards {
     grid-column: 2;
   }
   .story-extra-media,
