@@ -9,9 +9,74 @@ yapiya tasimaktir.
 - Local calisan sistem korunur.
 - Veritabani ve icerik silinmez.
 - Her adim kucuk, test edilebilir ve git ile geri alinabilir olur.
+- Refactor isleri `main` uzerinde yapilmaz; ayri branch kullanilir.
+- `main` calisan ve geri donulebilir ana hat olarak korunur.
+- Refactor bitene kadar canli sunucuya refactor branch'i gonderilmez.
 - Once public davranis korunur, sonra kod ic yapisi toparlanir.
 - Buyuk refactor yerine "moduler adalar" acilir.
 - Eski fonksiyonlar hemen silinmez; gerekirse yeni siniflara kopru olur.
+
+## Git ve yayin guvenlik kurali
+
+Ahmet bu kurali ozellikle unutabilir. Her refactor isine baslamadan once bu bolum
+kontrol edilir ve kullaniciya hatirlatilir.
+
+### Branch karari
+
+- `main`: Calisan, canliya cikmaya uygun ana hat.
+- `codex/architecture-refactor`: Mimari donusum calisma hatti.
+- Buyuk mimari isler, dosya tasimalari ve servis/repository ayrimlari bu branch'te yapilir.
+- Dokumantasyon gibi dusuk riskli tek dosya degisiklikleri gerekirse `main`e alinabilir.
+- Kararsiz kalinirsa `main` yerine branch secilir.
+
+### Commit kurali
+
+- Her faz ayri commit olur.
+- Bir commit sadece tek mantiksal isi anlatir.
+- Commit atmadan once:
+  - [ ] `git status --short` kontrol edildi.
+  - [ ] Degisen dosyalar kullaniciya soylendi.
+  - [ ] PHP syntax kontrolu yapildi.
+  - [ ] Gerekliyse JS syntax kontrolu yapildi.
+  - [ ] Gerekliyse HTTP 200 kontrolleri yapildi.
+
+### Push kurali
+
+- `main`e sadece calisan ve kucuk adimlar push edilir.
+- Refactor branch'i GitHub'a push edilebilir ama canliya gonderilmez.
+- Refactor branch'i bitmeden sunucuya dosya yuklenmez.
+
+### Canliya cikis kurali
+
+Refactor tamamlanmadan canli sunucuya yeni mimari dosyalari gonderilmez.
+
+Refactor bitince once su karar verilir:
+
+1. Degisim kucukse:
+   - Degisen dosyalar listelenir.
+   - Yayın Merkezi ile kontrol dosyasi hazirlanir.
+   - Gerekli dosyalar sunucuya gonderilir.
+
+2. Degisim buyukse:
+   - Temiz canli kurulum plani uygulanir.
+   - Sunucudaki mevcut kod yedeklenir.
+   - `acetinweb_private/storage/fikrimvar.sqlite` yedeklenir.
+   - `public/uploads/` yedeklenir.
+   - Eski kod kalintilari temizlenir.
+   - Yeni kod gonderilir.
+   - SQLite ve uploads geri konur.
+   - `public/deploy-manifest.json` gonderilir.
+   - Public ana sayfa, Hikayeler, en az bir Hikaye detay sayfasi ve admin local akisi test edilir.
+
+### Kullaniciya zorunlu hatirlatma
+
+Refactor isleri surerken her yeni adimdan once su cumle kontrol edilir:
+
+> Bu is refactor branch'inde mi? Main temiz mi? Canliya henuz gondermuyoruz.
+
+Refactor bittiginde su hatirlatilir:
+
+> Simdi canliya cikis plani secilecek: kucuk guncelleme mi, temiz kurulum mu?
 
 ## Hedef klasor yapisi
 
