@@ -10,7 +10,6 @@ Disallow: /_backups/
 Disallow: /mocap/
 Disallow: /arşiv/
 Disallow: /.git/
-Disallow: /system-check.php
 Disallow: /yorum-kaydet.php
 Disallow: /includes/
 

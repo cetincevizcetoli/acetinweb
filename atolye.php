@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-require __DIR__ . '/../app/bootstrap.php';
+require __DIR__ . '/_bootstrap.php';
 $slug=safe_slug((string)($_GET['slug'] ?? '')); $project=project_by_slug($slug); $site=setting('site',[]);
 $updates=$project ? project_updates((int)$project['id']) : []; $active=$updates ? end($updates) : null; if($updates) reset($updates);
 $milestones=array_values(array_filter($updates,fn($u)=>(int)$u['is_milestone']===1)); if(!$milestones && $updates) $milestones=$updates;

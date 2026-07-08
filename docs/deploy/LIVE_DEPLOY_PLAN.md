@@ -2,48 +2,73 @@
 
 Bu plan canliya otomatik yukleme yapmaz. Local ana kaynaktir; canli sunucu
 yayin kopyasidir. Canliya cikmadan once canli SQLite dosyasi ve
-`public/uploads/` mutlaka yedeklenir.
+`uploads/` mutlaka yedeklenir.
+
+## Tercih edilen canli klasor yapisi
+
+Bu projede canli icin tercih edilen model:
+
+```text
+/var/www/vhosts/acetin.com.tr/
+  httpdocs/
+    assets/
+    includes/
+    uploads/
+    index.php
+    hikaye.php
+    hikayeler.php
+    atolye.php
+    yorum-kaydet.php
+    deploy-manifest.json
+    .htaccess
+
+  acetinweb_private/
+    app/
+    config/
+    storage/
+      fikrimvar.sqlite
+      backups/
+      deploy-manifests/
+```
+
+`httpdocs` sadece ziyaretcinin gorecegi public yuzdur. `acetinweb_private`
+uygulamanin motor odasidir.
 
 ## A. Canliya yuklenecekler
 
-Tercih edilen kurulumda domain document root dogrudan `public/` klasorune
-bakar. Bu durumda URL'de `/public/` gorunmez.
+Domain document root dogrudan `httpdocs/` olmalidir. Localde
+`C:\xampp\htdocs\acetinweb\` altinda gordugun site dosyalari canlida
+dogrudan `httpdocs/` icine kopyalanir. URL'de `/public/` gorunmez.
 
 Yuklenecek uygulama dosyalari:
 
-- `public/`
-- `app/`
-- `config/config.php`
-- `config/local.example.php`
-- `.htaccess`
-- `index.php`
-- `robots.txt`
-- `sitemap.xml`
-- `VERSION.txt`
-- `DEPLOY_CHECKLIST.md` sadece canli web kokunun disinda tutulacaksa
-- `LIVE_DEPLOY_PLAN.md` sadece canli web kokunun disinda tutulacaksa
+- kok site dosyalari -> `httpdocs/`
+- `app/` -> `acetinweb_private/app/`
+- `config/config.php` -> `acetinweb_private/config/config.php`
+- `config/local.example.php` -> `acetinweb_private/config/local.example.php`
 
 Yuklenecek icerik dosyalari:
 
-- `public/uploads/`
-- `public/uploads/.htaccess`
-- `public/deploy-manifest.json` sade public kontrol dosyasi olarak
+- `uploads/` -> `httpdocs/uploads/`
+- `uploads/.htaccess` -> `httpdocs/uploads/.htaccess`
+- `deploy-manifest.json` -> `httpdocs/deploy-manifest.json`
 
-Not: `public/deploy-manifest.json` DB hash, DB boyutu, local yol, app/config
+Not: `deploy-manifest.json` DB hash, DB boyutu, local yol, app/config
 dosya listesi veya hassas path bilgisi icermemelidir.
 
 ## B. Canlida elle olusturulacaklar
 
-Sunucuda public web kokunun disinda:
+Sunucuda `httpdocs` disinda:
 
 - `acetinweb_private/storage/`
 - `acetinweb_private/storage/fikrimvar.sqlite`
 - `acetinweb_private/storage/backups/`
 - `acetinweb_private/storage/deploy-manifests/`
+- `acetinweb_private/config/local.php`
 
 Canliya ozel config:
 
-- `config/local.php`
+- `acetinweb_private/config/local.php`
 
 Ornek:
 
@@ -52,6 +77,7 @@ Ornek:
 declare(strict_types=1);
 
 return [
+    'public_path' => '/var/www/vhosts/acetin.com.tr/httpdocs',
     'storage_path' => '/var/www/vhosts/acetin.com.tr/acetinweb_private/storage',
     'db_path' => '/var/www/vhosts/acetin.com.tr/acetinweb_private/storage/fikrimvar.sqlite',
     'allow_system_check' => false,
@@ -61,7 +87,7 @@ return [
 Permissions:
 
 - PHP kullanicisi SQLite dosyasini okuyup yazabilmeli.
-- PHP kullanicisi `public/uploads/` icine dosya yazabilmeli.
+- PHP kullanicisi `uploads/` icine dosya yazabilmeli.
 - PHP kullanicisi private storage altinda backup ve deploy log yazabilmeli.
 
 ## C. Canliya yuklenmeyecekler
@@ -82,7 +108,7 @@ Permissions:
 - `ARCHITECTURE_REFACTOR_CHECKLIST.md`
 - `REFACTOR_GIT_RULES.md`
 - `SYSTEM_OVERVIEW.md`
-- `public/guven*.txt`
+- `guven*.txt`
 - local prompt, analiz, not ve gecici dosyalari
 
 ## D. Canli test sirasi
@@ -105,8 +131,7 @@ Kapali olmasi gerekenler:
 - `https://www.acetin.com.tr/README.txt`
 - `https://www.acetin.com.tr/TEST_REPORT.txt`
 - `https://www.acetin.com.tr/DEPLOY_CHECKLIST.md`
-- `https://www.acetin.com.tr/system-check.php`
-- `https://www.acetin.com.tr/public/system-check.php`
+- `https://www.acetin.com.tr/system-check.php` beklenen: 404
 
 Manifest:
 
@@ -120,10 +145,11 @@ Canli icin onerilen yol temiz kurulumdur:
 
 1. Canli mevcut kodu yedekle.
 2. Canli SQLite dosyasini yedekle.
-3. `public/uploads/` klasorunu yedekle.
-4. Domain document root'u `public/` olarak ayarla.
-5. Uygulama dosyalarini yukle.
-6. `config/local.php` dosyasini sunucuda elle olustur.
-7. SQLite ve uploads dosyalarini yerine koy.
-8. Sade `public/deploy-manifest.json` dosyasini yukle.
-9. Public ve hassas URL testlerini calistir.
+3. `uploads/` klasorunu yedekle.
+4. Domain document root'u `httpdocs/` olarak birak veya ayarla.
+5. Local kok site dosyalarini `httpdocs/` icine yukle.
+6. `app/` ve `config/` dosyalarini `acetinweb_private/` altina yukle.
+7. `acetinweb_private/config/local.php` dosyasini sunucuda elle olustur.
+8. SQLite ve uploads dosyalarini yerine koy.
+9. Sade `deploy-manifest.json` dosyasini `httpdocs/` icine yukle.
+10. Public ve hassas URL testlerini calistir.

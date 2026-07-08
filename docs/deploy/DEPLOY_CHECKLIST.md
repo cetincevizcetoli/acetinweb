@@ -2,18 +2,21 @@
 
 ## Web root
 
-- Canli sunucuda domain document root dogrudan `public/` olmalidir.
+- Canli sunucuda domain document root `httpdocs/` olmalidir.
+- Localde `C:\xampp\htdocs\acetinweb\` neyse canlida `httpdocs/` odur.
+- `app/`, `config/` ve `storage/` canlida `httpdocs` disindaki `acetinweb_private/` altinda durmalidir.
 - Kullanici `https://www.acetin.com.tr/` actiginda site acilmali, URL'de `/public/` gorunmemelidir.
 - `app/`, `config/`, `tools/`, `admin-local/`, `storage/`, `_backups/`, `.git/` web root disinda kalmalidir.
 - Eger hosting zorunlu olarak proje kokunu web root yaparsa kok `.htaccess` korumalari aktif olmalidir.
 - Proje koku web root olursa `/.htaccess` hassas klasorleri ve dosyalari kapatir.
 - Koku web root yapmak ikinci tercihtir. Bu durumda kok `.htaccess` public klasorune internal rewrite yapar ve hassas klasorleri deny eder.
-- `public/` web root olursa `/public/.htaccess` directory listing, dotfile ve yedek/db uzantilarini kapatir.
+- Canlida kok `.htaccess` dosyasi `httpdocs/.htaccess` olarak yer alir; directory listing, helper dosyalari, dotfile ve yedek/db uzantilarini kapatir.
 
 ## Ortam ayari
 
 - Uygulama kodu local ve canli icin ayni kalmalidir.
 - `config/config.php` once ortam degiskenlerini ve `config/local.php` dosyasini okur.
+- Canlida `config/config.php` yolu `acetinweb_private/config/config.php` olmalidir.
 - `config/local.php` yoksa local XAMPP icin `C:/xampp/acetinweb_private/storage`, canli Plesk icin proje kokunun yanindaki `acetinweb_private/storage` yolu otomatik denenir.
 - Canlida tercih edilen DB yolu: `/var/www/vhosts/acetin.com.tr/acetinweb_private/storage/fikrimvar.sqlite`.
 - Ortama ozel fark gerekiyorsa sadece `config/local.php` veya ortam degiskeni degisir; uygulama dosyalari degismez.
@@ -34,21 +37,21 @@
 
 ## System check
 
-- `public/system-check.php` yalnizca local loopback IP'lerinden calismalidir.
+- Sistem kontrolu public kokte tutulmaz; localde admin panelde `admin-local/system.php` kullanilir.
 - Canli domainde 403 veya `system-check disabled` mesaji donmelidir.
 - Canli ortamda DB yolu, storage yolu veya server bilgisi sizdirmamalidir.
 
 ## Deploy manifest
 
-- `public/deploy-manifest.json` public URL'de acilabilir ama sade olmalidir.
+- `deploy-manifest.json` public URL'de acilabilir ama sade olmalidir.
 - Public manifest DB hash'i, DB boyutu, local/sunucu path, `app/`, `config/` veya detayli dosya listesi icermemelidir.
 - Detayli manifest sadece local/admin tarafinda ve private storage altinda tutulur.
 - Canli kontrol icin public manifestte yalnizca version, generated_at, release_hash ve public_assets_hash gibi ozet alanlar kalmalidir.
 
 ## Uploads ve medya
 
-- `public/uploads/` siteyle birlikte yedeklenmelidir.
-- `public/uploads/.htaccess` calistirilabilir dosyalari engellemelidir.
+- `uploads/` siteyle birlikte yedeklenmelidir.
+- `uploads/.htaccess` calistirilabilir dosyalari engellemelidir.
 - Kucuk gorseller ve kapaklar siteye yuklenebilir.
 - Buyuk MP4 ve uzun ses dosyalari mumkunse YouTube, Vimeo, SoundCloud veya CDN uzerinden baglanmalidir.
 
@@ -73,7 +76,7 @@ Link olarak eklenmesi onerilir:
 - Sik degisen veya cok buyuk proje ciktilari.
 - Arsiv niteligi tasiyan ama site performansini, kotayi veya yedeklemeyi zorlayacak dosyalar.
 
-Buyuk dosyalari dogrudan `public/uploads` altinda tutmak uc maliyet olusturur:
+Buyuk dosyalari dogrudan `uploads` altinda tutmak uc maliyet olusturur:
 
 - Yedekleme agirlasir.
 - Hosting kotasi ve trafik limiti daha hizli dolar.
@@ -92,7 +95,7 @@ Ileride admin medya ekranina buyuk dosya uyarisi eklenmesi onerilir. Ornek uyari
 ## Canli oncesi yedek
 
 - SQLite DB yedegi al.
-- `public/uploads/` klasorunu yedekle.
+- `uploads/` klasorunu yedekle.
 - Canliya yuklenecek dosya listesini kontrol et.
 - Gereksiz local backup, zip ve test dosyalarini canli pakete dahil etme.
 
@@ -100,22 +103,17 @@ Ileride admin medya ekranina buyuk dosya uyarisi eklenmesi onerilir. Ornek uyari
 
 Canliya yukle:
 
-- `public/`
-- `app/`
-- `config/config.php`
-- `config/local.example.php`
-- `.htaccess`
-- `index.php`
-- `robots.txt`
-- `sitemap.xml`
-- `VERSION.txt`
-- `public/uploads/`
-- sade `public/deploy-manifest.json`
+- Kok site dosyalari -> `httpdocs/`
+- `app/` -> `acetinweb_private/app/`
+- `config/config.php` -> `acetinweb_private/config/config.php`
+- `config/local.example.php` -> `acetinweb_private/config/local.example.php`
+- `uploads/` -> `httpdocs/uploads/`
+- sade `deploy-manifest.json` -> `httpdocs/deploy-manifest.json`
 
 Canlida elle olustur:
 
-- `config/local.php`
-- public disinda private storage klasoru
+- `acetinweb_private/config/local.php`
+- `acetinweb_private/storage/`
 - `fikrimvar.sqlite`
 - backup klasoru
 - gerekli dosya izinleri
@@ -138,7 +136,7 @@ Canliya yukleme:
 - `/hikayeler.php`
 - `/hikaye.php?slug=acetin-com-tr-gelistirmesi`
 - `/hikaye.php?slug=webbordro`
-- `/system-check.php` beklenen: local disinda 403
+- `/system-check.php` beklenen: 404
 - `/.git/config` beklenen: 403 veya 404
 - `/app/` beklenen: 403 veya 404
 - `/config/` beklenen: 403 veya 404

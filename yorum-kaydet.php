@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-require __DIR__ . '/../app/bootstrap.php';
+require __DIR__ . '/_bootstrap.php';
 if(!is_post()) redirect('index.php');
 verify_csrf();
 $name=trim((string)($_POST['name'] ?? '')); $message=trim((string)($_POST['message'] ?? '')); $website=trim((string)($_POST['website'] ?? ''));

@@ -1,0 +1,347 @@
+FikrimVar / acetinweb projesinde “Canlı Yayın Öncesi Son Sertleştirme ve Deploy Hazırlığı” işini yap.
+
+Proje yolu:
+C:\xampp\htdocs\acetinweb
+
+Yerel site:
+http://localhost/acetinweb/public/
+
+Canlı site:
+https://www.acetin.com.tr/
+
+BU GÖREVDE:
+- Hero’ya dokunma.
+- Public tasarımı değiştirme.
+- Yeni özellik ekleme.
+- Hikâye / Atölye içeriklerini değiştirme.
+- Veritabanını sıfırlama.
+- Mevcut medyaları silme.
+- Canlı sunucuya otomatik yükleme yapma.
+- FTP/SFTP/SSH şifresi isteme veya dosyaya yazma.
+- Önce incele, sonra küçük ve güvenli düzeltmeleri uygula.
+- Yaptığın her şeyi raporla.
+
+AMAÇ:
+Claude, Gemini ve ChatGPT incelemelerinde çıkan canlı yayın endişelerini gidermek:
+
+1. Canlıda /public/ URL’si görünmemeli.
+2. Document root mümkünse public/ olmalı.
+3. .git, app, config, tools, admin-local, README, TEST_REPORT, DEPLOY_CHECKLIST gibi dosyalar web’den okunmamalı.
+4. config/local.php ve SQLite veritabanı kaynak pakette / Git’te dolaşmamalı.
+5. public/system-check.php canlıda bilgi sızdırmamalı.
+6. admin-local canlıda erişilebilir olmamalı.
+7. deploy-manifest.json gereksiz iç yapı veya DB hash’i sızdırmamalı.
+8. Büyük medya dosyaları için strateji deploy notunda açık olmalı.
+9. Gerçek tarayıcı / HTTP kontrolleri yapılmalı.
+10. Canlıya geçiş için net “yükle / yükleme / sunucuda elle oluştur” listesi oluşmalı.
+
+ÖNCE MEVCUT DURUMU İNCELE:
+
+A. Yerel dosya yapısı
+Şunları kontrol et:
+- public/
+- app/
+- config/
+- tools/
+- admin-local/
+- .htaccess
+- public/.htaccess
+- public/uploads/.htaccess
+- config/local.php
+- config/local.example.php var mı?
+- DEPLOY_CHECKLIST.md
+- deploy-manifest.json nerede?
+- storage veya backup dosyaları web kökü altında kalmış mı?
+- .gitignore doğru mu?
+
+B. Canlı URL kontrolü
+Mümkünse şu adresleri HTTP üzerinden kontrol et:
+
+Olması gereken public sayfalar:
+- https://www.acetin.com.tr/
+- https://www.acetin.com.tr/hikayeler.php
+- https://www.acetin.com.tr/hikaye.php?slug=acetin-com-tr-gelistirmesi
+- https://www.acetin.com.tr/hikaye.php?slug=webbordro
+- https://www.acetin.com.tr/hikaye.php?slug=ai-context
+
+Kesinlikle erişilmemesi gerekenler:
+- https://www.acetin.com.tr/.git/config
+- https://www.acetin.com.tr/config/local.php
+- https://www.acetin.com.tr/app/bootstrap.php
+- https://www.acetin.com.tr/admin-local/login.php
+- https://www.acetin.com.tr/tools/
+- https://www.acetin.com.tr/README.txt
+- https://www.acetin.com.tr/TEST_REPORT.txt
+- https://www.acetin.com.tr/DEPLOY_CHECKLIST.md
+- https://www.acetin.com.tr/system-check.php
+- https://www.acetin.com.tr/public/system-check.php
+- https://www.acetin.com.tr/deploy-manifest.json
+- https://www.acetin.com.tr/public/deploy-manifest.json
+
+Raporla:
+- 200 dönenler
+- 403/404 dönenler
+- yönlenenler
+- riskli görünenler
+
+Canlıya erişim yoksa veya HTTP testi yapılamazsa açıkça belirt.
+
+YAPILACAK DÜZELTMELER:
+
+1. Document root ve /public/ meselesi
+
+En doğru canlı kurulum:
+Domain document root doğrudan public/ klasörüne bakmalı.
+Kullanıcı https://www.acetin.com.tr/ açtığında site açılmalı, URL’de /public/ görünmemeli.
+
+DEPLOY_CHECKLIST.md içine bunu net yaz:
+“Canlıda domain document root = public/ olmalı.”
+
+Eğer hosting panelinde bu mümkün değilse fallback planı yaz:
+- kök .htaccess ile public/ içine yönlendirme
+- hassas klasörleri deny etme
+- ama bunun ikinci tercih olduğunu açıkça belirt
+
+Kodda sabit /public/ linkleri veya hatalı base path varsa kontrol et.
+Sabit public/ bağımlılığı varsa düzelt.
+
+2. config/local.php hijyeni
+
+config/local.php gerçek ortam dosyasıdır.
+Git’e ve paylaşılacak ZIP paketlerine girmemeli.
+
+Yapılacaklar:
+- config/local.php .gitignore içinde olmalı.
+- Eğer Git tarafından takip ediliyorsa raporla ve git rm --cached önerisi ver.
+- config/local.example.php oluştur veya güncelle.
+- local.example.php içinde gerçek sunucu yolu, gerçek DB yolu, parola veya özel bilgi olmasın.
+- Uygulama local.php yoksa anlaşılır hata versin veya example dosyasını işaret etsin.
+
+Canlıda local.php elle oluşturulacak şekilde DEPLOY_CHECKLIST’e ekle.
+
+3. SQLite ve backup dosyaları
+
+SQLite DB htdocs/public dışında olmalı.
+
+Beklenen canlı yapı örneği:
+private/storage/fikrimvar.sqlite
+private/storage/backups/
+
+Yapılacaklar:
+- Proje içinde *.sqlite, *.sqlite-*, *.bak, *.db dosyaları ara.
+- Public altında veya repo içinde olmamaları gerektiğini raporla.
+- .gitignore içinde bu türler kapalı olsun.
+- Public sayfalarda DB yolu görünmesin.
+- system-check sadece localde veya açıkça izinliyse çalışsın.
+
+4. system-check.php
+
+public/system-check.php canlıda bilgi sızdırmamalı.
+
+Tercih edilen davranış:
+- sadece localhost / 127.0.0.1 / ::1 için çalışsın
+veya
+- config/local.php içinde allow_system_check=true ise çalışsın
+- aksi halde 403 veya sade “disabled” dönsün
+
+Canlıda DB yolu, storage yolu, server path, PHP detayları göstermesin.
+
+Yerelde çalışmaya devam etsin.
+
+5. admin-local
+
+admin-local yalnızca yerel kullanım içindir.
+
+Yapılacaklar:
+- localhost dışından erişim kesin reddedilmeli.
+- Apache .htaccess + PHP kontrol birlikte çalışmalı.
+- Login/footer içinde DB yolu, storage yolu veya local path görünmemeli.
+- DEPLOY_CHECKLIST içine “admin-local canlıya yüklenmemeli; yüklenecekse IP/HTTPS ile ayrıca korunmalı” yaz.
+
+6. deploy-manifest.json
+
+deploy-manifest canlıda fazla bilgi sızdırmamalı.
+
+Kontrol et:
+- public/deploy-manifest.json herkese açık mı?
+- içinde app/config/tools dosya listeleri var mı?
+- DB hash’i veya DB boyutu var mı?
+- sunucu yolu, local yol veya hassas dosya adı var mı?
+
+Beklenen düzeltme:
+- Manifest public olmak zorunda değilse public dışına taşı veya erişime kapat.
+- Public kalması gerekiyorsa sadeleştir:
+  sadece version, generated_at, public_asset_hash gibi zararsız bilgiler kalsın.
+- DB hash’i, DB boyutu, app/config dosya listesi public manifest içinde olmasın.
+- Deploy aracı local/admin tarafında detaylı manifest kullanabilir, ama public URL’de geveze manifest olmamalı.
+
+7. .htaccess savunma katmanı
+
+Canlı document root public olsa bile yanlış kurulum ihtimaline karşı kök .htaccess güvenlik ağı olarak kalmalı.
+
+Kontrol et ve gerekirse güçlendir:
+- .git kapalı
+- app kapalı
+- config kapalı
+- tools kapalı
+- admin-local kapalı veya local
+- storage kapalı
+- backup kapalı
+- md/txt/sql/sqlite/db/bak/zip/env/key/pem dosyaları kapalı
+- public/uploads içinde PHP/CGI/HTML çalışmasın
+- directory listing kapalı
+
+8. Medya ve büyük dosya stratejisi
+
+Bu görevde admin medya ekranını değiştirme.
+Upload sistemini değiştirme.
+Mevcut medya kayıtlarını silme veya taşıma.
+
+Sadece DEPLOY_CHECKLIST.md içine “Medya ve Büyük Dosya Stratejisi” başlığı ekle veya mevcutsa güncelle.
+
+Metin şu mantığı taşımalı:
+
+- Küçük görseller, kapak görselleri, hikâye içi açıklayıcı görseller ve düşük boyutlu ekran görüntüleri siteye yüklenebilir.
+- Büyük MP4 dosyaları mümkünse doğrudan siteye yüklenmemeli.
+- Uzun videolar, yüksek çözünürlüklü render’lar ve tekrar tekrar izlenecek içerikler YouTube, Vimeo veya CDN üzerinden bağlanmalı.
+- MP3 ve uzun ses dosyaları için de aynı mantık geçerli.
+- public/uploads büyüdükçe yedekleme ağırlaşır, hosting kotası dolar, taşıma zorlaşır.
+
+Önerilen ayrım:
+
+Site içine yükle:
+- Kapak görselleri
+- Küçük WebP/JPG/PNG görseller
+- Hikâye içinde gerekli ekran görüntüleri
+- Kısa PDF/TXT belgeleri
+- Küçük ses/video örnekleri
+
+Link olarak ekle:
+- Büyük MP4 dosyaları
+- Uzun ses kayıtları
+- Sosyal medya videoları
+- YouTube / Instagram / Vimeo içerikleri
+- Sık değişen veya çok büyük proje çıktıları
+- Arşiv niteliğinde ama site performansını etkileyecek dosyalar
+
+Net tavsiye:
+#FikrimVar’ın kendi sunucusu hikâyeyi ve küçük kanıt görsellerini taşısın. Büyük video ve uzun ses dosyaları mümkün olduğunca harici platform/CDN üzerinden bağlansın.
+
+9. Test verisi ve görünür içerik kontrolü
+
+Veritabanında veya public sayfalarda şu kalıntıları ara:
+- test 1
+- test
+- lorem
+- dummy
+- deneme
+- örnek kayıt
+- placeholder
+
+Ama her “deneme” kelimesini hata sayma, çünkü sitenin doğası deneme üzerine.
+Sadece açıkça geçici/test kalıntısı gibi duranları raporla.
+Otomatik silme yapma.
+
+10. Gerçek testler
+
+Şunları çalıştır:
+
+- PHP syntax kontrolü
+- JS syntax kontrolü
+- SQLite integrity_check
+- SQLite foreign_key_check
+- schema-check
+- public ana sayfa HTTP 200
+- hikayeler.php HTTP 200
+- en az 5 hikâye detayı HTTP 200
+- admin-local login local HTTP 200
+- system-check local HTTP 200
+- system-check local dışı simülasyon
+- /.git/config erişim testi
+- /app/bootstrap.php erişim testi
+- /config/local.php erişim testi
+- /admin-local/login.php erişim testi
+- /tools/ erişim testi
+- README / TEST_REPORT / DEPLOY_CHECKLIST erişim testi
+- deploy-manifest erişim testi
+- mobil yatay taşma kontrolü mümkünse
+- tarayıcı konsol hatası mümkünse
+
+11. Canlı deploy çıktısı
+
+LIVE_DEPLOY_PLAN.md oluştur.
+
+Bu dosyada şu üç liste olsun:
+
+A. Canlıya yüklenecekler
+Örneğin:
+- public/
+- gerekli app/config/tools dosyaları eğer public dışında konumlandırılacaksa
+- public/uploads içeriği
+- schema veya deploy tool sadece gerekiyorsa
+
+B. Canlıda elle oluşturulacaklar
+- config/local.php
+- private storage klasörü
+- SQLite DB
+- backup klasörü
+- gerekli permissions
+
+C. Canlıya yüklenmeyecekler
+- .git/
+- config/local.php
+- SQLite backup dosyaları
+- admin-local, eğer canlıda kullanılmayacaksa
+- mocap/
+- arşiv/
+- TEST_REPORT, README, AGENTS, development docs
+- local ZIP ve backup dosyaları
+
+12. Final karar tablosu
+
+Raporun sonunda şu tabloyu ver:
+
+- Public root hazır mı?
+- /public/ URL problemi çözüldü mü?
+- .git erişimi kapalı mı?
+- config/local.php korunuyor mu?
+- DB public dışında mı?
+- system-check güvenli mi?
+- admin-local güvenli mi?
+- deploy-manifest güvenli mi?
+- uploads güvenli mi?
+- canlıya çıkış için kalan manuel adımlar neler?
+
+RAPOR FORMATİ:
+
+1. İncelenen yapı
+2. Claude endişeleri için sonuç
+3. Gemini endişeleri için sonuç
+4. ChatGPT endişeleri için sonuç
+5. Yapılan düzeltmeler
+6. Değişen dosyalar
+7. Değişmeyen ama bilinçli bırakılan alanlar
+8. Hassas dosya erişim testleri
+9. Canlı URL testleri
+10. config/local.php ve DB durumu
+11. deploy-manifest durumu
+12. Medya stratejisi
+13. Oluşturulan LIVE_DEPLOY_PLAN.md
+14. Test sonuçları
+15. Canlıya geçmeden önce elle yapman gerekenler
+16. Net karar: soft launch yapılabilir mi?
+
+KABUL ÖLÇÜTLERİ:
+
+- Canlıda document root public/ olacak şekilde net deploy planı olmalı.
+- /public/ URL’de görünmemesi için öneri ve gerekirse local yönlendirme hazırlığı olmalı.
+- config/local.php kaynak pakette / Git’te dolaşmamalı.
+- SQLite ve backup public altında olmamalı.
+- system-check canlıda bilgi sızdırmamalı.
+- admin-local canlıya açık kalmamalı.
+- deploy-manifest publicte gereksiz iç yapı ve DB bilgisi göstermemeli.
+- Hassas dosya testleri 403/404 dönmeli.
+- Public sayfalar çalışmaya devam etmeli.
+- Hero ve tasarım değişmemeli.
+
+Belirsizlik varsa kodlamadan önce sor.

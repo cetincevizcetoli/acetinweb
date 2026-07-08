@@ -186,7 +186,7 @@ admin_head($id ? 'Bölümü düzenle' : 'Yeni bölüm');
     </div>
     <div style="display:flex;gap:10px;flex-wrap:wrap">
         <a class="button secondary" href="story-edit.php?project_id=<?= $projectId ?>">Hikâyeye dön</a>
-        <a class="button secondary" href="../public/hikaye.php?slug=<?= e(rawurlencode((string)$story['project_slug'])) ?>" target="_blank" rel="noopener">Önizle</a>
+        <a class="button secondary" href="../hikaye.php?slug=<?= e(rawurlencode((string)$story['project_slug'])) ?>" target="_blank" rel="noopener">Önizle</a>
     </div>
 </div>
 <?php if ($error): ?><div class="flash flash-error"><?= e($error) ?></div><?php endif; ?>
@@ -220,7 +220,7 @@ admin_head($id ? 'Bölümü düzenle' : 'Yeni bölüm');
             <div class="field"><label>Yeni dosyalar</label><input type="file" name="media_files[]" multiple accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,audio/mpeg,audio/wav,audio/ogg,application/pdf"></div>
             <div class="field"><label>Birincil medya</label><select name="primary_media_id"><option value="">Yok</option><?php foreach ($projectMedia as $m): ?><option value="<?= (int)$m['id'] ?>" <?= (int)($section['media_id'] ?? 0) === (int)$m['id'] ? 'selected' : '' ?>><?= e($m['original_name']) ?> · <?= e($m['media_type']) ?></option><?php endforeach; ?></select></div>
             <h3>Galeri / ek medya</h3>
-            <div class="media-grid"><?php foreach ($projectMedia as $m): ?><label class="media-card"><input type="checkbox" name="gallery_media_ids[]" value="<?= (int)$m['id'] ?>" <?= in_array((int)$m['id'], $selectedGallery, true) ? 'checked' : '' ?>><?php if ($m['media_type'] === 'image'): ?><img src="../public/<?= e($m['relative_path']) ?>" alt=""><?php else: ?><div style="height:120px;display:grid;place-items:center;background:#090d11"><?= e(strtoupper($m['media_type'])) ?></div><?php endif; ?><small><?= e($m['original_name']) ?></small></label><?php endforeach; ?></div>
+            <div class="media-grid"><?php foreach ($projectMedia as $m): ?><label class="media-card"><input type="checkbox" name="gallery_media_ids[]" value="<?= (int)$m['id'] ?>" <?= in_array((int)$m['id'], $selectedGallery, true) ? 'checked' : '' ?>><?php if ($m['media_type'] === 'image'): ?><img src="../<?= e($m['relative_path']) ?>" alt=""><?php else: ?><div style="height:120px;display:grid;place-items:center;background:#090d11"><?= e(strtoupper($m['media_type'])) ?></div><?php endif; ?><small><?= e($m['original_name']) ?></small></label><?php endforeach; ?></div>
         </aside>
 
         <section class="panel">

@@ -5,14 +5,16 @@ require __DIR__ . '/_bootstrap.php';
 admin_require_login();
 
 const DEPLOY_REMOTE_MANIFEST_URL = 'https://www.acetin.com.tr/deploy-manifest.json';
-const DEPLOY_REMOTE_MANIFEST_FALLBACK_URL = 'https://www.acetin.com.tr/public/deploy-manifest.json';
 const DEPLOY_LIVE_DB_TARGET = '/var/www/vhosts/acetin.com.tr/acetinweb_private/storage/fikrimvar.sqlite';
 
 function deploy_rel(string $path): string
 {
-    $root = rtrim(str_replace('\\', '/', FV7_ROOT), '/') . '/';
     $path = str_replace('\\', '/', $path);
-    return str_starts_with($path, $root) ? substr($path, strlen($root)) : $path;
+    foreach ([FV7_PUBLIC, FV7_ROOT] as $rootPath) {
+        $root = rtrim(str_replace('\\', '/', $rootPath), '/') . '/';
+        if (str_starts_with($path, $root)) return substr($path, strlen($root));
+    }
+    return $path;
 }
 
 function deploy_file_record(string $path): ?array
@@ -51,22 +53,27 @@ function deploy_collect_tree(string $dir, array $skipDirs=[]): array
 function deploy_collect_code_files(): array
 {
     $records = [];
-    foreach ([FV7_ROOT . '/app', FV7_ROOT . '/public'] as $dir) {
+    foreach ([FV7_ROOT . '/app', FV7_PUBLIC . '/assets', FV7_PUBLIC . '/includes'] as $dir) {
         $records = array_merge($records, deploy_collect_tree($dir, ['uploads']));
     }
     foreach ([
         FV7_ROOT . '/config/config.php',
-        FV7_ROOT . '/.htaccess',
-        FV7_ROOT . '/index.php',
-        FV7_ROOT . '/robots.txt',
-        FV7_ROOT . '/sitemap.xml',
-        FV7_ROOT . '/VERSION.txt',
-        FV7_ROOT . '/DEPLOY_CHECKLIST.md',
+        FV7_PUBLIC . '/.htaccess',
+        FV7_PUBLIC . '/_bootstrap.php',
+        FV7_PUBLIC . '/_config.php',
+        FV7_PUBLIC . '/_private.php',
+        FV7_PUBLIC . '/atolye.php',
+        FV7_PUBLIC . '/hikaye.php',
+        FV7_PUBLIC . '/hikayeler.php',
+        FV7_PUBLIC . '/index.php',
+        FV7_PUBLIC . '/robots.txt',
+        FV7_PUBLIC . '/sitemap.xml',
+        FV7_PUBLIC . '/yorum-kaydet.php',
     ] as $path) {
         $record = deploy_file_record($path);
         if ($record) $records[] = $record;
     }
-    $records = array_values(array_filter($records, fn($r) => $r['path'] !== 'public/deploy-manifest.json'));
+    $records = array_values(array_filter($records, fn($r) => $r['path'] !== 'deploy-manifest.json'));
     usort($records, fn($a, $b) => $a['path'] <=> $b['path']);
     return $records;
 }
@@ -75,7 +82,7 @@ function deploy_collect_upload_files(): array
 {
     return array_values(array_filter(
         deploy_collect_tree(FV7_UPLOAD_ROOT),
-        fn($r) => $r['path'] !== 'public/uploads/.htaccess'
+        fn($r) => $r['path'] !== 'uploads/.htaccess'
     ));
 }
 
@@ -100,7 +107,7 @@ function deploy_manifest(): array
         'site' => 'fikrimvar',
         'schema' => 1,
         'generated_at' => date('c'),
-        'version' => is_file(FV7_ROOT . '/VERSION.txt') ? trim((string)file_get_contents(FV7_ROOT . '/VERSION.txt')) : '',
+        'version' => is_file(FV7_ROOT . '/docs/VERSION.txt') ? trim((string)file_get_contents(FV7_ROOT . '/docs/VERSION.txt')) : '',
         'code_commit' => deploy_git_commit(),
         'db' => $db,
         'code_files' => $codeFiles,
@@ -112,7 +119,7 @@ function deploy_manifest(): array
         'uploads' => array_column($uploadFiles, 'sha256', 'path'),
     ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
     $manifest['public_assets_hash'] = hash('sha256', json_encode([
-        'code' => array_column(array_filter($codeFiles, fn($r) => str_starts_with((string)$r['path'], 'public/')), 'sha256', 'path'),
+        'code' => array_column(array_filter($codeFiles, fn($r) => !str_starts_with((string)$r['path'], 'app/') && !str_starts_with((string)$r['path'], 'config/')), 'sha256', 'path'),
         'uploads' => count($uploadFiles),
     ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
     $manifest['release_hash'] = hash('sha256', (string)$manifest['local_hash']);
@@ -149,7 +156,7 @@ function deploy_fetch_remote_manifest(): array
         'ssl' => ['verify_peer' => true, 'verify_peer_name' => true],
     ]);
     $attempts = [];
-    foreach ([DEPLOY_REMOTE_MANIFEST_URL, DEPLOY_REMOTE_MANIFEST_FALLBACK_URL] as $url) {
+    foreach ([DEPLOY_REMOTE_MANIFEST_URL] as $url) {
         $raw = @file_get_contents($url, false, $context);
         $headers = $http_response_header ?? [];
         $status = deploy_http_status($headers);
@@ -301,7 +308,7 @@ if (!$remoteManifest) {
 } elseif ($sameAsLive) {
     $nextStep = 'Su anda ekstra gonderim gerekmiyor.';
 } elseif ($dbDifferent === true && $codeChangeCount === 0 && $uploadChangeCount === 0) {
-    $nextStep = 'Sadece SQLite DB farkli gorunuyor. Yayin paketini hazirla, sonra fikrimvar.sqlite ve public/deploy-manifest.json dosyasini birlikte canliya gonder.';
+    $nextStep = 'Sadece SQLite DB farkli gorunuyor. Yayin paketini hazirla, sonra fikrimvar.sqlite ve deploy-manifest.json dosyasini birlikte canliya gonder.';
 } else {
     $nextStep = $remoteHasDetailedManifest ? 'Fark listesine bak; degisen DB, medya veya kod dosyalarini canliya gonder.' : 'Canli kontrol dosyasi guvenli ozet formatinda. Degisen dosyalari yereldeki diff ve yayin planina gore gonder.';
 }
@@ -316,12 +323,12 @@ admin_head('Yayin Merkezi');
         <h1>Yayin paketi kontrolu</h1>
         <p>Localdeki son hali canli sunucuyla karsilastirir. Yayinlamadan once paketi hazirla; sonra ekranda yazan dosyalari canliya gonder.</p>
     </div>
-    <a class="button secondary" href="../public/deploy-manifest.json" target="_blank">Kontrol dosyasini ac</a>
+    <a class="button secondary" href="../deploy-manifest.json" target="_blank">Kontrol dosyasini ac</a>
 </div>
 
 <div class="stat-grid">
     <div class="stat"><strong><?= e($sameAsLive ? 'Ayni' : ($remoteManifest ? 'Fark var' : 'Kontrol yok')) ?></strong><span>Local / canli</span></div>
-    <div class="stat"><strong><?= count($localManifest['code_files']) ?></strong><span>Kod/public dosyasi</span></div>
+    <div class="stat"><strong><?= count($localManifest['code_files']) ?></strong><span>Kod/site dosyasi</span></div>
     <div class="stat"><strong><?= count($localManifest['uploads']) ?></strong><span>Medya dosyasi</span></div>
     <div class="stat"><strong><?= e(deploy_size((int)$localManifest['db']['size'])) ?></strong><span>SQLite DB</span></div>
 </div>
@@ -333,14 +340,14 @@ admin_head('Yayin Merkezi');
         <div class="list-row"><span>Canli kontrol dosyasi</span><strong><?= $remoteManifest ? 'Okundu' : 'Okunamadi' ?></strong><small><?= e($remoteUrl ?: 'Calisan kontrol dosyasi adresi bulunamadi') ?></small></div>
         <div class="list-row"><span>DB</span><strong><?= $dbDifferent === null ? 'Public manifestte gizli' : ($dbDifferent ? 'Farkli' : 'Ayni') ?></strong><small><?= e($dbDirection ?: 'DB hash ve boyut bilgisi public manifestte yayinlanmaz') ?></small></div>
         <div class="list-row"><span>Kod</span><strong><?= $codeDiff ? ($codeChangeCount . ' fark') : 'Public manifestte detay yok' ?></strong><small>Detayli liste sadece local/private manifestte tutulur</small></div>
-        <div class="list-row"><span>Medya</span><strong><?= $uploadDiff ? ($uploadChangeCount . ' fark') : 'Public manifestte detay yok' ?></strong><small>public/uploads icindeki dosya listesi public URL'de yayinlanmaz</small></div>
+        <div class="list-row"><span>Medya</span><strong><?= $uploadDiff ? ($uploadChangeCount . ' fark') : 'Public manifestte detay yok' ?></strong><small>uploads icindeki dosya listesi public URL'de yayinlanmaz</small></div>
         <div class="list-row"><span>Sonraki adim</span><strong><?= e($nextStep) ?></strong><small></small></div>
     </div>
 </section>
 
 <section class="panel">
     <h2>Yayin kurallari</h2>
-    <p class="help">Local ana kaynaktir. Canli DB uzerinde elle degisiklik yapilmaz. Canliya gondermeden once DB ve `public/uploads/` yedegi alinir. Admin panel canlida tutulmaz.</p>
+    <p class="help">Local ana kaynaktir. Canli DB uzerinde elle degisiklik yapilmaz. Canliya gondermeden once DB ve `uploads/` yedegi alinir. Admin panel canlida tutulmaz.</p>
     <div class="list">
         <div class="list-row"><span>DB local</span><strong><?= e(FV7_DB) ?></strong><small>Hash sadece admin/local ekranda gorunur; public manifestte yoktur.</small></div>
         <div class="list-row"><span>DB canli hedef</span><strong><?= e(DEPLOY_LIVE_DB_TARGET) ?></strong><small>Bu dosya elle/SFTP ile gonderilir.</small></div>
@@ -367,7 +374,7 @@ admin_head('Yayin Merkezi');
 <section class="panel" style="margin-top:20px">
     <h2>Sonuc</h2>
     <?php if (!$remoteManifest): ?>
-        <p class="help">Canli kontrol dosyasi okunamadigi icin local ile sunucu ayni mi kesin soylenemiyor. Once public/deploy-manifest.json dosyasinin canlida sade JSON olarak acilmasini sagla.</p>
+        <p class="help">Canli kontrol dosyasi okunamadigi icin local ile sunucu ayni mi kesin soylenemiyor. Once deploy-manifest.json dosyasinin canlida sade JSON olarak acilmasini sagla.</p>
     <?php elseif ($sameAsLive): ?>
         <p class="flash flash-success">Local ve canli ayni gorunuyor.</p>
     <?php else: ?>
@@ -381,14 +388,14 @@ admin_head('Yayin Merkezi');
         <h2>Canliya gonderilecekler</h2>
         <div class="list">
             <div class="list-row"><span>1</span><strong>SQLite DB</strong><small><?= $dbDifferent === false ? 'Ayni gorunuyor' : 'Gondermeden once yedek al' ?></small></div>
-            <div class="list-row"><span>2</span><strong>public/uploads/</strong><small><?= $uploadDiff ? (count($uploadDiff['new']) . ' yeni, ' . count($uploadDiff['changed']) . ' degisen') : 'Canli kontrol dosyasi yok; tum gerekli medya kontrol edilmeli' ?></small></div>
-            <div class="list-row"><span>3</span><strong>Kod/public dosyalari</strong><small><?= $codeDiff ? (count($codeDiff['new']) . ' yeni, ' . count($codeDiff['changed']) . ' degisen') : 'Git/FTP ile guncel kod gonderilmeli' ?></small></div>
-            <div class="list-row"><span>4</span><strong>public/deploy-manifest.json</strong><small>Sade public kontrol dosyasidir; DB hash veya ic dosya listesi icermez.</small></div>
+            <div class="list-row"><span>2</span><strong>uploads/</strong><small><?= $uploadDiff ? (count($uploadDiff['new']) . ' yeni, ' . count($uploadDiff['changed']) . ' degisen') : 'Canli kontrol dosyasi yok; tum gerekli medya kontrol edilmeli' ?></small></div>
+            <div class="list-row"><span>3</span><strong>Kod/site dosyalari</strong><small><?= $codeDiff ? (count($codeDiff['new']) . ' yeni, ' . count($codeDiff['changed']) . ' degisen') : 'Git/FTP ile guncel kod gonderilmeli' ?></small></div>
+            <div class="list-row"><span>4</span><strong>deploy-manifest.json</strong><small>Sade public kontrol dosyasidir; DB hash veya ic dosya listesi icermez.</small></div>
         </div>
     </section>
     <section class="panel">
         <h2>Yayin paketi hazirla</h2>
-        <p class="help">Bu buton mevcut local durumu kayda alir, detayli manifesti private storage altinda saklar ve public/deploy-manifest.json icin sade kontrol dosyasi uretir.</p>
+        <p class="help">Bu buton mevcut local durumu kayda alir, detayli manifesti private storage altinda saklar ve deploy-manifest.json icin sade kontrol dosyasi uretir.</p>
         <form method="post">
             <?= csrf_field() ?>
             <div class="field"><label>Not</label><textarea name="note" placeholder="Orn: ai-context hikaye guncellendi, 2 medya eklendi"></textarea></div>
@@ -411,7 +418,7 @@ admin_head('Yayin Merkezi');
 
 <?php if ($codeDiff): ?>
 <section class="panel" style="margin-top:20px">
-    <h2>Kod/public dosya farklari</h2>
+    <h2>Kod/site dosya farklari</h2>
     <h3>Localde yeni dosyalar</h3><?php deploy_render_file_list($codeDiff['new']); ?>
     <h3>Localde degisen dosyalar</h3><?php deploy_render_file_list($codeDiff['changed']); ?>
     <h3>Canlida localde olmayan dosyalar</h3><?php deploy_render_file_list($codeDiff['remote_only']); ?>

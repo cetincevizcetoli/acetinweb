@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-require __DIR__ . '/../config/config.php';
+require __DIR__ . '/_config.php';
 
 function fv7_system_check_is_local(): bool
 {
@@ -38,7 +38,7 @@ $checks = [
     ['PDO SQLite', extension_loaded('pdo_sqlite'), 'XAMPP php.ini icinde extension=pdo_sqlite etkin olmali.'],
     ['Veritabani', is_file(FV7_DB), FV7_DB],
     ['Storage yazilabilir', is_writable(FV7_STORAGE), FV7_STORAGE],
-    ['Uploads yazilabilir', is_writable(FV7_UPLOAD_ROOT), 'Medya yuklemek icin public/uploads yazilabilir olmali.'],
+    ['Uploads yazilabilir', is_writable(FV7_UPLOAD_ROOT), FV7_UPLOAD_ROOT],
     ['SQLite integrity_check', $integrity === 'ok', $integrity],
     ['SQLite foreign_key_check', $foreignCount === 0, $foreignCount === null ? ($dbError ?: 'Calistirilmadi') : (string)$foreignCount],
 ];

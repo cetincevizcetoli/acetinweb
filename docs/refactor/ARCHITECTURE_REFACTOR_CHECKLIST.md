@@ -84,11 +84,11 @@ Refactor bitince once su karar verilir:
    - Temiz canli kurulum plani uygulanir.
    - Sunucudaki mevcut kod yedeklenir.
    - `acetinweb_private/storage/fikrimvar.sqlite` yedeklenir.
-   - `public/uploads/` yedeklenir.
+   - `uploads/` yedeklenir.
    - Eski kod kalintilari temizlenir.
    - Yeni kod gonderilir.
    - SQLite ve uploads geri konur.
-   - `public/deploy-manifest.json` gonderilir.
+   - `deploy-manifest.json` gonderilir.
    - Public ana sayfa, Hikayeler, en az bir Hikaye detay sayfasi ve admin local akisi test edilir.
 
 ### Kullaniciya zorunlu hatirlatma
@@ -141,7 +141,7 @@ app/
 admin-local/
   controllers/
   views/
-public/
+site-root/
   controllers/
 ```
 

@@ -141,7 +141,7 @@ admin_head('Hikayeyi duzenle');
         <h1>Hikayeyi duzenle</h1>
         <p>Bolumleri ekle, sirala, duzenle ve uzun hikayelerde surec parcalarini tanimla.</p>
     </div>
-    <a class="button secondary" href="../public/hikaye.php?slug=<?= e(rawurlencode($project['slug'])) ?>" target="_blank">On izle</a>
+    <a class="button secondary" href="../hikaye.php?slug=<?= e(rawurlencode($project['slug'])) ?>" target="_blank">On izle</a>
 </div>
 
 <?php if ($error): ?><div class="flash flash-error"><?= e($error) ?></div><?php endif; ?>

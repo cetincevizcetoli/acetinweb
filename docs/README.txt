@@ -19,7 +19,7 @@ Proje
 
 Klasörler
 ---------
-public/       Ziyaretçinin gördüğü site ve yüklenen medya
+kok klasor    Ziyaretçinin gördüğü site ve yüklenen medya
 admin-local/  Yalnızca yerel bilgisayardan açılan yönetim paneli
 app/          SQLite erişimi, sorgular ve içerik çizim motoru
 config/       Uygulama ayarları
@@ -43,11 +43,11 @@ Kurulum: XAMPP / Windows
 
 5. Önce sistem kontrolünü açın:
 
-   http://localhost/acetinweb/public/system-check.php
+   http://localhost/acetinweb/admin-local/system.php
 
 6. Site:
 
-   http://localhost/acetinweb/public/
+   http://localhost/acetinweb/
 
 7. Yönetim paneli:
 
@@ -98,7 +98,7 @@ Silme önce Çöp Kutusuna taşır. Kalıcı silme ayrı bir işlemdir.
 
 Medya
 -----
-Dosyalar public/uploads/projects/<proje-slug>/ altında saklanır.
+Dosyalar uploads/projects/<proje-slug>/ altında saklanır.
 SQLite dosyanın kendisini değil, yolunu ve özelliklerini tutar.
 
 İzin verilen yüklemeler:
@@ -114,7 +114,7 @@ config/local.php icindeki storage_path altindaki backups/ klasorune olusturur.
 
 Tam yedek için birlikte saklayın:
   config/local.php icindeki db_path ile belirlenen SQLite dosyasi
-  public/uploads/
+  uploads/
 
 Güvenlik ve canlı sunucu
 -----------------------
@@ -128,14 +128,14 @@ kurulum:
   /uygulama/config
   /uygulama/storage
   /uygulama/admin-local   (internete açık document root dışında)
-  /public_html            (yalnızca public/ içeriği)
+  /public_html            (yalnızca site kökü içeriği)
 
-Canlı sitenin document root'u public/ olmalıdır. admin-local/, storage/,
+Canlı sitenin document root'u httpdocs/ olmalıdır. admin-local/, storage/,
 app/ ve config/ doğrudan web kökünde bırakılmamalıdır.
 
 Sunucuda yazma izinleri gereken yerler:
   storage/
-  public/uploads/
+  uploads/
 
 Hero
 ----
@@ -163,5 +163,5 @@ SQLite bağlantılı sayfalar burada PHP üzerinden çalıştırılamadı. Buna 
   - Proje, kayıt, Hikâye, bölüm, medya, sıra ve silme CRUD akışları veritabanı
     kopyası üzerinde sınandı
 
-XAMPP'ta public/system-check.php, gerekli sürücünün etkin olup olmadığını açıkça
+XAMPP'ta admin-local/system.php, gerekli sürücünün etkin olup olmadığını açıkça
 gösterir.

@@ -24,7 +24,7 @@ Basari, hata, yarim kalan is ve karar degisikligi ayni sistemde saklanir.
 - Hikaye: Ham atolyeden secilip duzenlenmis, okunabilir anlatidir.
 - Hikaye bolumu: Hikayenin parcalari. Metin, medya, galeri, kod, alinti veya
   baglanti icerebilir.
-- Medya: Dosyanin kendisi `public/uploads` altinda durur; SQLite sadece yol,
+- Medya: Dosyanin kendisi `uploads` altinda durur; SQLite sadece yol,
   sahiplik ve aciklama bilgisini saklar.
 - Baglanti: Harici kaynak, YouTube, Vimeo, SoundCloud veya dogrudan medya linki
   olabilir. Public tarafta `LinkRenderer` tarafindan anlamli kart/player olarak
@@ -32,17 +32,17 @@ Basari, hata, yarim kalan is ve karar degisikligi ayni sistemde saklanir.
 
 ## Klasorler
 
-- `public/`: Web kokudur. Public sayfalar, CSS, JS, upload dosyalari ve public
-  manifest burada durur.
+- Kok klasor: Localde `C:\xampp\htdocs\acetinweb\`, canlida `httpdocs/`
+  public web kokudur.
 - `admin-local/`: Yerel yonetim panelidir. Canli public web kokune tasinmamasi
   gerekir.
-- `app/`: Ortak PHP kodu. Repository, service ve render katmanlari burada
-  toplanir.
+- `app/`: Ortak PHP kodu. Canlida `acetinweb_private/app/` altinda durur.
 - `app/Repository/`: SQLite okuma/yazma sorgularinin yeni adresidir.
 - `app/Service/`: Davranis kurallari burada toplanir. Ornek:
   `VisibilityService`.
-- `config/`: Ortam ve yol ayarlari. Ortama ozel degerler `config/local.php`
-  veya ortam degiskenlerinden gelir.
+- `config/`: Ortam ve yol ayarlari. Canlida `acetinweb_private/config/`
+  altinda durur. Ortama ozel degerler `config/local.php` veya ortam
+  degiskenlerinden gelir.
 - `tools/`: Import, kontrol veya yardimci scriptler.
 - `mocap/`: Bu refactor kapsaminda dokunulmayan eski/ayri calisma alani.
 - `archive/`: Varsa eski veya arka plan dosyalari; refactor kapsaminda
@@ -50,11 +50,11 @@ Basari, hata, yarim kalan is ve karar degisikligi ayni sistemde saklanir.
 
 ## Public akis
 
-- Ana sayfa: `public/index.php`
-- Hikayeler listesi: `public/hikayeler.php`
-- Hikaye detay: `public/hikaye.php`
-- Atolye detay: `public/atolye.php`
-- Atolye penceresi partial: `public/includes/atelier_widget.php`
+- Ana sayfa: `index.php`
+- Hikayeler listesi: `hikayeler.php`
+- Hikaye detay: `hikaye.php`
+- Atolye detay: `atolye.php`
+- Atolye penceresi partial: `includes/atelier_widget.php`
 - Render yardimcilari: `app/render.php`, `app/LinkRenderer.php`
 
 Public sayfalar eski fonksiyon adlarini kullanabilir. Bu fonksiyonlar kademeli
@@ -113,7 +113,7 @@ Kucuk kapaklar, ekran goruntuleri ve gerekli aciklayici gorseller siteye
 yuklenebilir. Buyuk MP4 ve uzun ses dosyalari mumkunse YouTube, Vimeo,
 SoundCloud veya CDN ile linklenmelidir.
 
-`public/uploads/` canli yedek planina dahil edilmelidir.
+`uploads/` canli yedek planina dahil edilmelidir.
 
 ## Git ve yayin
 
@@ -132,7 +132,7 @@ Refactor bittiginde once karar verilir:
 
 1. `SYSTEM_OVERVIEW.md` oku.
 2. `ARCHITECTURE_REFACTOR_CHECKLIST.md` icinde aktif fazi bul.
-3. Public davranis icin once `public/` dosyasini, sonra ilgili repository ve
+3. Public davranis icin once kokteki sayfa dosyasini, sonra ilgili repository ve
    service sinifini oku.
 4. Admin davranis icin once ilgili `admin-local/*.php` dosyasini, sonra
    repository/service siniflarini oku.

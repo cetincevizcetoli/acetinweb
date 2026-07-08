@@ -42,11 +42,11 @@ Buyuk refactor sonrasi tercih edilen yol:
 
 1. Sunucudaki mevcut kodu yedekle.
 2. Canli SQLite dosyasini yedekle.
-3. `public/uploads/` klasorunu yedekle.
+3. `uploads/` klasorunu yedekle.
 4. Eski kod kalintilarini temizle.
 5. Yeni kodu gonder.
 6. SQLite ve uploads dosyalarini yerine koy.
-7. `public/deploy-manifest.json` dosyasini gonder.
+7. `deploy-manifest.json` dosyasini gonder.
 8. Public ana sayfa, Hikayeler, Hikaye detay ve admin local akisini test et.
 
 ## Codex icin zorunlu hatirlatma

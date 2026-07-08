@@ -3,30 +3,22 @@ DirectoryIndex index.php
 
 <IfModule mod_alias.c>
   RedirectMatch 403 "(^|/)\.git(/|$)"
-  RedirectMatch 403 "(^|/)(app|config|tools|storage|backups|_backups|mocap|archive|arsiv|ar.iv)(/|$)"
-  RedirectMatch 403 "(^|/)(README|TEST_REPORT|AGENTS|agents|VERSION|V7_MEDIA_LINK_FIX|DEPLOY_CHECKLIST|SYSTEM_OVERVIEW|ARCHITECTURE_REFACTOR_CHECKLIST|REFACTOR_GIT_RULES|LIVE_DEPLOY_PLAN)\.(txt|md)$"
+  RedirectMatch 403 "(^|/)(app|config|docs|tools|storage|backups|_backups|mocap|archive|arsiv|ar.iv)(/|$)"
   RedirectMatch 403 "\.(sqlite|sqlite-|db|bak|zip|env|pem|key|sql)$"
 </IfModule>
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteRule (^|/)\.git(/|$) - [F,L]
-  RewriteRule ^(app|config|tools|storage|backups|_backups|mocap|archive|arsiv|ar.iv)(/|$) - [F,L,NC]
+  RewriteRule ^_.*\.php$ - [F,L,NC]
+  RewriteRule ^(app|config|docs|tools|storage|backups|_backups|mocap|archive|arsiv|ar.iv)(/|$) - [F,L,NC]
   RewriteCond %{REMOTE_ADDR} !^127\.
   RewriteCond %{REMOTE_ADDR} !^::1$
   RewriteCond %{REMOTE_ADDR} !^::ffff:127\.
   RewriteRule ^admin-local(/|$) - [F,L,NC]
-  RewriteRule ^(README|TEST_REPORT|AGENTS|agents|VERSION|V7_MEDIA_LINK_FIX|DEPLOY_CHECKLIST|SYSTEM_OVERVIEW|ARCHITECTURE_REFACTOR_CHECKLIST|REFACTOR_GIT_RULES|LIVE_DEPLOY_PLAN)\.(txt|md)$ - [F,L,NC]
+  RewriteRule ^guven.*\.txt$ - [F,L,NC]
   RewriteRule (^|/)(composer\.(json|lock)|package(-lock)?\.json|\.env|config/local\.php)$ - [F,L,NC]
   RewriteRule \.(sqlite|sqlite-|db|bak|zip|env|pem|key|sql)$ - [F,L,NC]
-
-  # Fallback only: the preferred live setup is document root = public/.
-  RewriteRule ^$ public/index.php [L]
-  RewriteRule ^index\.php$ public/index.php [L]
-  RewriteCond %{REQUEST_URI} !/public/ [NC]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>
 
 <FilesMatch "(?i)^(\.env|composer\.(json|lock)|package(-lock)?\.json)$|.*\.(sqlite|db|bak|zip|pem|key|sql)$">
