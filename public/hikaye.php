@@ -111,7 +111,7 @@ function render_story_stage_marker(array $part, string $range): void
 $slug = safe_slug((string)($_GET['slug'] ?? ''));
 $project = project_by_slug($slug);
 $story = $project ? story_by_project((int)$project['id']) : null;
-if (!$project || !$story) {
+if (!$project || !$story || !VisibilityService::storyDetailReadable($project, $story)) {
     http_response_code(404);
 }
 

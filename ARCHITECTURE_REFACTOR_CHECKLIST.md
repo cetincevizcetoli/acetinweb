@@ -167,9 +167,9 @@ farkli yerlerden kontrol ediyor. Bunu tek servis anlatmali.
 - [x] Ana sayfa gorunurluk kuralini servise tasi.
 - [x] Hikayeler sayfasi gorunurluk kuralini servise tasi.
 - [x] Atolye penceresi kuralini servise tasi.
-- [ ] Hikaye detay erisim kuralini servise tasi.
+- [x] Hikaye detay erisim kuralini servise tasi.
 - [x] Admin "neden gorunmuyor?" kutusu bu servisi kullansin.
-- [ ] Eski sorgularin davranisi degismeden test et.
+- [x] Eski sorgularin davranisi degismeden test et.
 
 Kabul olcutu:
 - Proje public degilse public listelerde gorunmez.

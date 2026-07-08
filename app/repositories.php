@@ -71,7 +71,7 @@ function project_by_slug(string $slug, bool $admin=false): ?array
            LEFT JOIN media m ON m.id=p.cover_media_id AND m.deleted_at IS NULL
            LEFT JOIN stories s ON s.project_id=p.id AND s.deleted_at IS NULL
            WHERE p.slug=? AND p.deleted_at IS NULL";
-    if (!$admin) $sql.=" AND p.visibility IN ('public','unlisted')";
+    if (!$admin) $sql.=" AND " . VisibilityService::publicReadableProjectSql('p');
     $st=db()->prepare($sql); $st->execute([$slug]); $r=$st->fetch();
     if (!$r) return null;
     $r['project_title']=$r['title'];
@@ -101,7 +101,7 @@ function story_url(array $project): string
 function story_by_project(int $projectId, bool $admin=false): ?array
 {
     $sql='SELECT * FROM stories WHERE project_id=? AND deleted_at IS NULL';
-    if (!$admin) $sql.=" AND status='published' AND visibility IN ('public','unlisted')";
+    if (!$admin) $sql.=" AND " . VisibilityService::publishedReadableStorySql('stories');
     $st=db()->prepare($sql); $st->execute([$projectId]); return $st->fetch() ?: null;
 }
 

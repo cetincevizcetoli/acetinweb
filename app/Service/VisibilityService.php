@@ -4,6 +4,7 @@ declare(strict_types=1);
 final class VisibilityService
 {
     public const PUBLIC_VISIBILITY = 'public';
+    public const UNLISTED_VISIBILITY = 'unlisted';
     public const PUBLISHED_STATUS = 'published';
     public const HOME_SECTIONS = ['focus', 'trace'];
     public const WORKSHOP_WIDGET_STATUSES = ['open', 'paused'];
@@ -16,6 +17,16 @@ final class VisibilityService
     public static function publishedPublicStorySql(string $alias = 's'): string
     {
         return $alias . ".deleted_at IS NULL AND " . $alias . ".status='published' AND " . $alias . ".visibility='public'";
+    }
+
+    public static function publicReadableProjectSql(string $alias = 'p'): string
+    {
+        return $alias . ".deleted_at IS NULL AND " . $alias . ".visibility IN ('public','unlisted')";
+    }
+
+    public static function publishedReadableStorySql(string $alias = 's'): string
+    {
+        return $alias . ".deleted_at IS NULL AND " . $alias . ".status='published' AND " . $alias . ".visibility IN ('public','unlisted')";
     }
 
     public static function widgetProjectSql(string $alias = 'p'): string
@@ -36,6 +47,25 @@ final class VisibilityService
             && ($story['status'] ?? '') === self::PUBLISHED_STATUS
             && ($story['visibility'] ?? '') === self::PUBLIC_VISIBILITY
             && empty($story['deleted_at']);
+    }
+
+    public static function projectIsPublicReadable(array $project): bool
+    {
+        return in_array((string)($project['visibility'] ?? ''), [self::PUBLIC_VISIBILITY, self::UNLISTED_VISIBILITY], true)
+            && empty($project['deleted_at']);
+    }
+
+    public static function storyIsPublishedReadable(?array $story): bool
+    {
+        return is_array($story)
+            && ($story['status'] ?? '') === self::PUBLISHED_STATUS
+            && in_array((string)($story['visibility'] ?? ''), [self::PUBLIC_VISIBILITY, self::UNLISTED_VISIBILITY], true)
+            && empty($story['deleted_at']);
+    }
+
+    public static function storyDetailReadable(array $project, ?array $story): bool
+    {
+        return self::projectIsPublicReadable($project) && self::storyIsPublishedReadable($story);
     }
 
     public static function homeSectionIsVisible(string $homeSection): bool
