@@ -23,7 +23,6 @@
         const rect=item.getBoundingClientRect(); list.insertBefore(dragging, e.clientY < rect.top+rect.height/2 ? item : item.nextSibling);
       });
     });
-    updateOrder(list);
   });
   function updateOrder(list){ list.querySelectorAll('[data-order-input]').forEach((input,i)=>input.value=String(i+1)); }
   document.querySelectorAll('[data-confirm]').forEach((el)=>el.addEventListener('click',(e)=>{ if(!confirm(el.dataset.confirm || 'Emin misiniz?')) e.preventDefault(); }));

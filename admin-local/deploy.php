@@ -347,7 +347,7 @@ admin_head('Yayin Merkezi');
 
 <section class="panel">
     <h2>Yayin kurallari</h2>
-    <p class="help">Local ana kaynaktir. Canli DB uzerinde elle degisiklik yapilmaz. Canliya gondermeden once DB ve `uploads/` yedegi alinir. Admin panel canlida tutulmaz.</p>
+    <p class="help">Local ana kaynaktir. Yayin ve sira ekraninda yapilan gorunurluk kararları SQLite DB icindedir; canliya yansimasi icin fikrimvar.sqlite da gonderilmelidir. Canli DB uzerinde elle degisiklik yapilmaz. Canliya gondermeden once DB ve `uploads/` yedegi alinir. Admin panel canlida tutulmaz.</p>
     <div class="list">
         <div class="list-row"><span>DB local</span><strong><?= e(FV7_DB) ?></strong><small>Hash sadece admin/local ekranda gorunur; public manifestte yoktur.</small></div>
         <div class="list-row"><span>DB canli hedef</span><strong><?= e(DEPLOY_LIVE_DB_TARGET) ?></strong><small>Bu dosya elle/SFTP ile gonderilir.</small></div>

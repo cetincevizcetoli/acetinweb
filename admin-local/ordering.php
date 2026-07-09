@@ -1,14 +1,165 @@
 <?php
 declare(strict_types=1);
-require __DIR__ . '/_bootstrap.php'; admin_require_login();
-if(is_post()){
- verify_csrf();
- try{
-  db()->beginTransaction();
-  foreach($_POST['projects'] ?? [] as $id=>$row){$st=db()->prepare('UPDATE projects SET sort_order=?,show_on_home=?,show_in_archive=?,home_section=?,updated_at=CURRENT_TIMESTAMP WHERE id=?');$st->execute([(float)($row['order']??999),!empty($row['home'])?1:0,!empty($row['archive'])?1:0,(string)($row['section']??'none'),(int)$id]);}
-  db()->commit();flash('success','Yayın ve sıralama kaydedildi.');redirect('ordering.php');
- }catch(Throwable $e){if(db()->inTransaction())db()->rollBack();flash('error',$e->getMessage());}
+require __DIR__ . '/_bootstrap.php';
+admin_require_login();
+
+function ordering_story_from_project(array $project): ?array
+{
+    if (empty($project['story_id'])) return null;
+    return [
+        'id' => $project['story_id'],
+        'status' => $project['story_status'] ?? '',
+        'visibility' => $project['story_visibility'] ?? '',
+        'published_at' => $project['story_published_at'] ?? null,
+        'deleted_at' => null,
+    ];
 }
-$projects=admin_projects();admin_head('Yayın ve sıra'); ?>
-<div class="page-head"><div><p class="eyebrow">YAYIN KONTROLÜ</p><h1>Ne görünsün, nerede dursun?</h1><p>Projeyi silmeden ana sayfadan veya Hikâyeler sayfasından kaldırabilirsin. Satırları sürükleyerek sırala.</p></div></div>
-<form method="post"><?= csrf_field() ?><div class="sortable" data-sortable><?php foreach($projects as $i=>$p): ?><article class="sortable-item" draggable="true"><span class="drag-handle">⠿</span><div><strong><?= e($p['title']) ?></strong><small><?= e($p['category_title'] ?? '') ?> · <?= e($p['story_status'] ?? 'hikâye yok') ?></small><input type="hidden" name="projects[<?= (int)$p['id'] ?>][order]" value="<?= $i+1 ?>" data-order-input></div><div class="check-row"><label class="check"><input type="checkbox" name="projects[<?= (int)$p['id'] ?>][home]" <?= $p['show_on_home']?'checked':'' ?>> Ana sayfada göster</label><label class="check"><input type="checkbox" name="projects[<?= (int)$p['id'] ?>][archive]" <?= $p['show_in_archive']?'checked':'' ?>> Hikâyeler sayfasında göster</label><select name="projects[<?= (int)$p['id'] ?>][section]"><option value="none" <?= $p['home_section']==='none'?'selected':'' ?>>Ana sayfadaki yeri: Kapalı</option><option value="focus" <?= $p['home_section']==='focus'?'selected':'' ?>>Öne çıkan büyük kart</option><option value="trace" <?= $p['home_section']==='trace'?'selected':'' ?>>Alt şerit / küçük kayıt</option></select></div></article><?php endforeach; ?></div><div class="form-actions"><button class="accent" type="submit">Sırayı kaydet</button></div></form><?php admin_foot(); ?>
+
+function ordering_result_chip(bool $visible): string
+{
+    return $visible ? 'chip ok' : 'chip warn';
+}
+
+function ordering_story_label(array $project): string
+{
+    if (empty($project['story_id'])) return 'Hikaye yok';
+    $status = (string)($project['story_status'] ?? 'bilinmiyor');
+    $visibility = (string)($project['story_visibility'] ?? 'bilinmiyor');
+    return $status . ' / ' . $visibility;
+}
+
+if (is_post()) {
+    verify_csrf();
+    try {
+        db()->beginTransaction();
+        foreach ($_POST['projects'] ?? [] as $id => $row) {
+            $projectId = (int)$id;
+            $visibility = (string)($row['visibility'] ?? 'private');
+            $workshopStatus = (string)($row['workshop_status'] ?? 'none');
+            $homeSection = (string)($row['section'] ?? 'none');
+            $showHome = !empty($row['home']) ? 1 : 0;
+            $showArchive = !empty($row['archive']) ? 1 : 0;
+            $showWidget = !empty($row['widget']) ? 1 : 0;
+            $isPinned = !empty($row['pinned']) ? 1 : 0;
+            $sortOrder = (float)($row['order'] ?? 999);
+
+            if ($showWidget && !VisibilityService::workshopStatusAllowsWidget($workshopStatus)) {
+                throw new RuntimeException('Atolye penceresinde gostermek icin Atolye durumu Acik veya Beklemede olmali. Proje #' . $projectId);
+            }
+
+            $st = db()->prepare('UPDATE projects SET visibility=?, workshop_status=?, sort_order=?, show_on_home=?, show_in_archive=?, show_in_widget=?, is_pinned=?, home_section=?, updated_at=CURRENT_TIMESTAMP WHERE id=?');
+            $st->execute([$visibility, $workshopStatus, $sortOrder, $showHome, $showArchive, $showWidget, $isPinned, $homeSection, $projectId]);
+            if ($isPinned) db()->prepare('UPDATE projects SET is_pinned=0 WHERE id<>?')->execute([$projectId]);
+        }
+        db()->commit();
+        admin_audit('update', 'publishing', 0, 'Toplu yayin ve sira ayarlari guncellendi.');
+        flash('success', 'Yayin ve sira ayarlari kaydedildi. Yayin Merkezi bunu SQLite DB degisikligi olarak algilar.');
+        redirect('ordering.php');
+    } catch (Throwable $e) {
+        if (db()->inTransaction()) db()->rollBack();
+        flash('error', $e->getMessage());
+    }
+}
+
+$projects = admin_projects();
+admin_head('Yayin ve sira');
+?>
+<div class="page-head">
+    <div>
+        <p class="eyebrow">YAYIN KONTROLU</p>
+        <h1>Ne yayinlansin, nerede gorunsun?</h1>
+        <p>Bu ekran proje icindeki yayin ayarlarinin toplu halidir. Projeyi silmeden ana sayfa, Hikayeler sayfasi ve Atolye penceresi gorunumunu buradan yonetebilirsin.</p>
+    </div>
+    <a class="button secondary" href="deploy.php">Yayin Merkezi</a>
+</div>
+
+<section class="panel publish-guide">
+    <h2>Yayin zinciri</h2>
+    <div class="list">
+        <div class="list-row"><span>Ana sayfa</span><strong>Proje public + Ana sayfada goster + yer secili + hikaye yayinda/public</strong><small>Yer: One cikan buyuk kart veya Alt serit / kucuk kayit.</small></div>
+        <div class="list-row"><span>Hikayeler</span><strong>Proje public + Hikayeler sayfasinda goster + hikaye yayinda/public</strong><small>Bu sayfa ham atolye kaydi degil, duzenlenmis hikaye listesidir.</small></div>
+        <div class="list-row"><span>Atolye penceresi</span><strong>Proje public + Atolye Acik/Beklemede + Atolye penceresinde goster</strong><small>Hikayesi olup olmamasi Atolye penceresinden cikarmamalidir.</small></div>
+        <div class="list-row"><span>Yayin Merkezi</span><strong>Bu ekrandaki her kayit SQLite DB'yi degistirir</strong><small>Canliya giderken fikrimvar.sqlite ve deploy-manifest.json birlikte kontrol edilir.</small></div>
+    </div>
+</section>
+
+<form method="post">
+    <?= csrf_field() ?>
+    <div class="sortable publish-board" data-sortable>
+        <?php foreach ($projects as $i => $project):
+            $story = ordering_story_from_project($project);
+            $homeVisible = VisibilityService::homeVisible($project, $story);
+            $archiveVisible = VisibilityService::archiveVisible($project, $story);
+            $widgetVisible = VisibilityService::widgetVisible($project);
+            $projectId = (int)$project['id'];
+        ?>
+            <article class="sortable-item publish-row" draggable="true">
+                <span class="drag-handle" title="Siralamak icin surukle">::</span>
+                <div class="publish-main">
+                    <div class="publish-title">
+                        <strong><?= e($project['title']) ?></strong>
+                        <small><?= e($project['category_title'] ?? 'Kategori yok') ?> · Hikaye: <?= e(ordering_story_label($project)) ?></small>
+                    </div>
+                    <div class="publish-state">
+                        <span class="<?= e(ordering_result_chip($homeVisible)) ?>">Ana sayfa: <?= e($homeVisible ? 'Gorunur' : 'Gorunmez') ?></span>
+                        <span class="<?= e(ordering_result_chip($archiveVisible)) ?>">Hikayeler: <?= e($archiveVisible ? 'Gorunur' : 'Gorunmez') ?></span>
+                        <span class="<?= e(ordering_result_chip($widgetVisible)) ?>">Atolye: <?= e($widgetVisible ? 'Gorunur' : 'Gorunmez') ?></span>
+                    </div>
+                    <div class="publish-reasons">
+                        <small><?= e(VisibilityService::homeReason($project, $story)) ?></small>
+                        <small><?= e(VisibilityService::archiveReason($project, $story)) ?></small>
+                        <small><?= e(VisibilityService::widgetReason($project)) ?></small>
+                    </div>
+                </div>
+                <div class="publish-controls">
+                    <div class="form-grid">
+                        <div class="field">
+                            <label>Proje gorunurlugu</label>
+                            <select name="projects[<?= $projectId ?>][visibility]">
+                                <option value="private" <?= $project['visibility'] === 'private' ? 'selected' : '' ?>>Gizli</option>
+                                <option value="unlisted" <?= $project['visibility'] === 'unlisted' ? 'selected' : '' ?>>Baglantiya sahip olanlar</option>
+                                <option value="public" <?= $project['visibility'] === 'public' ? 'selected' : '' ?>>Herkese acik</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>Ana sayfadaki yeri</label>
+                            <select name="projects[<?= $projectId ?>][section]">
+                                <option value="none" <?= $project['home_section'] === 'none' ? 'selected' : '' ?>>Kapali</option>
+                                <option value="focus" <?= $project['home_section'] === 'focus' ? 'selected' : '' ?>>One cikan buyuk kart</option>
+                                <option value="trace" <?= $project['home_section'] === 'trace' ? 'selected' : '' ?>>Alt serit / kucuk kayit</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>Atolye durumu</label>
+                            <select name="projects[<?= $projectId ?>][workshop_status]">
+                                <option value="none" <?= $project['workshop_status'] === 'none' ? 'selected' : '' ?>>Yok</option>
+                                <option value="open" <?= $project['workshop_status'] === 'open' ? 'selected' : '' ?>>Acik</option>
+                                <option value="paused" <?= $project['workshop_status'] === 'paused' ? 'selected' : '' ?>>Beklemede</option>
+                                <option value="closed" <?= $project['workshop_status'] === 'closed' ? 'selected' : '' ?>>Kapandi</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>Sira</label>
+                            <input type="number" step="0.1" name="projects[<?= $projectId ?>][order]" value="<?= e((string)$project['sort_order']) ?>" data-order-input>
+                        </div>
+                    </div>
+                    <div class="check-row">
+                        <label class="check"><input type="checkbox" name="projects[<?= $projectId ?>][home]" <?= $project['show_on_home'] ? 'checked' : '' ?>> Ana sayfada goster</label>
+                        <label class="check"><input type="checkbox" name="projects[<?= $projectId ?>][archive]" <?= $project['show_in_archive'] ? 'checked' : '' ?>> Hikayeler sayfasinda goster</label>
+                        <label class="check"><input type="checkbox" name="projects[<?= $projectId ?>][widget]" <?= $project['show_in_widget'] ? 'checked' : '' ?>> Atolye penceresinde goster</label>
+                        <label class="check"><input type="checkbox" name="projects[<?= $projectId ?>][pinned]" <?= $project['is_pinned'] ? 'checked' : '' ?>> Sabitle</label>
+                    </div>
+                    <div class="card-actions">
+                        <a class="button secondary" href="project-edit.php?id=<?= $projectId ?>">Projeyi yonet</a>
+                        <?php if (!empty($project['story_id'])): ?><a class="button secondary" href="story-edit.php?project_id=<?= $projectId ?>">Hikaye</a><?php endif; ?>
+                    </div>
+                </div>
+            </article>
+        <?php endforeach; ?>
+    </div>
+    <div class="form-actions">
+        <button class="accent" type="submit">Yayin kararlarini kaydet</button>
+        <a class="button secondary" href="deploy.php">Yayin Merkezi'nde kontrol et</a>
+    </div>
+</form>
+<?php admin_foot(); ?>
