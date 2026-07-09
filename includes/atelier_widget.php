@@ -11,7 +11,7 @@ function render_atelier_widget(array $workshops, array $config=[]): void
             <span><small>ATÖLYE SAKİN</small><strong>Açık iş yok</strong></span>
         </button>
         <div class="atelier-widget-overlay" data-atelier-widget-overlay hidden></div>
-        <aside class="atelier-widget" id="atelier-widget" aria-labelledby="atelier-widget-title" aria-hidden="true" data-atelier-widget>
+        <aside class="atelier-widget" id="atelier-widget" aria-labelledby="atelier-widget-title" aria-hidden="true" data-atelier-widget hidden>
             <div class="atelier-widget-head">
                 <div><span>ATÖLYE SAKİN</span><small>0 atölye izleniyor</small></div>
                 <button type="button" aria-label="Atölye penceresini kapat" data-atelier-widget-close><?= icon('close') ?></button>
@@ -34,7 +34,7 @@ function render_atelier_widget(array $workshops, array $config=[]): void
         <span><small><?= e($statusLabel) ?></small><strong><?= e($first['project']['title']) ?></strong></span>
     </button>
     <div class="atelier-widget-overlay" data-atelier-widget-overlay hidden></div>
-    <aside class="atelier-widget" id="atelier-widget" aria-labelledby="atelier-widget-title" aria-hidden="true" data-atelier-widget>
+    <aside class="atelier-widget" id="atelier-widget" aria-labelledby="atelier-widget-title" aria-hidden="true" data-atelier-widget hidden>
         <div class="atelier-widget-head">
             <div><span><?= e($statusLabel) ?></span><small><?= $count ?> atölye izleniyor</small></div>
             <button type="button" aria-label="Atölye penceresini kapat" data-atelier-widget-close><?= icon('close') ?></button>

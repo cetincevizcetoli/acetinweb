@@ -129,6 +129,7 @@ $partRanges = story_part_ranges($parts, $sections);
     <meta name="theme-color" content="#101319">
     <meta name="description" content="<?= e($story['summary'] ?? 'Çalışma hikâyesi') ?>">
     <title><?= e($story['question'] ?? $project['title'] ?? 'Hikâye') ?> | #FikrimVar</title>
+    <link rel="canonical" href="https://www.acetin.com.tr/hikaye.php?slug=<?= e(rawurlencode($slug)) ?>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">

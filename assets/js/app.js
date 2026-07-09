@@ -4,15 +4,23 @@
   const navToggle = document.querySelector('[data-nav-toggle]');
   const nav = document.querySelector('[data-nav]');
   if (navToggle && nav) {
+    const closeNav = () => {
+      navToggle.setAttribute('aria-expanded', 'false');
+      nav.classList.remove('is-open');
+    };
     navToggle.addEventListener('click', () => {
       const open = navToggle.getAttribute('aria-expanded') !== 'true';
       navToggle.setAttribute('aria-expanded', String(open));
       nav.classList.toggle('is-open', open);
+      if (open) nav.querySelector('a, button')?.focus();
     });
-    nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
-      navToggle.setAttribute('aria-expanded', 'false');
-      nav.classList.remove('is-open');
-    }));
+    nav.querySelectorAll('a, button').forEach((item) => item.addEventListener('click', closeNav));
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && nav.classList.contains('is-open')) {
+        closeNav();
+        navToggle.focus();
+      }
+    });
   }
 
   const header = document.querySelector('[data-header]');
@@ -44,6 +52,7 @@
     if (!drawer || !overlay) return;
     lastFocused = document.activeElement;
     overlay.hidden = false;
+    drawer.hidden = false;
     requestAnimationFrame(() => {
       drawer.classList.add('is-open');
       drawer.setAttribute('aria-hidden', 'false');
@@ -56,7 +65,10 @@
     drawer.classList.remove('is-open');
     drawer.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('notes-open');
-    window.setTimeout(() => { overlay.hidden = true; }, 360);
+    window.setTimeout(() => {
+      overlay.hidden = true;
+      drawer.hidden = true;
+    }, reducedMotion ? 0 : 360);
     if (lastFocused instanceof HTMLElement) lastFocused.focus();
   };
   openButtons.forEach((button) => button.addEventListener('click', openNotes));
@@ -78,6 +90,7 @@
     if (drawer?.classList.contains('is-open')) closeNotes();
     atelierLastFocused = document.activeElement;
     atelierWidgetOverlay.hidden = false;
+    atelierWidget.hidden = false;
     requestAnimationFrame(() => {
       atelierWidgetOverlay.classList.add('is-visible');
       atelierWidget.classList.add('is-open');
@@ -95,7 +108,10 @@
     atelierWidget.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('atelier-widget-open');
     atelierWidgetOpeners.forEach((button) => button.setAttribute('aria-expanded', 'false'));
-    window.setTimeout(() => { atelierWidgetOverlay.hidden = true; }, reducedMotion ? 0 : 300);
+    window.setTimeout(() => {
+      atelierWidgetOverlay.hidden = true;
+      atelierWidget.hidden = true;
+    }, reducedMotion ? 0 : 300);
     if (atelierLastFocused instanceof HTMLElement) atelierLastFocused.focus();
   };
 

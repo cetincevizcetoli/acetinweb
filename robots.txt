@@ -1,16 +1,19 @@
 User-agent: *
 Allow: /
 
-Disallow: /admin-local/
-Disallow: /app/
-Disallow: /config/
-Disallow: /tools/
-Disallow: /storage/
-Disallow: /_backups/
-Disallow: /mocap/
-Disallow: /arşiv/
-Disallow: /.git/
-Disallow: /yorum-kaydet.php
-Disallow: /includes/
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: GPTBot
+Allow: /
 
 Sitemap: https://www.acetin.com.tr/sitemap.xml
