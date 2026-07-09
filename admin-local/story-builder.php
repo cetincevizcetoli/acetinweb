@@ -4,6 +4,12 @@ require __DIR__ . '/_bootstrap.php'; admin_require_login();
 $projectId=(int)($_GET['project_id'] ?? $_POST['project_id'] ?? 0);
 $st=db()->prepare('SELECT * FROM projects WHERE id=? AND deleted_at IS NULL');$st->execute([$projectId]);$project=$st->fetch();if(!$project){http_response_code(404);exit('Proje yok.');}
 $updates=project_updates($projectId,false);$story=story_by_project($projectId,true);$error='';
+function story_builder_has_column(string $table, string $column): bool
+{
+  $st=db()->query('PRAGMA table_info('.$table.')');
+  foreach($st->fetchAll() as $row) if(($row['name'] ?? '')===$column) return true;
+  return false;
+}
 if(is_post()){
   verify_csrf();
   try{
@@ -21,7 +27,8 @@ if(is_post()){
     // timeline from selected updates
     $st=db()->prepare("INSERT INTO story_sections(story_id,type,layout,label,title,intro_text,sort_order) VALUES (?, 'timeline','full-bleed','DÖNÜM NOKTALARI','Atölyede yönü değiştiren kararlar.','Ham kayıtların tamamı değil; seçilmiş kırılmalar.',?)");$st->execute([$storyId,++$max]);$sectionId=(int)db()->lastInsertId();
     $q=db()->prepare('SELECT * FROM updates WHERE id=? AND project_id=?');
-    foreach($selected as $i=>$uid){$q->execute([$uid,$projectId]);$u=$q->fetch();if(!$u)continue;$ins=db()->prepare("INSERT INTO story_section_items(section_id,group_key,item_type,step,title,subtitle,text,sort_order) VALUES (?,'','timeline',?,?,?,?,?)");$ins->execute([$sectionId,str_pad((string)($i+1),2,'0',STR_PAD_LEFT),$u['title'],$u['display_label'] ?: $u['phase'],$u['decision'] ?: $u['summary'],$i+1]);}
+    $hasItemSource=story_builder_has_column('story_section_items','source_update_id');
+    foreach($selected as $i=>$uid){$q->execute([$uid,$projectId]);$u=$q->fetch();if(!$u)continue;if($hasItemSource){$ins=db()->prepare("INSERT INTO story_section_items(section_id,group_key,item_type,step,title,subtitle,text,source_update_id,sort_order) VALUES (?,'','timeline',?,?,?,?,?,?)");$ins->execute([$sectionId,str_pad((string)($i+1),2,'0',STR_PAD_LEFT),$u['title'],$u['display_label'] ?: $u['phase'],$u['decision'] ?: $u['summary'],(int)$u['id'],$i+1]);}else{$ins=db()->prepare("INSERT INTO story_section_items(section_id,group_key,item_type,step,title,subtitle,text,sort_order) VALUES (?,'','timeline',?,?,?,?,?)");$ins->execute([$sectionId,str_pad((string)($i+1),2,'0',STR_PAD_LEFT),$u['title'],$u['display_label'] ?: $u['phase'],$u['decision'] ?: $u['summary'],$i+1]);}}
     // ending/lessons section
     $st=db()->prepare("INSERT INTO story_sections(story_id,type,layout,label,title,body_text,sort_order) VALUES (?, 'text','wide','BUGÜN NEREDE?','Bu proje benim için bugün ne ifade ediyor?',?,?)");$st->execute([$storyId,trim((string)($_POST['closing_note'] ?? $project['closing_note'])) ?: 'Bu bölüm hikâye düzenleyicisinden tamamlanacak.',++$max]);
     if(checkbox('close_workshop')){

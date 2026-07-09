@@ -120,6 +120,14 @@ $sections = $story ? story_sections((int)$story['id']) : [];
 $parts = $story ? story_parts((int)$story['id']) : [];
 $readingMode = story_reading_mode($sections, $parts);
 $partRanges = story_part_ranges($parts, $sections);
+$hasWorkshopUpdates = $project ? project_has_updates((int)$project['id']) : false;
+$hasWorkshopPage = $project && ($hasWorkshopUpdates || in_array($project['workshop_status'], ['open', 'paused', 'closed'], true));
+$workshopLinkLabel = '';
+if ($project && $hasWorkshopPage) {
+    $workshopLinkLabel = in_array($project['workshop_status'], ['open', 'paused'], true)
+        ? 'Canlı Atölye'
+        : ($project['workshop_status'] === 'closed' ? 'Atölye Arşivi' : 'Atölye Kayıtları');
+}
 ?>
 <!doctype html>
 <html lang="tr">
@@ -143,8 +151,8 @@ $partRanges = story_part_ranges($parts, $sections);
         <a class="brand" href="index.php"><span class="brand-name">AHMET ÇETİN</span><span class="brand-mark">#FikrimVar</span></a>
         <nav>
             <a href="hikayeler.php">Bütün hikâyeler</a>
-            <?php if ($project && in_array($project['workshop_status'], ['open', 'paused'], true)): ?>
-                <a href="atolye.php?slug=<?= e(rawurlencode($slug)) ?>">Atölye</a>
+            <?php if ($workshopLinkLabel !== ''): ?>
+                <a href="atolye.php?slug=<?= e(rawurlencode($slug)) ?>"><?= e($workshopLinkLabel) ?></a>
             <?php endif; ?>
             <a href="index.php">Ana sayfa</a>
         </nav>
@@ -212,8 +220,8 @@ $partRanges = story_part_ranges($parts, $sections);
             <blockquote>Kusursuz olmak değil; denemek, yanılmak, öğrenmek ve fikri hayata geçirmek.</blockquote>
             <nav>
                 <a href="hikayeler.php">Bütün hikâyeler <?= icon('arrow') ?></a>
-                <?php if (in_array($project['workshop_status'], ['open', 'paused'], true)): ?>
-                    <a href="atolye.php?slug=<?= e(rawurlencode($slug)) ?>">Canlı atölye <?= icon('arrow') ?></a>
+                <?php if ($workshopLinkLabel !== ''): ?>
+                    <a href="atolye.php?slug=<?= e(rawurlencode($slug)) ?>"><?= e($workshopLinkLabel) ?> <?= icon('arrow') ?></a>
                 <?php endif; ?>
                 <a href="index.php">Ana sayfa <?= icon('arrow') ?></a>
             </nav>

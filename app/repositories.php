@@ -61,6 +61,13 @@ function project_updates(int $projectId, bool $publishedOnly=true): array
     return UpdateRepository::forProject($projectId, $publishedOnly);
 }
 
+function project_has_updates(int $projectId): bool
+{
+    $st=db()->prepare('SELECT 1 FROM updates WHERE project_id=? AND deleted_at IS NULL LIMIT 1');
+    $st->execute([$projectId]);
+    return (bool)$st->fetchColumn();
+}
+
 function update_media(int $updateId): array
 {
     return MediaRepository::forUpdate($updateId);

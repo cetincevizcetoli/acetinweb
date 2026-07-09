@@ -173,10 +173,12 @@ CREATE TABLE story_section_items (
   state TEXT NOT NULL DEFAULT '',
   value TEXT NOT NULL DEFAULT '',
   media_id INTEGER,
+  source_update_id INTEGER,
   url TEXT NOT NULL DEFAULT '',
   sort_order INTEGER NOT NULL DEFAULT 0,
   FOREIGN KEY(section_id) REFERENCES story_sections(id) ON DELETE CASCADE,
-  FOREIGN KEY(media_id) REFERENCES media(id) ON DELETE SET NULL
+  FOREIGN KEY(media_id) REFERENCES media(id) ON DELETE SET NULL,
+  FOREIGN KEY(source_update_id) REFERENCES updates(id) ON DELETE SET NULL
 );
 
 CREATE TABLE story_section_media (
