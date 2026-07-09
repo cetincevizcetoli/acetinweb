@@ -27,7 +27,7 @@ function render_atelier_widget(array $workshops, array $config=[]): void
     }
     $first=$workshops[0];
     $count=count($workshops);
-    $statusLabel=$count > 1 ? 'ATOLYEDE '.$count.' IS' : (($first['project']['workshop_status'] ?? '')==='paused' ? 'ATOLYE BEKLEMEDE' : 'ATOLYE ACIK');
+    $statusLabel=$count > 1 ? 'ATÖLYEDE '.$count.' İŞ' : (($first['project']['workshop_status'] ?? '')==='paused' ? 'ATÖLYE BEKLEMEDE' : 'ATÖLYE AÇIK');
     ?>
     <button class="atelier-fab" type="button" aria-expanded="false" aria-controls="atelier-widget" data-atelier-widget-open>
         <span class="atelier-fab-dot" aria-hidden="true"></span>
