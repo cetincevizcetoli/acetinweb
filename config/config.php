@@ -8,6 +8,14 @@ function fv7_path(string $path): string
     return rtrim(str_replace('\\', '/', $path), '/');
 }
 
+function fv7_is_public_root(string $path): bool
+{
+    if (basename($path) === 'admin-local') return false;
+    return is_file($path . '/index.php')
+        && is_file($path . '/hikayeler.php')
+        && is_file($path . '/assets/css/style.css');
+}
+
 $localConfig = [];
 $localConfigFile = __DIR__ . '/local.php';
 if (is_file($localConfigFile)) {
@@ -32,7 +40,7 @@ foreach ($publicCandidates as $candidate) {
     $candidate = fv7_path((string)$candidate);
     if ($candidate === '') continue;
     if ($publicPath === '') $publicPath = $candidate;
-    if (is_file($candidate . '/index.php') || is_dir($candidate . '/assets')) {
+    if (fv7_is_public_root($candidate)) {
         $publicPath = $candidate;
         break;
     }

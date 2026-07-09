@@ -99,6 +99,31 @@ function admin_resolve_project_sort_order(string $raw,bool $showHome,string $hom
     return 999.0;
 }
 
+function admin_normalize_project_publication(bool $showHome,string $homeSection,bool $showArchive,bool $showWidget,string $workshopStatus): array
+{
+    $warnings=[];
+    if(VisibilityService::homeSectionIsVisible($homeSection) && !$showHome){
+        $showHome=true;
+        $warnings[]='Ana sayfadaki yer secildigi icin Ana sayfada goster tiki otomatik acildi.';
+    }
+    if($showHome && !VisibilityService::homeSectionIsVisible($homeSection)){
+        $homeSection='trace';
+        $warnings[]='Ana sayfada goster acik oldugu icin ana sayfadaki yer Alt serit / kucuk kayit olarak ayarlandi.';
+    }
+    if($showWidget && !VisibilityService::workshopStatusAllowsWidget($workshopStatus)){
+        $showWidget=false;
+        $warnings[]='Atolye durumu Acik veya Beklemede olmadigi icin Atolye penceresi tiki otomatik kapatildi.';
+    }
+
+    return [
+        'show_home'=>$showHome,
+        'home_section'=>$homeSection,
+        'show_archive'=>$showArchive,
+        'show_widget'=>$showWidget,
+        'warnings'=>$warnings,
+    ];
+}
+
 function admin_project_sort_conflicts(int $projectId,float $sortOrder,bool $showHome,string $homeSection,bool $showArchive): array
 {
     $messages=[];

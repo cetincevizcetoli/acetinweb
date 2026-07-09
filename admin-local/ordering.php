@@ -32,6 +32,7 @@ if (is_post()) {
     verify_csrf();
     try {
         db()->beginTransaction();
+        $normalizationWarnings = [];
         foreach ($_POST['projects'] ?? [] as $id => $row) {
             $projectId = (int)$id;
             $visibility = (string)($row['visibility'] ?? 'private');
@@ -43,9 +44,12 @@ if (is_post()) {
             $isPinned = !empty($row['pinned']) ? 1 : 0;
             $sortOrder = (float)($row['order'] ?? 999);
 
-            if ($showWidget && !VisibilityService::workshopStatusAllowsWidget($workshopStatus)) {
-                throw new RuntimeException('Atolye penceresinde gostermek icin Atolye durumu Acik veya Beklemede olmali. Proje #' . $projectId);
-            }
+            $normalized = admin_normalize_project_publication((bool)$showHome, $homeSection, (bool)$showArchive, (bool)$showWidget, $workshopStatus);
+            $showHome = $normalized['show_home'] ? 1 : 0;
+            $homeSection = (string)$normalized['home_section'];
+            $showArchive = $normalized['show_archive'] ? 1 : 0;
+            $showWidget = $normalized['show_widget'] ? 1 : 0;
+            foreach ($normalized['warnings'] as $warning) $normalizationWarnings[] = '#' . $projectId . ': ' . $warning;
 
             $st = db()->prepare('UPDATE projects SET visibility=?, workshop_status=?, sort_order=?, show_on_home=?, show_in_archive=?, show_in_widget=?, is_pinned=?, home_section=?, updated_at=CURRENT_TIMESTAMP WHERE id=?');
             $st->execute([$visibility, $workshopStatus, $sortOrder, $showHome, $showArchive, $showWidget, $isPinned, $homeSection, $projectId]);
@@ -54,6 +58,7 @@ if (is_post()) {
         db()->commit();
         admin_audit('update', 'publishing', 0, 'Toplu yayin ve sira ayarlari guncellendi.');
         flash('success', 'Yayin ve sira ayarlari kaydedildi. Yayin Merkezi bunu SQLite DB degisikligi olarak algilar.');
+        foreach (array_unique($normalizationWarnings) as $warning) flash('warning', $warning);
         redirect('ordering.php');
     } catch (Throwable $e) {
         if (db()->inTransaction()) db()->rollBack();
@@ -92,6 +97,8 @@ admin_head('Yayin ve sira');
             $archiveVisible = VisibilityService::archiveVisible($project, $story);
             $widgetVisible = VisibilityService::widgetVisible($project);
             $projectId = (int)$project['id'];
+            $widgetCanBeChecked = VisibilityService::workshopStatusAllowsWidget((string)($project['workshop_status'] ?? 'none'));
+            $widgetWasInconsistent = !empty($project['show_in_widget']) && !$widgetCanBeChecked;
         ?>
             <article class="sortable-item publish-row" draggable="true">
                 <span class="drag-handle" title="Siralamak icin surukle">::</span>
@@ -146,9 +153,10 @@ admin_head('Yayin ve sira');
                     <div class="check-row">
                         <label class="check"><input type="checkbox" name="projects[<?= $projectId ?>][home]" <?= $project['show_on_home'] ? 'checked' : '' ?>> Ana sayfada goster</label>
                         <label class="check"><input type="checkbox" name="projects[<?= $projectId ?>][archive]" <?= $project['show_in_archive'] ? 'checked' : '' ?>> Hikayeler sayfasinda goster</label>
-                        <label class="check"><input type="checkbox" name="projects[<?= $projectId ?>][widget]" <?= $project['show_in_widget'] ? 'checked' : '' ?>> Atolye penceresinde goster</label>
+                        <label class="check"><input type="checkbox" name="projects[<?= $projectId ?>][widget]" <?= $project['show_in_widget'] && $widgetCanBeChecked ? 'checked' : '' ?>> Atolye penceresinde goster</label>
                         <label class="check"><input type="checkbox" name="projects[<?= $projectId ?>][pinned]" <?= $project['is_pinned'] ? 'checked' : '' ?>> Sabitle</label>
                     </div>
+                    <?php if ($widgetWasInconsistent): ?><p class="help">Bu projede Atolye penceresi tiki eski kayittan acik kalmis; Atolye durumu Acik/Beklemede olmadigi icin sonraki kayitta otomatik kapatilacak.</p><?php endif; ?>
                     <div class="card-actions">
                         <a class="button secondary" href="project-edit.php?id=<?= $projectId ?>">Projeyi yonet</a>
                         <?php if (!empty($project['story_id'])): ?><a class="button secondary" href="story-edit.php?project_id=<?= $projectId ?>">Hikaye</a><?php endif; ?>
