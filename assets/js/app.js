@@ -149,36 +149,6 @@
     render();
   }
 
-  if (!reducedMotion) {
-    const organicHero = document.querySelector('[data-organic-hero]');
-    const crackLayers = organicHero ? Array.from(organicHero.querySelectorAll('[data-crack-layer]')) : [];
-    let organicPulseTimer = 0;
-
-    const scheduleOrganicPulse = () => {
-      window.clearTimeout(organicPulseTimer);
-      if (document.hidden || crackLayers.length === 0) return;
-      const delay = 1700 + Math.random() * 3600;
-      organicPulseTimer = window.setTimeout(() => {
-        const layer = crackLayers[Math.floor(Math.random() * crackLayers.length)];
-        const duration = Math.round(760 + Math.random() * 920);
-        layer.style.setProperty('--pulse-duration', `${duration}ms`);
-        layer.style.setProperty('--pulse-opacity', (0.24 + Math.random() * 0.18).toFixed(2));
-        layer.style.setProperty('--pulse-brightness', (1.55 + Math.random() * 0.55).toFixed(2));
-        layer.classList.remove('is-pulsing');
-        void layer.offsetWidth;
-        layer.classList.add('is-pulsing');
-        window.setTimeout(() => layer.classList.remove('is-pulsing'), duration + 60);
-        scheduleOrganicPulse();
-      }, delay);
-    };
-
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) window.clearTimeout(organicPulseTimer);
-      else scheduleOrganicPulse();
-    });
-    scheduleOrganicPulse();
-  }
-
   document.querySelectorAll('[data-story-index]').forEach((root) => {
     const cards = Array.from(root.querySelectorAll('[data-story-card]'));
     const categoryButtons = Array.from(root.querySelectorAll('[data-story-category]'));

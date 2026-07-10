@@ -119,6 +119,14 @@ function media_url(?string $path): string
     return ltrim($path,'/');
 }
 
+function asset_url(string $path): string
+{
+    $path = ltrim($path, '/');
+    $file = FV7_PUBLIC . '/' . $path;
+    $version = is_file($file) ? (string)filemtime($file) : (string)time();
+    return $path . '?v=' . rawurlencode($version);
+}
+
 function icon(string $name): string
 {
     $icons = [
