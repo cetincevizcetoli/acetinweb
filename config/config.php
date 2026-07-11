@@ -95,3 +95,5 @@ define('FV7_IMAGE_MAX_BYTES', 20 * 1024 * 1024);
 define('FV7_VIDEO_MAX_BYTES', 250 * 1024 * 1024);
 define('FV7_OTHER_MAX_BYTES', 40 * 1024 * 1024);
 define('FV7_SESSION_NAME', 'fikrimvar_v7_admin');
+define('FV7_DEPLOY_REMOTE_MANIFEST_URL', (string)(getenv('FV7_DEPLOY_REMOTE_MANIFEST_URL') ?: ($localConfig['deploy_remote_manifest_url'] ?? 'https://www.acetin.com.tr/deploy-manifest.json')));
+define('FV7_DEPLOY_LIVE_DB_TARGET', (string)(getenv('FV7_DEPLOY_LIVE_DB_TARGET') ?: ($localConfig['deploy_live_db_target'] ?? '/var/www/vhosts/acetin.com.tr/acetinweb_private/storage/fikrimvar.sqlite')));

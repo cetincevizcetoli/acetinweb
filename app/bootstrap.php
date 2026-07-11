@@ -5,9 +5,12 @@ require_once __DIR__ . '/../config/config.php';
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_name(FV7_SESSION_NAME);
+    $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+        || (string)($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https';
     session_start([
         'cookie_httponly' => true,
         'cookie_samesite' => 'Lax',
+        'cookie_secure' => $isHttps,
         'use_strict_mode' => true,
     ]);
 }

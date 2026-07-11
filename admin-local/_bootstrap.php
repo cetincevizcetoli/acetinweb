@@ -149,58 +149,13 @@ function admin_render_visibility_summary(array $project, ?array $story=null): vo
     $widgetVisible = VisibilityService::widgetVisible($project);
     ?>
     <section class="panel">
-        <h2>Neden gorunmuyor?</h2>
-        <div class="list">
-            <div class="list-row"><span>Ana sayfa</span><strong><?= e($homeVisible ? 'Gorunur' : 'Gorunmez') ?></strong><small><?= e(VisibilityService::homeReason($project, $story)) ?></small></div>
-            <div class="list-row"><span>Hikayeler sayfasi</span><strong><?= e($archiveVisible ? 'Gorunur' : 'Gorunmez') ?></strong><small><?= e(VisibilityService::archiveReason($project, $story)) ?></small></div>
-            <div class="list-row"><span>Atolye penceresi</span><strong><?= e($widgetVisible ? 'Gorunur' : 'Gorunmez') ?></strong><small><?= e(VisibilityService::widgetReason($project)) ?></small></div>
-        </div>
-        <p class="help">Kontrol zinciri VisibilityService tarafindan hesaplanir. Ana sayfa/Hikayeler icin hikaye yayimlanmis/public olmalidir; Atolye penceresi hikaye yayinindan bagimsizdir.</p>
-    </section>
-    <?php
-    return;
-    $projectPublic=($project['visibility'] ?? '')==='public' && empty($project['deleted_at']);
-    $storyPublic=admin_story_public($story);
-    $homeSection=(string)($project['home_section'] ?? 'none');
-    $homeVisible=$projectPublic && !empty($project['show_on_home']) && in_array($homeSection,['focus','trace'],true) && $storyPublic;
-    $archiveVisible=$projectPublic && !empty($project['show_in_archive']) && $storyPublic;
-    $widgetVisible=$projectPublic && in_array((string)($project['workshop_status'] ?? 'none'),['open','paused'],true) && !empty($project['show_in_widget']);
-    $homeReason=$homeVisible ? 'Ana sayfada görünür.' : 'Görünmez: ';
-    if(!$homeVisible){
-        $reasons=[];
-        if(!$projectPublic) $reasons[]='proje public değil';
-        if(empty($project['show_on_home'])) $reasons[]='ana sayfada göster kapalı';
-        if(!in_array($homeSection,['focus','trace'],true)) $reasons[]='ana sayfadaki yeri kapalı';
-        if(!$story) $reasons[]='hikâye yok';
-        elseif(!$storyPublic) $reasons[]='hikâye yayımlanmış/public değil';
-        $homeReason.=implode(', ',$reasons).'.';
-    }
-    $archiveReason=$archiveVisible ? 'Hikâyeler sayfasında görünür.' : 'Görünmez: ';
-    if(!$archiveVisible){
-        $reasons=[];
-        if(!$projectPublic) $reasons[]='proje public değil';
-        if(empty($project['show_in_archive'])) $reasons[]='Hikâyeler sayfasında göster kapalı';
-        if(!$story) $reasons[]='hikâye yok';
-        elseif(!$storyPublic) $reasons[]='hikâye yayımlanmış/public değil';
-        $archiveReason.=implode(', ',$reasons).'.';
-    }
-    $widgetReason=$widgetVisible ? 'Atölye penceresinde görünür.' : 'Görünmez: ';
-    if(!$widgetVisible){
-        $reasons=[];
-        if(!$projectPublic) $reasons[]='proje public değil';
-        if(!in_array((string)($project['workshop_status'] ?? 'none'),['open','paused'],true)) $reasons[]='Atölye durumu Açık/Beklemede değil';
-        if(empty($project['show_in_widget'])) $reasons[]='Atölye penceresi kapalı';
-        $widgetReason.=implode(', ',$reasons).'.';
-    }
-    ?>
-    <section class="panel">
         <h2>Neden görünmüyor?</h2>
         <div class="list">
-            <div class="list-row"><span>Ana sayfa</span><strong><?= e($homeVisible?'Görünür':'Görünmez') ?></strong><small><?= e($homeReason) ?></small></div>
-            <div class="list-row"><span>Hikâyeler sayfası</span><strong><?= e($archiveVisible?'Görünür':'Görünmez') ?></strong><small><?= e($archiveReason) ?></small></div>
-            <div class="list-row"><span>Atölye penceresi</span><strong><?= e($widgetVisible?'Görünür':'Görünmez') ?></strong><small><?= e($widgetReason) ?></small></div>
+            <div class="list-row"><span>Ana sayfa</span><strong><?= e($homeVisible ? 'Görünür' : 'Görünmez') ?></strong><small><?= e(VisibilityService::homeReason($project, $story)) ?></small></div>
+            <div class="list-row"><span>Hikâyeler sayfası</span><strong><?= e($archiveVisible ? 'Görünür' : 'Görünmez') ?></strong><small><?= e(VisibilityService::archiveReason($project, $story)) ?></small></div>
+            <div class="list-row"><span>Atölye penceresi</span><strong><?= e($widgetVisible ? 'Görünür' : 'Görünmez') ?></strong><small><?= e(VisibilityService::widgetReason($project)) ?></small></div>
         </div>
-        <p class="help">Kontrol zinciri: proje public + ilgili gösterim tiki + hikâye yayımlanmış/public. Atölye penceresi hikâye yayınından bağımsızdır.</p>
+        <p class="help">Ana sayfa ve Hikâyeler için hikâye yayımlanmış ve herkese açık olmalı. Atölye penceresi ise hikâye yayınından bağımsızdır.</p>
     </section>
     <?php
 }
@@ -224,29 +179,8 @@ function save_update_links(int $updateId,array $links): void
 function assert_project_media_ids(int $projectId,array $mediaIds,string $context='Medya'): array
 {
     return MediaRepository::assertProjectMediaIds($projectId, $mediaIds, $context);
-
-    $ids=array_values(array_unique(array_filter(array_map('intval',$mediaIds),fn($id)=>$id>0)));
-    if(!$ids) return [];
-    $placeholders=implode(',',array_fill(0,count($ids),'?'));
-    $st=db()->prepare("SELECT id,project_id FROM media WHERE id IN ($placeholders) AND deleted_at IS NULL");
-    $st->execute($ids);
-    $rows=$st->fetchAll();
-    $found=[];
-    foreach($rows as $row){
-        $found[(int)$row['id']]=(int)$row['project_id'];
-    }
-    foreach($ids as $mid){
-        if(!array_key_exists($mid,$found)) throw new RuntimeException($context.' bulunamadı veya silinmiş: #'.$mid);
-        if($found[$mid]!==$projectId) throw new RuntimeException($context.' bu projeye ait değil: #'.$mid);
-    }
-    return $ids;
 }
 function attach_update_media(int $updateId,int $projectId,array $mediaIds): void
 {
     MediaRepository::attachToUpdate($updateId, $projectId, $mediaIds);
-    return;
-
-    $mediaIds=assert_project_media_ids($projectId,$mediaIds,'Atölye medyası');
-    $max=(int)(db()->query('SELECT COALESCE(MAX(sort_order),-1) FROM update_media WHERE update_id='.(int)$updateId)->fetchColumn());
-    foreach(array_unique(array_map('intval',$mediaIds)) as $mid){if($mid<=0)continue;$st=db()->prepare('INSERT OR IGNORE INTO update_media(update_id,media_id,role,sort_order) VALUES (?,?,' . db()->quote('gallery') . ',?)');$st->execute([$updateId,$mid,++$max]);}
 }

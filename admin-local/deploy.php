@@ -4,8 +4,8 @@ declare(strict_types=1);
 require __DIR__ . '/_bootstrap.php';
 admin_require_login();
 
-const DEPLOY_REMOTE_MANIFEST_URL = 'https://www.acetin.com.tr/deploy-manifest.json';
-const DEPLOY_LIVE_DB_TARGET = '/var/www/vhosts/acetin.com.tr/acetinweb_private/storage/fikrimvar.sqlite';
+define('DEPLOY_REMOTE_MANIFEST_URL', FV7_DEPLOY_REMOTE_MANIFEST_URL);
+define('DEPLOY_LIVE_DB_TARGET', FV7_DEPLOY_LIVE_DB_TARGET);
 
 function deploy_rel(string $path): string
 {

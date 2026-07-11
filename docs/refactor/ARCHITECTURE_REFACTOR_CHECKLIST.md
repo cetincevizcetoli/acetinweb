@@ -266,11 +266,33 @@ Kabul olcutu:
 - [ ] Local log dosyasi yazimi ayri yardimciya tasinir.
 - [ ] Canli manifest okuma ve karsilastirma test edilir.
 - [ ] "Yayin paketi hazirla" akisi dokumante edilir.
+- [ ] Canli hedef URL/path bilgileri kod icinde sabit kalmaz; `config/local.php` veya ortam degiskeninden okunur.
 
 Kabul olcutu:
 - Manifest hazirlamak SQLite dosyasini degistirmez.
 - Local/canli ayniysa ekran bunu acik soyler.
 - Hangi dosyalar sunucuya gidecek net gorunur.
+
+## Faz 7.5 - Atolye Gunlugu urun raporu
+
+Bu konu projenin kalbi oldugu icin kucuk bir notla gecistirilmeyecek.
+
+- [ ] Atolye Penceresi, proje atolye sayfasi ve gercek Atolye Gunlugu farklari yazilir.
+- [ ] Tum projelerdeki ham kayit akisinin hangi filtrelerle listelenecegi belirlenir.
+- [ ] Hikayeye donmus eski kayitlar ile yeni devam eden kayitlarin ayni gunlukte nasil gorunecegi planlanir.
+- [ ] Admin tarafinda ham kayit, donum noktasi ve hikaye bolumu arasindaki iliski net anlatilir.
+- [ ] Bu faz icin ayri urun/tasarim raporu yazilir.
+
+## Surekli gelistirme kurali - OOP ve aciklama uyumu
+
+Yeni duzeltme veya ozellik eklerken:
+
+- [ ] Yeni is mantigi mumkunse servis/repository sinifina konur.
+- [ ] Public/admin sayfalari sadece sayfa akisi ve render sorumlulugu tasir.
+- [ ] Kod icindeki yorumlar "ne yaptigini" degil, "neden boyle yapildigini" aciklar.
+- [ ] Dokuman, admin metni ve kod davranisi ayni kavramlari kullanir.
+- [ ] Eski fallback veya return sonrasi olu kod birakilmaz.
+- [ ] Bir ekleme baska ekranda kavram karmasasi yaratirsa dokuman da ayni committe guncellenir.
 
 ## Faz 8 - Sistem anlatim raporu
 

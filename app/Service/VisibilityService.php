@@ -102,40 +102,40 @@ final class VisibilityService
 
     public static function homeReason(array $project, ?array $story): string
     {
-        if (self::homeVisible($project, $story)) return 'Ana sayfada gorunur.';
+        if (self::homeVisible($project, $story)) return 'Ana sayfada görünür.';
 
         $reasons = [];
-        if (!self::projectIsPublic($project)) $reasons[] = 'proje public degil';
-        if (empty($project['show_on_home'])) $reasons[] = 'ana sayfada goster kapali';
-        if (!self::homeSectionIsVisible((string)($project['home_section'] ?? 'none'))) $reasons[] = 'ana sayfadaki yeri kapali';
-        if (!$story) $reasons[] = 'hikaye yok';
-        elseif (!self::storyIsPublishedPublic($story)) $reasons[] = 'hikaye yayimlanmis/public degil';
+        if (!self::projectIsPublic($project)) $reasons[] = 'proje herkese açık değil';
+        if (empty($project['show_on_home'])) $reasons[] = 'Ana sayfada göster kapalı';
+        if (!self::homeSectionIsVisible((string)($project['home_section'] ?? 'none'))) $reasons[] = 'Ana sayfadaki yeri kapalı';
+        if (!$story) $reasons[] = 'hikâye yok';
+        elseif (!self::storyIsPublishedPublic($story)) $reasons[] = 'hikâye yayımlanmış/herkese açık değil';
 
-        return 'Gorunmez: ' . implode(', ', $reasons) . '.';
+        return 'Görünmez: ' . implode(', ', $reasons) . '.';
     }
 
     public static function archiveReason(array $project, ?array $story): string
     {
-        if (self::archiveVisible($project, $story)) return 'Hikayeler sayfasinda gorunur.';
+        if (self::archiveVisible($project, $story)) return 'Hikâyeler sayfasında görünür.';
 
         $reasons = [];
-        if (!self::projectIsPublic($project)) $reasons[] = 'proje public degil';
-        if (empty($project['show_in_archive'])) $reasons[] = 'Hikayeler sayfasinda goster kapali';
-        if (!$story) $reasons[] = 'hikaye yok';
-        elseif (!self::storyIsPublishedPublic($story)) $reasons[] = 'hikaye yayimlanmis/public degil';
+        if (!self::projectIsPublic($project)) $reasons[] = 'proje herkese açık değil';
+        if (empty($project['show_in_archive'])) $reasons[] = 'Hikâyeler sayfasında göster kapalı';
+        if (!$story) $reasons[] = 'hikâye yok';
+        elseif (!self::storyIsPublishedPublic($story)) $reasons[] = 'hikâye yayımlanmış/herkese açık değil';
 
-        return 'Gorunmez: ' . implode(', ', $reasons) . '.';
+        return 'Görünmez: ' . implode(', ', $reasons) . '.';
     }
 
     public static function widgetReason(array $project): string
     {
-        if (self::widgetVisible($project)) return 'Atolye penceresinde gorunur.';
+        if (self::widgetVisible($project)) return 'Atölye penceresinde görünür.';
 
         $reasons = [];
-        if (!self::projectIsPublic($project)) $reasons[] = 'proje public degil';
-        if (!self::workshopStatusAllowsWidget((string)($project['workshop_status'] ?? 'none'))) $reasons[] = 'Atolye durumu Acik/Beklemede degil';
-        if (empty($project['show_in_widget'])) $reasons[] = 'Atolye penceresi kapali';
+        if (!self::projectIsPublic($project)) $reasons[] = 'proje herkese açık değil';
+        if (!self::workshopStatusAllowsWidget((string)($project['workshop_status'] ?? 'none'))) $reasons[] = 'Atölye durumu Açık/Beklemede değil';
+        if (empty($project['show_in_widget'])) $reasons[] = 'Atölye penceresinde göster kapalı';
 
-        return 'Gorunmez: ' . implode(', ', $reasons) . '.';
+        return 'Görünmez: ' . implode(', ', $reasons) . '.';
     }
 }

@@ -20,6 +20,7 @@
 - `config/local.php` yoksa local XAMPP icin `C:/xampp/acetinweb_private/storage`, canli Plesk icin proje kokunun yanindaki `acetinweb_private/storage` yolu otomatik denenir.
 - Canlida tercih edilen DB yolu: `/var/www/vhosts/acetin.com.tr/acetinweb_private/storage/fikrimvar.sqlite`.
 - Ortama ozel fark gerekiyorsa sadece `config/local.php` veya ortam degiskeni degisir; uygulama dosyalari degismez.
+- Yayin Merkezi canli kontrol adresi ve canli DB hedef yolu da ortama ozeldir. Bunlar `deploy_remote_manifest_url` ve `deploy_live_db_target` degerleriyle `config/local.php` icinden veya ortam degiskenlerinden verilebilir.
 
 ## Private storage
 
@@ -47,6 +48,14 @@
 - Public manifest DB hash'i, DB boyutu, local/sunucu path, `app/`, `config/` veya detayli dosya listesi icermemelidir.
 - Detayli manifest sadece local/admin tarafinda ve private storage altinda tutulur.
 - Canli kontrol icin public manifestte yalnizca version, generated_at, release_hash ve public_assets_hash gibi ozet alanlar kalmalidir.
+
+## Robots ve sitemap stratejisi
+
+- `robots.txt` sik degisen icerik icin elle guncellenmez; sabit kalir ve sadece arama motorlarina genel izin ile sitemap adresini bildirir.
+- Hikaye yayinlama/kaldirma gibi sik degisen kararlar `robots.txt` ile degil, sitemap uretimi ve sayfanin kendi 404/200 davranisi ile yonetilir.
+- `sitemap.xml` elle tutulan statik liste olmamalidir. Yalnizca public gorunen, yayimlanmis ve Hikayeler sayfasinda gosterilen iceriklerden otomatik uretilmelidir.
+- Bir hikaye yayindan kalkarsa sitemap sonraki uretimde o URL'i kendiliginden cikarmalidir.
+- Botlar icin pratik hedef: robots sabit, sitemap dinamik, public gorunurluk kurali tek kaynak.
 
 ## Uploads ve medya
 

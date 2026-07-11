@@ -282,9 +282,4 @@ function render_media_items(array $media, string $class = 'atelier-media-grid'):
 function render_external_links(array $links): void
 {
     LinkRenderer::renderList($links);
-    return;
-    if ($links === []) return;
-    echo '<nav class="content-links" aria-label="İlgili bağlantılar">';
-    foreach ($links as $l) echo '<a href="' . e($l['url']) . '" target="_blank" rel="noopener noreferrer">' . e($l['title']) . ' ' . icon('arrow') . '</a>';
-    echo '</nav>';
 }
