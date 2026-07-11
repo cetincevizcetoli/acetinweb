@@ -28,13 +28,55 @@ function ordering_story_label(array $project): string
     return $status . ' / ' . $visibility;
 }
 
+function ordering_sort_scope_label(string $scope): string
+{
+    return match ($scope) {
+        'home:focus' => 'Ana sayfa / One cikan buyuk kart',
+        'home:trace' => 'Ana sayfa / Alt serit / kucuk kayit',
+        'archive' => 'Hikayeler sayfasi',
+        default => $scope,
+    };
+}
+
+function ordering_pending_sort_conflicts(array $pending): array
+{
+    $groups = [];
+    foreach ($pending as $project) {
+        if ($project['visibility'] !== 'public') continue;
+
+        $orderKey = rtrim(rtrim(sprintf('%.3F', (float)$project['sort_order']), '0'), '.');
+        if ($project['show_on_home'] && VisibilityService::homeSectionIsVisible($project['home_section'])) {
+            $groups['home:' . $project['home_section']][$orderKey][] = $project['title'];
+        }
+        if ($project['show_in_archive']) {
+            $groups['archive'][$orderKey][] = $project['title'];
+        }
+    }
+
+    $messages = [];
+    foreach ($groups as $scope => $orders) {
+        foreach ($orders as $order => $titles) {
+            if (count($titles) < 2) continue;
+            $messages[] = ordering_sort_scope_label($scope) . ' alaninda ' . $order . ' sira numarasi birden fazla projede kullaniliyor: ' . implode(', ', $titles);
+        }
+    }
+    return $messages;
+}
+
 if (is_post()) {
     verify_csrf();
     try {
-        db()->beginTransaction();
+        $projectTitles = [];
+        foreach (admin_projects() as $project) {
+            $projectTitles[(int)$project['id']] = (string)$project['title'];
+        }
+
+        $pending = [];
         $normalizationWarnings = [];
         foreach ($_POST['projects'] ?? [] as $id => $row) {
             $projectId = (int)$id;
+            if (!isset($projectTitles[$projectId])) continue;
+
             $visibility = (string)($row['visibility'] ?? 'private');
             $workshopStatus = (string)($row['workshop_status'] ?? 'none');
             $homeSection = (string)($row['section'] ?? 'none');
@@ -51,9 +93,40 @@ if (is_post()) {
             $showWidget = $normalized['show_widget'] ? 1 : 0;
             foreach ($normalized['warnings'] as $warning) $normalizationWarnings[] = '#' . $projectId . ': ' . $warning;
 
+            $pending[$projectId] = [
+                'id' => $projectId,
+                'title' => $projectTitles[$projectId],
+                'visibility' => $visibility,
+                'workshop_status' => $workshopStatus,
+                'sort_order' => $sortOrder,
+                'show_on_home' => (bool)$showHome,
+                'show_in_archive' => (bool)$showArchive,
+                'show_in_widget' => (bool)$showWidget,
+                'is_pinned' => (bool)$isPinned,
+                'home_section' => $homeSection,
+            ];
+        }
+
+        $sortConflicts = ordering_pending_sort_conflicts($pending);
+        if ($sortConflicts) {
+            throw new RuntimeException('Sira cakismasi var. Kayit yapilmadi. ' . implode(' ', $sortConflicts));
+        }
+
+        db()->beginTransaction();
+        foreach ($pending as $projectId => $project) {
             $st = db()->prepare('UPDATE projects SET visibility=?, workshop_status=?, sort_order=?, show_on_home=?, show_in_archive=?, show_in_widget=?, is_pinned=?, home_section=?, updated_at=CURRENT_TIMESTAMP WHERE id=?');
-            $st->execute([$visibility, $workshopStatus, $sortOrder, $showHome, $showArchive, $showWidget, $isPinned, $homeSection, $projectId]);
-            if ($isPinned) db()->prepare('UPDATE projects SET is_pinned=0 WHERE id<>?')->execute([$projectId]);
+            $st->execute([
+                $project['visibility'],
+                $project['workshop_status'],
+                $project['sort_order'],
+                $project['show_on_home'] ? 1 : 0,
+                $project['show_in_archive'] ? 1 : 0,
+                $project['show_in_widget'] ? 1 : 0,
+                $project['is_pinned'] ? 1 : 0,
+                $project['home_section'],
+                $projectId,
+            ]);
+            if ($project['is_pinned']) db()->prepare('UPDATE projects SET is_pinned=0 WHERE id<>?')->execute([$projectId]);
         }
         db()->commit();
         admin_audit('update', 'publishing', 0, 'Toplu yayin ve sira ayarlari guncellendi.');
