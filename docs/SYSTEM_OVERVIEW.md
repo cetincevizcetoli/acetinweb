@@ -107,6 +107,18 @@ Ana sayfa ve Hikayeler icin proje ve hikaye birlikte uygunsa gorunur.
 Atolye penceresi ise hikaye yayinindan bagimsizdir; proje public, silinmemis,
 `workshop_status` open/paused ve `show_in_widget=1` ise gorunebilir.
 
+## Hata yonetimi
+
+Beklenmeyen hatalar `AppErrorService` ile private storage altindaki
+`logs/app-errors.jsonl` dosyasina yazilir. Public tarafta canli sitede ham
+teknik hata basilmaz; kullanici hata referans kodu gorur.
+
+Admin sayfalari hata mesajlari icin `admin_error_message()` yardimcisini
+kullanir. Kullanici hatalari acik kalir, veritabani gibi teknik hatalar log
+referansi ile saklanir.
+
+Ayrintili kural: `docs/refactor/ERROR_HANDLING_GUIDE.md`.
+
 ## Medya stratejisi
 
 Kucuk kapaklar, ekran goruntuleri ve gerekli aciklayici gorseller siteye

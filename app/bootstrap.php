@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/Service/AppErrorService.php';
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_name(FV7_SESSION_NAME);
@@ -14,6 +15,22 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
         'use_strict_mode' => true,
     ]);
 }
+
+set_exception_handler(static function (Throwable $error): void {
+    $reference = AppErrorService::log($error, 'uncaught');
+    if (PHP_SAPI === 'cli') {
+        fwrite(STDERR, 'Beklenmeyen hata: ' . $error->getMessage() . ' [' . $reference . ']' . PHP_EOL);
+        exit(1);
+    }
+    if (!headers_sent()) {
+        http_response_code(500);
+        header('Content-Type: text/plain; charset=UTF-8');
+    }
+    echo FV7_DEBUG
+        ? 'Beklenmeyen hata: ' . e($error->getMessage()) . ' [' . e($reference) . ']'
+        : 'Beklenmeyen bir hata oluştu. Hata kodu: ' . e($reference);
+    exit;
+});
 
 function db(): PDO
 {

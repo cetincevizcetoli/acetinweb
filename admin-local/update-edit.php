@@ -22,7 +22,7 @@ if(is_post()){
     foreach(array_map('intval',$_POST['remove_media_ids'] ?? []) as $mid)db()->prepare('DELETE FROM update_media WHERE update_id=? AND media_id=?')->execute([$id,$mid]);
     save_update_links($id,is_array($_POST['links'] ?? null)?$_POST['links']:[]);db()->prepare('UPDATE projects SET updated_at=CURRENT_TIMESTAMP WHERE id=?')->execute([$project['id']]);
     db()->commit();admin_audit('update','update',$id,$title);flash('success','Kayıt güncellendi.');redirect('update-edit.php?id='.$id);
-  }catch(Throwable $e){if(db()->inTransaction())db()->rollBack();$error=$e->getMessage();}
+  }catch(Throwable $e){if(db()->inTransaction())db()->rollBack();$error=admin_error_message($e,'admin.update_edit');}
 }
 $st=db()->prepare('SELECT * FROM updates WHERE id=?');$st->execute([$id]);$update=$st->fetch();$attached=update_media($id);$links=owner_links('update',$id);
 admin_head('Atölye kaydını düzenle');

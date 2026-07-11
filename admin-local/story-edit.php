@@ -122,7 +122,7 @@ if (is_post()) {
         if (db()->inTransaction()) {
             db()->rollBack();
         }
-        $error = $e->getMessage();
+        $error = admin_error_message($e, 'admin.story_edit');
     }
 }
 

@@ -10,7 +10,7 @@ if(is_post()){
   if($action==='upload'){if(!$project)throw new RuntimeException('Önce proje seçin.');$ids=save_uploaded_files($projectId,$project['slug']);flash('success',count($ids).' medya dosyası yüklendi.');redirect('media.php?project_id='.$projectId);}
   if($action==='metadata'){$id=(int)$_POST['media_id'];assert_project_media_ids($projectId,[$id],'Medya');$st=db()->prepare('UPDATE media SET title=?,alt_text=?,caption=? WHERE id=? AND project_id=?');$st->execute([trim(old('title')),trim(old('alt_text')),trim(old('caption')),$id,$projectId]);flash('success','Medya bilgileri güncellendi.');redirect('media.php?project_id='.$projectId);}
   if($action==='delete'){$id=(int)$_POST['media_id'];assert_project_media_ids($projectId,[$id],'Medya');$st=db()->prepare('SELECT (SELECT COUNT(*) FROM update_media WHERE media_id=?)+(SELECT COUNT(*) FROM story_section_media WHERE media_id=?)+(SELECT COUNT(*) FROM story_sections WHERE media_id=?)+(SELECT COUNT(*) FROM story_section_items WHERE media_id=?)');$st->execute([$id,$id,$id,$id]);$use=(int)$st->fetchColumn();if($use>0)throw new RuntimeException('Bu medya '.$use.' yerde kullanılıyor. Önce ilişkileri kaldırın.');db()->prepare('UPDATE media SET deleted_at=CURRENT_TIMESTAMP WHERE id=? AND project_id=?')->execute([$id,$projectId]);flash('success','Medya çöp kutusuna taşındı.');redirect('media.php?project_id='.$projectId);}
- }catch(Throwable $e){$error=$e->getMessage();}
+ }catch(Throwable $e){$error=admin_error_message($e,'admin.media');}
 }
 $projects=admin_projects();$media=$projectId?project_media_admin($projectId):MediaRepository::latestAdmin(100);
 admin_head('Medya kütüphanesi'); ?>

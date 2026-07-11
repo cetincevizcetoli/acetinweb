@@ -26,7 +26,7 @@ if(is_post()){
     save_update_links($id,is_array($_POST['links'] ?? null)?$_POST['links']:[]);
     db()->prepare('UPDATE projects SET updated_at=CURRENT_TIMESTAMP WHERE id=?')->execute([$projectId]);
     db()->commit();admin_audit('create','update',$id,$title);flash('success','Atölye kaydı eklendi.');redirect('update-edit.php?id='.$id);
-  }catch(Throwable $e){if(db()->inTransaction())db()->rollBack();$error=$e->getMessage();}
+  }catch(Throwable $e){if(db()->inTransaction())db()->rollBack();$error=admin_error_message($e,'admin.update_new');}
 }
 admin_head('Yeni Atölye kaydı');
 ?><div class="page-head"><div><p class="eyebrow"><?= e($project['title']) ?></p><h1>Yeni çalışma kaydı</h1><p>Bugün girmek zorunda değilsin. Yalnızca kaybetmek istemediğin bir karar veya deneme olduğunda ekle.</p></div></div><?php if($error): ?><div class="flash flash-error"><?= e($error) ?></div><?php endif; ?><form method="post" enctype="multipart/form-data"><input type="hidden" name="project_id" value="<?= $projectId ?>"><?= csrf_field() ?><?php render_update_form($project); ?><div class="form-actions"><button class="accent" type="submit">Kaydı oluştur</button><a class="button secondary" href="project-edit.php?id=<?= $projectId ?>">Vazgeç</a></div></form><?php admin_foot(); ?>

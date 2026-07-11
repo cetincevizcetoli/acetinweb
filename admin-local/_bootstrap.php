@@ -20,6 +20,7 @@ function admin_audit(string $action,string $entityType,int $entityId=0,string $d
     $st=db()->prepare('INSERT INTO audit_log(user_id,action,entity_type,entity_id,details) VALUES (?,?,?,?,?)');
     $st->execute([$_SESSION['admin_user_id'] ?? null,$action,$entityType,$entityId?:null,$details]);
 }
+function admin_error_message(Throwable $error,string $context='admin'): string { return AppErrorService::adminMessage($error,$context); }
 function admin_head(string $title): void { $u=admin_user(); $flashes=pull_flashes(); ?>
 <!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title><?= e($title) ?> · FikrimVar V7</title><link rel="stylesheet" href="assets/admin.css"><script src="assets/admin.js" defer></script></head><body><header class="admin-header"><a class="admin-brand" href="index.php"><strong>#FikrimVar</strong><span>V7 · SQLite içerik yönetimi</span></a><?php if($u): ?><nav><a href="index.php">Projeler</a><a href="project-new.php">Yeni proje</a><a href="ordering.php">Yayın ve sıra</a><a href="media.php">Medya</a><a href="deploy.php">Yayın Merkezi</a><a href="notes.php">Notlar</a><a href="settings.php">Ayarlar</a><a href="backup.php">Yedek</a><a href="../" target="_blank">Siteyi aç</a><a href="logout.php">Çıkış</a></nav><?php endif; ?></header><main class="admin-main"><?php foreach($flashes as $f): ?><div class="flash flash-<?= e($f['type']) ?>"><?= e($f['message']) ?></div><?php endforeach; ?>
 <?php }

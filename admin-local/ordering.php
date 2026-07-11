@@ -135,7 +135,7 @@ if (is_post()) {
         redirect('ordering.php');
     } catch (Throwable $e) {
         if (db()->inTransaction()) db()->rollBack();
-        flash('error', $e->getMessage());
+        flash('error', admin_error_message($e, 'admin.ordering'));
     }
 }
 

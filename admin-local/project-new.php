@@ -25,7 +25,7 @@ if(is_post()){
             db()->commit(); admin_audit('create','project',$id,$title); flash('success','Proje oluşturuldu.');
             foreach(admin_project_sort_conflicts($id,$sortOrder,$showHome,$homeSection,$showArchive) as $warning) flash('warning',$warning);
             redirect('project-edit.php?id='.$id);
-        }catch(Throwable $e){ if(db()->inTransaction()) db()->rollBack(); $error='Proje oluşturulamadı: '.$e->getMessage(); }
+        }catch(Throwable $e){ if(db()->inTransaction()) db()->rollBack(); $error='Proje oluşturulamadı: '.admin_error_message($e,'admin.project_new'); }
     }
 }
 admin_head('Yeni proje'); ?>

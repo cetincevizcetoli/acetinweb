@@ -35,7 +35,7 @@ if(is_post()){
       db()->prepare("UPDATE projects SET workshop_status='closed',closing_state=?,closing_note=?,ended_at=?,updated_at=CURRENT_TIMESTAMP WHERE id=?")->execute([(string)($_POST['closing_state'] ?? 'Bu hâliyle bitti'),trim((string)($_POST['closing_note'] ?? '')),date('Y-m-d'),$projectId]);
     }
     db()->commit();admin_audit('build_story','story',$storyId,'Selected updates: '.implode(',',$selected));flash('success','Hikâye taslağı oluşturuldu.');redirect('story-edit.php?project_id='.$projectId);
-  }catch(Throwable $e){if(db()->inTransaction())db()->rollBack();$error=$e->getMessage();}
+  }catch(Throwable $e){if(db()->inTransaction())db()->rollBack();$error=admin_error_message($e,'admin.story_builder');}
 }
 admin_head('Atölyeden Hikâye'); ?>
 <div class="page-head"><div><p class="eyebrow"><?= e($project['title']) ?></p><h1>Atölyeden Hikâye oluştur</h1><p>Ham kayıtlar silinmez. Hikâyeye yalnızca seçtiğin dönüm noktalarının özeti taşınır.</p></div></div><?php if($error): ?><div class="flash flash-error"><?= e($error) ?></div><?php endif; ?>

@@ -91,6 +91,7 @@ define('FV7_PUBLIC', fv7_path($publicPath));
 define('FV7_UPLOAD_ROOT', FV7_PUBLIC . '/uploads');
 define('FV7_ADMIN_LOCAL_ONLY', true);
 define('FV7_ALLOW_SYSTEM_CHECK', filter_var(getenv('FV7_ALLOW_SYSTEM_CHECK') ?: ($localConfig['allow_system_check'] ?? false), FILTER_VALIDATE_BOOL));
+define('FV7_DEBUG', filter_var(getenv('FV7_DEBUG') ?: ($localConfig['debug'] ?? false), FILTER_VALIDATE_BOOL));
 define('FV7_IMAGE_MAX_BYTES', 20 * 1024 * 1024);
 define('FV7_VIDEO_MAX_BYTES', 250 * 1024 * 1024);
 define('FV7_OTHER_MAX_BYTES', 40 * 1024 * 1024);

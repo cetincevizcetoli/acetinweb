@@ -8,6 +8,7 @@ return [
     'public_path' => '/absolute/httpdocs',
     'storage_path' => '/absolute/acetinweb_private/storage',
     'db_path' => '/absolute/acetinweb_private/storage/fikrimvar.sqlite',
+    'debug' => false,
     'allow_system_check' => false,
     'deploy_remote_manifest_url' => 'https://www.example.com/deploy-manifest.json',
     'deploy_live_db_target' => '/absolute/acetinweb_private/storage/fikrimvar.sqlite',

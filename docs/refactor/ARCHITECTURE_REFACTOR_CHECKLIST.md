@@ -275,9 +275,15 @@ Kabul olcutu:
 
 ## Faz 7.5 - Atolye Gunlugu urun raporu
 
-Bu konu projenin kalbi oldugu icin kucuk bir notla gecistirilmeyecek.
+Karar: Tek kisilik CMS icin ayri Atolye Gunlugu sayfasi simdilik yapilmayacak.
+Ana sayfadaki "Atolyede simdi" paneli canli atolye girisi olarak kanonik kabul
+edilir. Proje ozelindeki ham kayitlar `atolye.php?slug=...` uzerinden izlenir.
 
-- [ ] Atolye Penceresi, proje atolye sayfasi ve gercek Atolye Gunlugu farklari yazilir.
+Bu konu ileride tekrar acilirsa kucuk bir notla gecistirilmeyecek.
+
+- [x] Atolye Penceresi mevcut canli giris olarak kabul edildi.
+- [x] Ayri Atolye Gunlugu sayfasi simdilik ertelendi.
+- [ ] Ileride ihtiyac dogarsa Atolye Penceresi, proje atolye sayfasi ve gercek Atolye Gunlugu farklari yazilir.
 - [ ] Tum projelerdeki ham kayit akisinin hangi filtrelerle listelenecegi belirlenir.
 - [ ] Hikayeye donmus eski kayitlar ile yeni devam eden kayitlarin ayni gunlukte nasil gorunecegi planlanir.
 - [ ] Admin tarafinda ham kayit, donum noktasi ve hikaye bolumu arasindaki iliski net anlatilir.

@@ -349,7 +349,7 @@ if (is_post()) {
             redirect('deploy.php');
         }
     } catch (Throwable $e) {
-        flash('error', $e->getMessage());
+        flash('error', admin_error_message($e, 'admin.deploy'));
         redirect('deploy.php');
     }
 }

@@ -9,7 +9,7 @@ try {
     $integrity = (string)db()->query('PRAGMA integrity_check')->fetchColumn();
     $foreignKeyCount = count(db()->query('PRAGMA foreign_key_check')->fetchAll());
 } catch (Throwable $e) {
-    $integrity = $e->getMessage();
+    $integrity = admin_error_message($e, 'admin.system');
 }
 
 $checks = [

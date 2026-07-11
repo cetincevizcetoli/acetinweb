@@ -140,7 +140,7 @@ if (is_post()) {
         redirect('section-edit.php?id=' . $sectionId);
     } catch (Throwable $e) {
         if (db()->inTransaction()) db()->rollBack();
-        $error = $e->getMessage();
+        $error = admin_error_message($e, 'admin.section_edit');
     }
 }
 
