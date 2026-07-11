@@ -122,11 +122,27 @@ function count_public(string $kind): int
 {
     return match($kind) {
         'stories' => (int)db()->query("SELECT COUNT(*) FROM stories s JOIN projects p ON p.id=s.project_id WHERE s.status='published' AND s.visibility='public' AND s.deleted_at IS NULL AND p.deleted_at IS NULL AND p.visibility='public' AND p.show_in_archive=1")->fetchColumn(),
-        'workshops' => (int)db()->query("SELECT COUNT(*) FROM projects WHERE workshop_status='open' AND visibility='public' AND deleted_at IS NULL")->fetchColumn(),
-        'methods' => (int)db()->query("SELECT COUNT(*) FROM projects p JOIN categories c ON c.id=p.category_id WHERE c.slug='yz-yontem' AND p.visibility='public' AND p.deleted_at IS NULL")->fetchColumn(),
-        'unfinished' => (int)db()->query("SELECT COUNT(*) FROM projects WHERE status IN ('yarim','fikir','not') AND visibility='public' AND deleted_at IS NULL")->fetchColumn(),
+        'workshops' => (int)db()->query("SELECT COUNT(*) FROM projects WHERE workshop_status IN ('open','paused') AND visibility='public' AND deleted_at IS NULL AND show_in_widget=1")->fetchColumn(),
+        'methods' => (int)db()->query("SELECT COUNT(*) FROM stories s JOIN projects p ON p.id=s.project_id JOIN categories c ON c.id=p.category_id WHERE c.slug='yz-yontem' AND s.status='published' AND s.visibility='public' AND s.deleted_at IS NULL AND p.deleted_at IS NULL AND p.visibility='public' AND p.show_in_archive=1")->fetchColumn(),
+        'unfinished' => (int)db()->query("SELECT COUNT(*) FROM stories s JOIN projects p ON p.id=s.project_id WHERE p.status IN ('yarim','fikir','not') AND s.status='published' AND s.visibility='public' AND s.deleted_at IS NULL AND p.deleted_at IS NULL AND p.visibility='public' AND p.show_in_archive=1")->fetchColumn(),
         default => 0,
     };
+}
+
+function public_story_category_counts(int $limit=2): array
+{
+    $limit=max(0,$limit);
+    if($limit===0) return [];
+    $sql="SELECT c.slug,c.title,COUNT(*) count
+          FROM stories s
+          JOIN projects p ON p.id=s.project_id
+          JOIN categories c ON c.id=p.category_id
+          WHERE s.status='published' AND s.visibility='public' AND s.deleted_at IS NULL
+            AND p.deleted_at IS NULL AND p.visibility='public' AND p.show_in_archive=1
+          GROUP BY c.slug,c.title
+          ORDER BY count DESC,c.title
+          LIMIT ".$limit;
+    return db()->query($sql)->fetchAll();
 }
 
 function admin_projects(string $filter='all'): array

@@ -12,7 +12,19 @@ $traceStories=array_values(array_filter($projects,fn($p)=>($p['home_section'] ??
 usort($traceStories,fn($a,$b)=>($a['sort_order']<=>$b['sort_order']));
 $atelierWorkshops=widget_workshops(); $atelier=$atelierWorkshops[0]['project'] ?? null; $latestAtelier=$atelierWorkshops[0]['latest'] ?? null;
 $recentUpdates=recent_updates($recentLimit);
-$storyCount=count_public('stories'); $atelierCount=count_public('workshops'); $methodCount=count_public('methods'); $unfinishedCount=count_public('unfinished');
+$storyCount=count_public('stories'); $atelierCount=count_public('workshops');
+$heroMetrics=[
+    ['kind'=>'link','href'=>'hikayeler.php','count'=>$storyCount,'label'=>'Hikâye'],
+    ['kind'=>'button','count'=>$atelierCount,'label'=>'Canlı atölye'],
+];
+foreach(public_story_category_counts(2) as $metric){
+    $heroMetrics[]=[
+        'kind'=>'link',
+        'href'=>'hikayeler.php?kategori='.rawurlencode((string)$metric['slug']),
+        'count'=>(int)$metric['count'],
+        'label'=>(string)$metric['title'],
+    ];
+}
 ?>
 <!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="<?= e($site['description'] ?? '') ?>"><meta name="theme-color" content="#0b0e12"><title><?= e($site['title'] ?? 'Ahmet Çetin | #FikrimVar') ?></title><link rel="canonical" href="https://www.acetin.com.tr/"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650;9..144,700&family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="<?= e(asset_url('assets/css/style.css')) ?>"><script src="<?= e(asset_url('assets/js/app.js')) ?>" defer></script></head>
 <body class="home-page"><a class="skip-link" href="#main">İçeriğe geç</a>
@@ -20,7 +32,7 @@ $storyCount=count_public('stories'); $atelierCount=count_public('workshops'); $m
 <main id="main">
 <section class="hero" data-parallax-root><div class="hero-atmosphere" aria-hidden="true"><div class="hero-grid" data-parallax data-depth="0.035"></div><div class="hero-core hero-core--base" data-parallax data-depth="0.12" aria-hidden="true"><img class="hero-core-base" src="assets/img/hero/hero-core.png" alt="" role="presentation"></div><div class="hero-shade"></div><div class="hero-orbit hero-orbit-one" data-parallax data-depth="0.08"></div><div class="hero-orbit hero-orbit-two" data-parallax data-depth="0.05"></div></div>
 <div class="shell hero-inner"><div class="hero-copy" data-reveal><p class="hero-eyebrow"><?= e($hero['eyebrow'] ?? '') ?></p><h1 class="idea-title"><span class="idea-word" data-text="#FikrimVar">#FikrimVar</span></h1><p class="hero-lead"><?= e($hero['lead'] ?? '') ?></p><p class="hero-body"><?= e($hero['body'] ?? '') ?></p><div class="hero-actions"><a class="button button-light" href="#manifesto"><?= e($hero['primary_label'] ?? 'Günlüğe gir') ?> <?= icon('arrow') ?></a><a class="text-button" href="hikayeler.php"><?= e($hero['secondary_label'] ?? 'Bütün hikâyeler') ?></a></div></div>
-<div class="hero-index" aria-label="Sitenin içerik yapısı" data-reveal><a href="hikayeler.php"><strong><?= str_pad((string)$storyCount,2,'0',STR_PAD_LEFT) ?></strong><span>Hikâye</span></a><button type="button" data-atelier-widget-open><strong><?= str_pad((string)max(1,$atelierCount),2,'0',STR_PAD_LEFT) ?></strong><span>Canlı atölye</span></button><a href="hikayeler.php?kategori=yz-yontem"><strong><?= str_pad((string)$methodCount,2,'0',STR_PAD_LEFT) ?></strong><span>Yöntem notu</span></a><a href="hikayeler.php?durum=yarim"><strong><?= str_pad((string)$unfinishedCount,2,'0',STR_PAD_LEFT) ?></strong><span>Açık dosya</span></a></div><a class="hero-scroll" href="#manifesto"><span></span> Hikâyenin içine gir</a></div></section>
+<div class="hero-index" aria-label="Sitenin içerik yapısı" data-reveal><?php foreach($heroMetrics as $metric): ?><?php if(($metric['kind'] ?? 'link')==='button'): ?><button type="button" data-atelier-widget-open><strong><?= str_pad((string)$metric['count'],2,'0',STR_PAD_LEFT) ?></strong><span><?= e($metric['label']) ?></span></button><?php else: ?><a href="<?= e($metric['href']) ?>"><strong><?= str_pad((string)$metric['count'],2,'0',STR_PAD_LEFT) ?></strong><span><?= e($metric['label']) ?></span></a><?php endif; ?><?php endforeach; ?></div><a class="hero-scroll" href="#manifesto"><span></span> Hikâyenin içine gir</a></div></section>
 
 <section class="manifesto-bridge" id="manifesto" aria-labelledby="manifesto-title"><div class="shell manifesto-layout"><article class="manifesto-copy" data-reveal><p class="eyebrow"><?= e($manifesto['label'] ?? '') ?></p><h2 id="manifesto-title"><?= e($manifesto['title'] ?? '') ?></h2><div class="manifesto-text"><?php foreach(($manifesto['paragraphs'] ?? []) as $p): ?><p><?= e((string)$p) ?></p><?php endforeach; ?></div></article><aside class="manifesto-card" data-reveal><span>KISA HÂLİ</span><blockquote><?= e($manifesto['short'] ?? '') ?></blockquote><div class="manifesto-keywords"><?php foreach(($manifesto['words'] ?? []) as $w): ?><em><?= e((string)$w) ?></em><?php endforeach; ?></div></aside></div></section>
 

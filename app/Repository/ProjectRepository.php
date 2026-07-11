@@ -100,6 +100,8 @@ final class ProjectRepository
         } elseif ($filter === 'workshop') {
             $where .= " AND p.workshop_status IN ('open','paused')";
         } elseif ($filter === 'published') {
+            $where .= " AND p.visibility='public' AND p.show_in_archive=1 AND s.status='published' AND s.visibility='public'";
+        } elseif ($filter === 'story-published') {
             $where .= " AND s.status='published'";
         } elseif ($filter === 'draft') {
             $where .= " AND (s.status='draft' OR s.id IS NULL)";
