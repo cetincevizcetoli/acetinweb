@@ -164,6 +164,7 @@ function icon(string $name): string
 }
 
 require_once __DIR__ . '/Service/VisibilityService.php';
+require_once __DIR__ . '/Service/SitemapService.php';
 require_once __DIR__ . '/Repository/ProjectRepository.php';
 require_once __DIR__ . '/Repository/StoryRepository.php';
 require_once __DIR__ . '/Repository/LinkRepository.php';

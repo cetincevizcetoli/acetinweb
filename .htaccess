@@ -9,6 +9,7 @@ DirectoryIndex index.php
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
+  RewriteRule ^sitemap\.xml$ sitemap.php [L,NC]
   RewriteRule (^|/)\.git(/|$) - [F,L]
   RewriteRule ^_.*\.php$ - [F,L,NC]
   RewriteRule ^(app|config|docs|tools|storage|backups|_backups|mocap|archive|arsiv|ar.iv)(/|$) - [F,L,NC]

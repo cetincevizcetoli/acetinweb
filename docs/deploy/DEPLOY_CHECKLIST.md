@@ -56,6 +56,9 @@
 - `sitemap.xml` elle tutulan statik liste olmamalidir. Yalnizca public gorunen, yayimlanmis ve Hikayeler sayfasinda gosterilen iceriklerden otomatik uretilmelidir.
 - Bir hikaye yayindan kalkarsa sitemap sonraki uretimde o URL'i kendiliginden cikarmalidir.
 - Botlar icin pratik hedef: robots sabit, sitemap dinamik, public gorunurluk kurali tek kaynak.
+- Public adres `/sitemap.xml` olarak kalir; `.htaccess` bunu `sitemap.php` uzerinden dinamik uretime baglar.
+- `sitemap.xml` dosyasi yalnizca mod_rewrite kapali kalirsa kullanilacak sade fallback kopyadir.
+- Atolye sayfalari simdilik sitemap'e eklenmez. Kanonik SEO listesi Ana sayfa, Hikayeler ve yayinlanmis Hikaye detaylaridir.
 
 ## Uploads ve medya
 

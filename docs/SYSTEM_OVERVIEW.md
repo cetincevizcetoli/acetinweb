@@ -107,6 +107,16 @@ Ana sayfa ve Hikayeler icin proje ve hikaye birlikte uygunsa gorunur.
 Atolye penceresi ise hikaye yayinindan bagimsizdir; proje public, silinmemis,
 `workshop_status` open/paused ve `show_in_widget=1` ise gorunebilir.
 
+## Robots ve sitemap
+
+`robots.txt` sabit kalir ve arama motorlarina sitemap adresini bildirir.
+Hikaye yayina alma/kaldirma karari robots dosyasindan degil, gorunurluk
+kurallari ve sitemap uretiminden gelir.
+
+`/sitemap.xml` public adrestir. `.htaccess` bu adresi `sitemap.php` dosyasina
+baglar; `SitemapService` yalnizca public, yayimlanmis ve Hikayeler sayfasinda
+gosterilen hikayeleri XML'e yazar.
+
 ## Hata yonetimi
 
 Beklenmeyen hatalar `AppErrorService` ile private storage altindaki
