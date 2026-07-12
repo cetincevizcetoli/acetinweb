@@ -1,5 +1,41 @@
 (() => {
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const themeKey = 'fikrimvar-theme';
+  const themeMeta = document.querySelector('meta[name="theme-color"]');
+  const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
+  const readTheme = () => {
+    try {
+      return localStorage.getItem(themeKey) || (systemDark.matches ? 'dark' : 'light');
+    } catch (_) {
+      return systemDark.matches ? 'dark' : 'light';
+    }
+  };
+  const writeTheme = (theme) => {
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+    if (themeMeta) themeMeta.setAttribute('content', theme === 'dark' ? '#0f1318' : '#efe7d8');
+    document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
+      const dark = theme === 'dark';
+      button.setAttribute('aria-pressed', String(dark));
+      button.setAttribute('aria-label', dark ? 'Aydınlık moda geç' : 'Karanlık moda geç');
+      const label = button.querySelector('[data-theme-label]');
+      if (label) label.textContent = dark ? 'Aydınlık' : 'Karanlık';
+    });
+  };
+  writeTheme(readTheme());
+  document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const next = (document.documentElement.dataset.theme || readTheme()) === 'dark' ? 'light' : 'dark';
+      try { localStorage.setItem(themeKey, next); } catch (_) { /* private mode */ }
+      writeTheme(next);
+    });
+  });
+  systemDark.addEventListener?.('change', () => {
+    try {
+      if (localStorage.getItem(themeKey)) return;
+    } catch (_) { /* private mode */ }
+    writeTheme(readTheme());
+  });
 
   const navToggle = document.querySelector('[data-nav-toggle]');
   const nav = document.querySelector('[data-nav]');

@@ -111,6 +111,9 @@ function render_story_stage_marker(array $part, string $range): void
 $slug = safe_slug((string)($_GET['slug'] ?? ''));
 $project = project_by_slug($slug);
 $story = $project ? story_by_project((int)$project['id']) : null;
+if ($project && $story && VisibilityService::storyDetailReadable($project, $story) && in_array((string)$project['workshop_status'], ['open', 'paused'], true)) {
+    redirect('atolye.php?slug=' . rawurlencode($slug));
+}
 if (!$project || !$story || !VisibilityService::storyDetailReadable($project, $story)) {
     http_response_code(404);
 }
@@ -138,6 +141,7 @@ if ($project && $hasWorkshopPage) {
     <meta name="description" content="<?= e($story['summary'] ?? 'Çalışma hikâyesi') ?>">
     <title><?= e($story['question'] ?? $project['title'] ?? 'Hikâye') ?> | #FikrimVar</title>
     <link rel="canonical" href="https://www.acetin.com.tr/hikaye.php?slug=<?= e(rawurlencode($slug)) ?>">
+    <?= public_theme_boot_script() ?>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -155,6 +159,7 @@ if ($project && $hasWorkshopPage) {
                 <a href="atolye.php?slug=<?= e(rawurlencode($slug)) ?>"><?= e($workshopLinkLabel) ?></a>
             <?php endif; ?>
             <a href="index.php">Ana sayfa</a>
+            <?= public_theme_toggle() ?>
         </nav>
     </div>
 </header>

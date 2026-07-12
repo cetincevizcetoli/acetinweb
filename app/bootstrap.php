@@ -147,6 +147,16 @@ function asset_url(string $path): string
     return $path . '?v=' . rawurlencode($version);
 }
 
+function public_theme_boot_script(): string
+{
+    return '<script>(function(){try{var key="fikrimvar-theme";var saved=localStorage.getItem(key);var dark=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;var theme=saved||((dark)?"dark":"light");document.documentElement.dataset.theme=theme;document.documentElement.style.colorScheme=theme;}catch(e){document.documentElement.dataset.theme="light";}})();</script>';
+}
+
+function public_theme_toggle(): string
+{
+    return '<button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label="Tema değiştir"><span data-theme-label>Tema</span></button>';
+}
+
 function icon(string $name): string
 {
     $icons = [
