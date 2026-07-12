@@ -328,18 +328,18 @@ admin_head($id ? 'Bölümü düzenle' : 'Yeni bölüm');
                 <div class="field full"><label>Kod / terminal</label><textarea name="code_text" rows="10" style="font-family:monospace"><?= e($section['code_text'] ?? '') ?></textarea></div>
                 <div class="section-preview full" data-section-preview>
                     <div>
-                        <span>Önizleme mantığı</span>
-                        <strong data-preview-title><?= e($section['title'] ?: 'Bölüm başlığı') ?></strong>
-                        <p data-preview-body><?= e($section['body_text'] ?: $section['intro_text'] ?: $section['quote_text'] ?: 'Bu alan, seçtiğin içerik tipi ve yerleşimin public sayfada nasıl davranacağını gösterir.') ?></p>
+                        <span>Yerleşim yardımı</span>
+                        <strong data-preview-title>Seçimin davranışı</strong>
+                        <p data-preview-body>Bu kutu gerçek hikâye metnini tekrar etmez. Yalnızca seçtiğin içerik tipi ve yerleşimin nasıl davranacağını anlatır.</p>
                     </div>
                     <ul>
                         <li><b>İçerik tipi</b><span data-preview-type><?= e($types[$currentType]['label'] ?? $currentType) ?></span></li>
                         <li><b>Yerleşim</b><span data-preview-layout><?= e($layouts[$currentLayout]['label'] ?? $currentLayout) ?></span></li>
-                        <li><b>Uyarı</b><span data-preview-advice>Uzun başlıkta metin tabanlı yerleşimler daha güvenlidir.</span></li>
+                        <li><b>Not</b><span data-preview-advice>Uzun metinlerde sade okuma yerleşimleri daha güvenlidir.</span></li>
                     </ul>
                     <div class="section-rules">
-                        <strong>Yerleşim kuralı</strong>
-                        <p>Liste, karşılaştırma, durum ve ders tipleri satır ister. Satır yoksa sistem bölümü metin, kod veya galeri gibi güvenli görünüme alır.</p>
+                        <strong>Kısa kural</strong>
+                        <p>Bu alan canlı önizleme değil, seçim rehberidir. Gerçek sonucu görmek için üstteki Önizle bağlantısını kullan.</p>
                     </div>
                 </div>
             </div>
