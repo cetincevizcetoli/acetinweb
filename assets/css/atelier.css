@@ -1,0 +1,144 @@
+/* Atelier page: light workbench language, separate from edited story pages. */
+
+body.atelier-page {
+  background-color: #efe5d4;
+  background-image:
+    linear-gradient(rgba(32, 26, 20, .035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(32, 26, 20, .035) 1px, transparent 1px);
+  background-size: 28px 28px;
+  color: var(--ink);
+}
+
+.atelier-page .atelier-hero,
+.atelier-page .atelier-raw-log,
+.atelier-page .atelier-rule {
+  background-color: transparent;
+}
+
+.atelier-page .atelier-hero {
+  color: var(--ink);
+}
+
+.atelier-page .atelier-hero h1,
+.atelier-page .atelier-log h2,
+.atelier-page .atelier-stage-copy h2 {
+  color: var(--ink);
+}
+
+.atelier-page .atelier-hero-grid > div:last-child > p:last-of-type,
+.atelier-page .atelier-log header > p:last-child,
+.atelier-page .atelier-stage-copy > p,
+.atelier-page .atelier-stage-copy dd {
+  color: #5f554b;
+}
+
+.atelier-page .atelier-meta span {
+  color: #5a4f44;
+  border-color: rgba(41, 31, 22, .18);
+  background: rgba(255, 255, 255, .24);
+}
+
+.atelier-page .atelier-question {
+  border-left: 3px solid var(--rust);
+  padding-left: 16px;
+  font-family: var(--mono);
+  color: var(--rust-dark);
+}
+
+.atelier-page .atelier-stage-media,
+.atelier-page .atelier-entry-media figure,
+.atelier-page .atelier-media-grid figure {
+  position: relative;
+  border: 1px solid rgba(41, 31, 22, .18);
+  box-shadow: 0 16px 34px rgba(34, 24, 14, .08);
+}
+
+.atelier-page .atelier-stage-media::before,
+.atelier-page .atelier-entry-media figure::before,
+.atelier-page .atelier-media-grid figure::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  width: 74px;
+  height: 20px;
+  transform: translateX(-50%) rotate(-2deg);
+  background: rgba(236, 204, 145, .45);
+  border: 1px solid rgba(123, 93, 48, .12);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.atelier-page .atelier-stage-copy dt,
+.atelier-page .atelier-live-label,
+.atelier-page .atelier-phase > summary,
+.atelier-page .atelier-meta span,
+.atelier-page .content-links a {
+  font-family: var(--mono);
+}
+
+.atelier-page .atelier-stage-copy dl div {
+  border-top: 1px solid rgba(41, 31, 22, .16);
+  padding-top: 14px;
+}
+
+.atelier-page .atelier-stage-copy dt {
+  display: inline-flex;
+  margin-bottom: 8px;
+  padding: 4px 7px;
+  border: 1px solid rgba(226, 165, 58, .28);
+  color: var(--gold);
+  font-size: .68rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.atelier-page .atelier-raw-log header {
+  border-bottom: 1px solid rgba(41, 31, 22, .14);
+  padding-bottom: 18px;
+}
+
+.atelier-page .atelier-log-entry {
+  margin-bottom: 10px;
+  padding: 16px;
+  color: #5f554b;
+  background: rgba(255, 255, 255, .28);
+  border: 1px solid rgba(41, 31, 22, .14);
+  border-left: 3px solid rgba(41, 31, 22, .18);
+}
+
+.atelier-page .atelier-log-entry:last-child {
+  border-bottom: 1px solid rgba(41, 31, 22, .14);
+}
+
+.atelier-page .atelier-log-entry strong {
+  color: var(--ink);
+}
+
+.atelier-page .atelier-log-entry small {
+  color: #6a5d50;
+}
+
+.atelier-page .atelier-log-entry.is-active {
+  padding-left: 16px;
+  border-left-color: var(--rust);
+  background: rgba(255, 255, 255, .5);
+  box-shadow: 0 10px 26px rgba(34, 24, 14, .08);
+}
+
+.atelier-page .atelier-phase {
+  background: rgba(255, 255, 255, .22);
+}
+
+@media (max-width: 760px) {
+  body.atelier-page {
+    background-size: 22px 22px;
+  }
+
+  .atelier-page .atelier-stage-media::before,
+  .atelier-page .atelier-entry-media figure::before,
+  .atelier-page .atelier-media-grid figure::before {
+    width: 56px;
+    height: 16px;
+  }
+}

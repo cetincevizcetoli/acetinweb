@@ -1,0 +1,3 @@
+Proje oluşturulamadı: admin_resolve_project_sort_order(): Argument #2 ($showHome) must be of type bool, int given, called in C:\xampp\htdocs\acetinweb\admin-local\project-new.php on line 16
+
+proje olusturuken alınan hata 

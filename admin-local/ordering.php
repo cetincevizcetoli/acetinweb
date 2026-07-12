@@ -63,6 +63,57 @@ function ordering_pending_sort_conflicts(array $pending): array
     return $messages;
 }
 
+function ordering_sort_key(float $sortOrder): string
+{
+    return sprintf('%.3F', $sortOrder);
+}
+
+function ordering_project_sort_scopes(array $project): array
+{
+    if ($project['visibility'] !== 'public') return [];
+
+    $scopes = [];
+    if ($project['show_on_home'] && VisibilityService::homeSectionIsVisible($project['home_section'])) {
+        $scopes[] = 'home:' . $project['home_section'];
+    }
+    if ($project['show_in_archive']) {
+        $scopes[] = 'archive';
+    }
+    return $scopes;
+}
+
+function ordering_sort_candidate_is_used(array $pending, int $projectId, array $project, float $candidate): bool
+{
+    $scopes = ordering_project_sort_scopes($project);
+    if (!$scopes) return false;
+
+    $candidateKey = ordering_sort_key($candidate);
+    foreach ($pending as $otherId => $other) {
+        if ((int)$otherId === $projectId || $other['sort_order'] === null) continue;
+        if (ordering_sort_key((float)$other['sort_order']) !== $candidateKey) continue;
+        if (array_intersect($scopes, ordering_project_sort_scopes($other))) return true;
+    }
+    return false;
+}
+
+function ordering_fill_auto_sort_orders(array $pending): array
+{
+    foreach ($pending as $projectId => $project) {
+        if ($project['sort_order'] !== null) continue;
+        if (!ordering_project_sort_scopes($project)) {
+            $pending[$projectId]['sort_order'] = 999.0;
+            continue;
+        }
+
+        $candidate = 10.0;
+        while (ordering_sort_candidate_is_used($pending, (int)$projectId, $project, $candidate)) {
+            $candidate += 10.0;
+        }
+        $pending[$projectId]['sort_order'] = $candidate;
+    }
+    return $pending;
+}
+
 if (is_post()) {
     verify_csrf();
     try {
@@ -84,13 +135,15 @@ if (is_post()) {
             $showArchive = !empty($row['archive']) ? 1 : 0;
             $showWidget = !empty($row['widget']) ? 1 : 0;
             $isPinned = !empty($row['pinned']) ? 1 : 0;
-            $sortOrder = (float)($row['order'] ?? 999);
+            $sortRaw = trim((string)($row['order'] ?? ''));
+            $sortOrder = $sortRaw !== '' ? (float)$sortRaw : null;
 
             $normalized = admin_normalize_project_publication((bool)$showHome, $homeSection, (bool)$showArchive, (bool)$showWidget, $workshopStatus);
             $showHome = $normalized['show_home'] ? 1 : 0;
             $homeSection = (string)$normalized['home_section'];
             $showArchive = $normalized['show_archive'] ? 1 : 0;
             $showWidget = $normalized['show_widget'] ? 1 : 0;
+            $workshopStatus = (string)$normalized['workshop_status'];
             foreach ($normalized['warnings'] as $warning) $normalizationWarnings[] = '#' . $projectId . ': ' . $warning;
 
             $pending[$projectId] = [
@@ -107,6 +160,7 @@ if (is_post()) {
             ];
         }
 
+        $pending = ordering_fill_auto_sort_orders($pending);
         $sortConflicts = ordering_pending_sort_conflicts($pending);
         if ($sortConflicts) {
             throw new RuntimeException('Sira cakismasi var. Kayit yapilmadi. ' . implode(' ', $sortConflicts));
@@ -140,6 +194,7 @@ if (is_post()) {
 }
 
 $projects = admin_projects();
+$currentSortConflicts = ordering_pending_sort_conflicts($projects);
 admin_head('Yayin ve sira');
 ?>
 <div class="page-head">
@@ -150,6 +205,10 @@ admin_head('Yayin ve sira');
     </div>
     <a class="button secondary" href="deploy.php">Yayin Merkezi</a>
 </div>
+
+<?php foreach ($currentSortConflicts as $warning): ?>
+    <div class="flash flash-warning"><?= e($warning) ?></div>
+<?php endforeach; ?>
 
 <section class="panel publish-guide">
     <h2>Yayin zinciri</h2>

@@ -92,12 +92,41 @@ function admin_next_sort_order(string $scope, string $homeSection='none'): float
     return 999.0;
 }
 
+function admin_next_project_sort_order(bool $showHome,string $homeSection,bool $showArchive): float
+{
+    $conditions = [];
+    $params = [];
+    if($showHome && in_array($homeSection,['focus','trace'],true)){
+        $conditions[] = '(show_on_home=1 AND home_section=?)';
+        $params[] = $homeSection;
+    }
+    if($showArchive){
+        $conditions[] = 'show_in_archive=1';
+    }
+    if(!$conditions) return 999.0;
+
+    $st = db()->prepare('SELECT sort_order FROM projects WHERE deleted_at IS NULL AND (' . implode(' OR ', $conditions) . ') ORDER BY sort_order');
+    $st->execute($params);
+    $used = [];
+    foreach($st->fetchAll() as $row){
+        $used[sprintf('%.3F',(float)$row['sort_order'])] = true;
+    }
+    $candidate = 10.0;
+    while(isset($used[sprintf('%.3F',$candidate)])) $candidate += 10.0;
+    return $candidate;
+}
+
 function admin_resolve_project_sort_order(string $raw,bool $showHome,string $homeSection,bool $showArchive): float
 {
     if(trim($raw)!=='') return (float)$raw;
-    if($showHome && in_array($homeSection,['focus','trace'],true)) return admin_next_sort_order('home',$homeSection);
-    if($showArchive) return admin_next_sort_order('archive');
-    return 999.0;
+    return admin_next_project_sort_order($showHome,$homeSection,$showArchive);
+}
+
+function admin_next_update_sort_order(int $projectId): float
+{
+    $st=db()->prepare('SELECT COALESCE(MAX(sort_order),0) FROM updates WHERE project_id=? AND deleted_at IS NULL');
+    $st->execute([$projectId]);
+    return (float)$st->fetchColumn()+10;
 }
 
 function admin_normalize_project_publication(bool $showHome,string $homeSection,bool $showArchive,bool $showWidget,string $workshopStatus): array
@@ -112,8 +141,8 @@ function admin_normalize_project_publication(bool $showHome,string $homeSection,
         $warnings[]='Ana sayfada goster acik oldugu icin ana sayfadaki yer Alt serit / kucuk kayit olarak ayarlandi.';
     }
     if($showWidget && !VisibilityService::workshopStatusAllowsWidget($workshopStatus)){
-        $showWidget=false;
-        $warnings[]='Atolye durumu Acik veya Beklemede olmadigi icin Atolye penceresi tiki otomatik kapatildi.';
+        $workshopStatus='paused';
+        $warnings[]='Atolye penceresinde goster acildigi icin Atolye durumu Beklemede yapildi.';
     }
 
     return [
@@ -121,6 +150,7 @@ function admin_normalize_project_publication(bool $showHome,string $homeSection,
         'home_section'=>$homeSection,
         'show_archive'=>$showArchive,
         'show_widget'=>$showWidget,
+        'workshop_status'=>$workshopStatus,
         'warnings'=>$warnings,
     ];
 }
@@ -159,6 +189,150 @@ function admin_render_visibility_summary(array $project, ?array $story=null): vo
         <p class="help">Ana sayfa ve Hikâyeler için hikâye yayımlanmış ve herkese açık olmalı. Atölye penceresi ise hikâye yayınından bağımsızdır.</p>
     </section>
     <?php
+}
+
+function admin_create_sqlite_backup(string $reason='manual'): string
+{
+    $dir=FV7_STORAGE.'/backups';
+    if(!is_dir($dir)) mkdir($dir,0775,true);
+    $safeReason=safe_slug($reason) ?: 'manual';
+    $dest=$dir.'/fikrimvar-'.date('Ymd-His').'-'.$safeReason.'.sqlite';
+    db()->exec('PRAGMA wal_checkpoint(FULL)');
+    if(!copy(FV7_DB,$dest)) throw new RuntimeException('SQLite yedegi olusturulamadi.');
+    return $dest;
+}
+
+function admin_text_excerpt(string $text,int $limit=260): string
+{
+    $text=trim(preg_replace('/\s+/',' ',strip_tags($text)) ?? '');
+    if($text==='') return '';
+    if(function_exists('mb_strimwidth')) return mb_strimwidth($text,0,$limit,'...','UTF-8');
+    return strlen($text)>$limit ? substr($text,0,$limit-3).'...' : $text;
+}
+
+function admin_story_section_plain_text(array $section): string
+{
+    $parts=[];
+    foreach(['intro_text','body_text','quote_text','note_text','code_text'] as $key){
+        if(trim((string)($section[$key] ?? ''))!=='') $parts[]=(string)$section[$key];
+    }
+    foreach($section['items'] ?? [] as $item){
+        foreach(['title','subtitle','text','value','state'] as $key){
+            if(trim((string)($item[$key] ?? ''))!=='') $parts[]=(string)$item[$key];
+        }
+    }
+    return admin_text_excerpt(implode(' ', $parts), 420);
+}
+
+function admin_story_section_update_exists(int $projectId,int $updateId): bool
+{
+    $st=db()->prepare('SELECT 1 FROM updates WHERE id=? AND project_id=? AND deleted_at IS NULL');
+    $st->execute([$updateId,$projectId]);
+    return (bool)$st->fetchColumn();
+}
+
+function admin_story_section_media_ids(int $projectId,array $section): array
+{
+    $ids=[];
+    if(!empty($section['media_id'])) $ids[]=(int)$section['media_id'];
+    foreach($section['media'] ?? [] as $media){
+        if(!empty($media['media_id'])) $ids[]=(int)$media['media_id'];
+    }
+    foreach($section['items'] ?? [] as $item){
+        if(!empty($item['media_id'])) $ids[]=(int)$item['media_id'];
+    }
+    $ids=array_values(array_unique(array_filter($ids)));
+    if(!$ids) return [];
+    $valid=assert_project_media_ids($projectId,$ids,'Hikaye bolumu medyasi');
+    return array_values($valid);
+}
+
+function admin_restore_story_to_atelier(int $projectId,int $storyId): array
+{
+    $story=story_by_project($projectId,true);
+    if(!$story || (int)$story['id']!==$storyId) throw new RuntimeException('Hikaye bu projeye ait degil.');
+
+    $sections=story_sections($storyId);
+    if(!$sections) return ['created'=>0,'linked'=>0,'backup'=>''];
+
+    $backup=admin_create_sqlite_backup('story-to-atelier');
+    $created=0;
+    $linked=0;
+    $maxSort=admin_next_update_sort_order($projectId)-10;
+    db()->beginTransaction();
+    try{
+        foreach($sections as $index=>$section){
+            $sourceId=(int)($section['source_update_id'] ?? 0);
+            if($sourceId && admin_story_section_update_exists($projectId,$sourceId)){
+                $linked++;
+                continue;
+            }
+
+            $title=trim((string)($section['title'] ?: $section['label'] ?: 'Hikayeden gelen kayit'));
+            $summary=admin_story_section_plain_text($section);
+            if($summary==='') $summary='Bu kayit, daha once duzenlenmis hikayede duran bir bolumden Atolye akisine geri alindi.';
+            $slug=unique_update_slug($projectId,'hikaye-'.$section['id'].'-'.$title);
+            $display=trim((string)($section['label'] ?: $section['type'] ?: 'Hikayeden gelen'));
+            $decision=admin_text_excerpt((string)($section['quote_text'] ?: $section['note_text'] ?: $summary),260);
+            $maxSort+=10;
+
+            $st=db()->prepare("INSERT INTO updates(project_id,slug,work_date,display_label,title,summary,tried,failed,decision,next_step,phase,is_milestone,status,visibility,show_in_recent,sort_order,published_at)
+              VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP)");
+            $st->execute([
+                $projectId,
+                $slug,
+                null,
+                $display,
+                $title,
+                $summary,
+                admin_text_excerpt((string)($section['intro_text'] ?: $section['body_text']),320),
+                admin_text_excerpt((string)($section['note_text'] ?? ''),260),
+                $decision,
+                'Bu kayit eski hikaye bolumunden Atolye akisine geri alindi.',
+                'Hikayeden gelen',
+                1,
+                'published',
+                'public',
+                0,
+                $maxSort,
+            ]);
+            $updateId=(int)db()->lastInsertId();
+
+            foreach(admin_story_section_media_ids($projectId,$section) as $order=>$mediaId){
+                db()->prepare("INSERT INTO update_media(update_id,media_id,role,sort_order) VALUES (?,?,'gallery',?)")->execute([$updateId,$mediaId,$order+1]);
+            }
+
+            $links=owner_links('story_section',(int)$section['id']);
+            if($links){
+                $insertLink=db()->prepare("INSERT INTO links(owner_type,owner_id,link_type,title,url,sort_order) VALUES ('update',?,?,?,?,?)");
+                foreach($links as $link){
+                    $insertLink->execute([$updateId,(string)$link['link_type'],(string)$link['title'],(string)$link['url'],(int)$link['sort_order']]);
+                }
+            }
+
+            db()->prepare('UPDATE story_sections SET source_update_id=?,updated_at=CURRENT_TIMESTAMP WHERE id=?')->execute([$updateId,(int)$section['id']]);
+            db()->prepare('UPDATE story_section_items SET source_update_id=? WHERE section_id=? AND source_update_id IS NULL')->execute([$updateId,(int)$section['id']]);
+            $created++;
+        }
+        db()->commit();
+    }catch(Throwable $e){
+        if(db()->inTransaction()) db()->rollBack();
+        throw $e;
+    }
+
+    admin_audit('restore_story_to_atelier','story',$storyId,'Created updates: '.$created.', linked existing: '.$linked);
+    return ['created'=>$created,'linked'=>$linked,'backup'=>$backup];
+}
+
+function admin_story_needs_atelier_restore(int $projectId,int $storyId): bool
+{
+    $st=db()->prepare("SELECT COUNT(*)
+        FROM story_sections ss
+        LEFT JOIN updates u ON u.id=ss.source_update_id AND u.project_id=? AND u.deleted_at IS NULL
+        WHERE ss.story_id=? AND ss.deleted_at IS NULL
+          AND (ss.source_update_id IS NULL OR u.id IS NULL)");
+    $st->execute([$projectId,$storyId]);
+    return (int)$st->fetchColumn() > 0;
 }
 
 function unique_update_slug(int $projectId,string $base,int $ignoreId=0): string

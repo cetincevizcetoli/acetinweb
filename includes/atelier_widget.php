@@ -44,7 +44,7 @@ function render_atelier_widget(array $workshops, array $config=[]): void
             <h2 id="atelier-widget-title">Atölyede şimdi</h2>
             <span>Takip etmek istediğin işi seç; ilgili atölye kaydına gidersin.</span>
             <div class="atelier-widget-list">
-                <?php foreach($workshops as $item): $project=$item['project']; $latest=$item['latest']; $media=$latest['media'][0] ?? null; $url='atolye.php?slug='.rawurlencode((string)$project['slug']).((string)($latest['slug'] ?? '')!=='' ? '#update-'.rawurlencode((string)$latest['slug']) : ''); $storyUrl=(($project['story_status'] ?? '')==='published' && in_array($project['story_visibility'] ?? '', ['public','unlisted'], true)) ? 'hikaye.php?slug='.rawurlencode((string)$project['slug']) : ''; $itemStatus=($project['workshop_status'] ?? '')==='paused' ? 'Beklemede' : 'Açık'; ?>
+                <?php foreach($workshops as $item): $project=$item['project']; $latest=$item['latest']; $media=$latest['media'][0] ?? null; $url='atolye.php?slug='.rawurlencode((string)$project['slug']).((string)($latest['slug'] ?? '')!=='' ? '#update-'.rawurlencode((string)$latest['slug']) : ''); $itemStatus=($project['workshop_status'] ?? '')==='paused' ? 'Beklemede' : 'Açık'; ?>
                 <article class="atelier-widget-item <?= $media ? '' : 'atelier-widget-item--text' ?>">
                     <?php if($media): ?><a class="atelier-widget-thumb" href="<?= e($url) ?>"><?php if(($media['media_type'] ?? '')==='video'): ?><video muted playsinline preload="metadata"><source src="<?= e(media_url($media['relative_path'])) ?>"></video><?php else: ?><img src="<?= e(media_url($media['relative_path'])) ?>" alt="<?= e($media['alt_text'] ?? $project['title']) ?>" loading="lazy"><?php endif; ?></a><?php endif; ?>
                     <div>
@@ -54,7 +54,6 @@ function render_atelier_widget(array $workshops, array $config=[]): void
                         <span><?= e($latest['summary']) ?></span>
                         <div class="atelier-widget-actions">
                             <a class="button button-rust" href="<?= e($url) ?>">Atölyeye gir <?= icon('arrow') ?></a>
-                            <?php if($storyUrl!==''): ?><a class="button secondary" href="<?= e($storyUrl) ?>">Hikâyeyi oku</a><?php endif; ?>
                             <?php foreach($latest['links'] ?? [] as $link): ?><a class="atelier-widget-social" href="<?= e($link['url']) ?>" target="_blank" rel="noopener noreferrer"><?= e($link['title']) ?></a><?php endforeach; ?>
                         </div>
                     </div>

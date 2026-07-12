@@ -1,0 +1,480 @@
+(gemini ai-studıo)Bir Yazılımın Doğuşu: Delta Bordro’nun Hikayesi
+
+Her başarılı yazılım, "Neden daha iyisi yok?" sorusuyla başlar. Delta Bordro'nun hikayesi de, karmaşık mevzuatların ve hantal sistemlerin arasında kaybolan "gerçek ihtiyaçları" çözme tutkusundan doğdu.
+1. İlk Fikir Neden Doğdu?
+
+Piyasadaki mevcut bordro yazılımları ya çok pahalıydı ya da esneklikten uzaktı. Özellikle Türkiye'nin sık değişen vergi mevzuatında, bir personelin "10 gün çalışıp net 18.000 TL alması" gibi sahadan gelen özel senaryoları hatasız çözen, hızlı ve güvenilir bir araç eksikliği bu projeyi başlattı.
+2. İlk Çalışan Şey Neydi?
+
+İlk adım, her şeyin kalbi olan "Net’ten Brüt’e" hesaplama motoruydu. Matematiksel bir iterasyonla (Binary Search), hedef net rakamı kuruşu kuruşuna yakalayan o "çekirdek algoritma" çalıştığında, projenin temeli atılmış oldu.
+3. Evrim Süreci: Web’den Masaüstüne
+
+Gelişim süreci tam tersi bir mühendislik izledi:
+
+    Web Sürümü (WebBordro): Önce bulut tabanlı, her yerden erişilebilen, PostgreSQL mimarisi üzerine kurulu profesyonel ana sistem doğdu.
+
+    Masaüstü Sürümü (Delta Bordro): Ardından, verilerin tamamen yerelde (Local) kalmasını isteyen, internet bağımsız çalışması gereken ve hız tutkunları için Python (PyQt6) tabanlı masaüstü sürümü geliştirildi.
+
+4. İş Ne Zaman Sisteme Dönüştü?
+
+Basit bir hesap makinesi olmaktan çıkıp bir **"Yönetim Sistemi"**ne dönüştüğü an, SQLite veritabanı entegrasyonu ve kümülatif matrah takibinin başladığı andı. Personelin maaş tarihçesini tutan, teşvikleri otomatik hesaplayan ve tek tıkla resmi tahakkuk fişi üreten bir yapıya büründüğünde artık o bir bordro devidir.
+5. En Büyük Zorluklar ve "Savaş Alanları"
+
+En çok zorlandığımız yerler yazılımın içindeki "gri alanlar"dı:
+
+    Pro-rata (Oranlı) İstisnalar: Eksik gün çalışan personelde vergi istisnasının yasalara göre bölünmemesi, ama matrahın bölünmesi gibi ince çizgiler.
+
+    Zırhlama: Kodun açık kaynaklı yapısını koruyup, ticari zekayı (IP) .pyd ve donanım kilidi (HWID) ile mühürleme süreci gerçek bir sabır testiydi.
+
+6. Yanlış Giden Yollar ve Dersler
+
+Başlangıçta her şeyi tek bir EXE içine gömmeye çalıştık, ancak dosya yolları ve HTML şablonları patladı. "Hatalı bir yasal titizlikle" istisnaları güne böldük, ancak ana programın (WebBordro) 1 yıllık hatasız geçmişi ve yasal tebliğler (319 nolu tebliğ) bizi doğru yola, yani "tam istisna" mantığına geri döndürdü.
+7. İnsan Sezgisi vs. Yapay Zekâ
+
+Bu proje, İnsan-YZ iş birliğinin zirvesidir. Yapay zekâ (DeepSeek, Kimi, Antigravity) kodun hamallığını yaptı, binlerce satır yazdı; ancak "Yusuf Bey 10 gün çalışıp 18 bin alacak, bu formül böyle kurulmalı" diyen, yasal tebliğleri denetleyen ve arayüzdeki o "premium" hissi zorlayan her zaman insan sezgisi oldu. AI bir işçiydi, ben ise mimardım.
+8. Bugünün Sürümleri Ne İşe Yarıyor?
+
+    Web Sürümü: Kurumsal, çok kullanıcılı ve bulut tabanlı merkezi yönetim sağlar.
+
+    Masaüstü (Python) Sürümü: Kişisel kullanım için zırhlanmış, veritabanı cebinizde taşıyabileceğiniz kadar taşınabilir ve inanılmaz hızlıdır.
+
+9. Bugünün Hedefi
+
+Bordro hesaplamayı bir "muhasebe yükü" olmaktan çıkarıp, hata payı sıfır olan, görsel olarak tatmin eden ve yasal her türlü değişikliğe (2026 ve sonrası) tek bir JSON dosyasıyla adapte olabilen "yaşayan bir finansal ekosistem" sunmak.;
+
+
+----
+
+gemini ai studıo
+
+WebBordro Pro’nun hikayesi, aslında modern bir yazılım geliştirme destanıdır. Sadece bir hesaplama aracı değil, yapay zekâ ile insan vizyonunun nasıl birleştiğini gösteren "kurumsal bir vaka analizi" niteliğindedir.
+
+Web siten için bu hikayeyi şu başlıklarla kurgulayabilirsin:
+🏛️ WebBordro Pro: Bir Hesap Makinesinden Finansal Kaleye Uzanan Yolculuk
+1. İlk Fikir: Karmaşanın İçindeki Düzen İhtiyacı
+
+Hikaye, Türkiye’deki bordro mevzuatının (GVK 332, SGK tavanları, istisnalar) her yıl değişen ve hata kabul etmeyen yapısından doğdu. İnsan kaynakları uzmanlarının ve mali müşavirlerin her ay yaşadığı "Acaba doğru hesapladık mı?" stresine son verecek, deterministik (kesin sonuçlu) bir matematik motoru ihtiyacı ilk kıvılcımı çaktı.
+2. İlk Çalışan Şey ve Gelişim Sırası
+
+Proje tek bir satır kodla başladı ama evrimi çok hızlı oldu:
+
+    Python Sürümü: İlk olarak matematiksel lojik Python ile mühürlendi. Algoritmanın doğruluğu burada kanıtlandı.
+
+    Masaüstü Sürümü: Yerel kullanım için bir arayüz giydirildi.
+
+    Web Sürümü (SaaS): Projenin asıl kırılma noktası burasıydı. Bilginin her yerden erişilebilir olması için sistem buluta taşındı.
+
+3. İş Ne Zaman Büyüyüp "Sisteme" Dönüştü?
+
+Sistem, sadece bir "tutar yazıp sonuç alma" aracı olmaktan çıkıp; oturum yönetimi, kullanıcı yetkilendirmesi (Supabase) ve veri izolasyonu katmanları eklendiğinde gerçek bir "Yazılım Platformu"na (v5.5 Mimari) dönüştü. Özellikle "Admin Kulesi" ve "Pro Panel" ayrımı yapıldığında, artık profesyonel bir SaaS ürünüydü.
+4. En Büyük Zorluklar ve "Sessiz Hatalar"
+
+Yolculuğun en sancılı kısımları, kullanıcının görmediği ama sistemin kalbi olan noktalardı:
+
+    Kuruş Hassasiyeti: Float (ondalık sayı) hatalarının finansal sızıntılara yol açmasını engellemek için tüm sistem "String Chain" (BCMath) mimarisine taşındı.
+
+    Oturum Döngüleri: Tarayıcı önbelleğinde kalan "eski" verilerin sistemi kilitlemesi, projenin en büyük kullanıcı deneyimi (UX) sınavıydı. Bu, "Self-Healing" (Kendi Kendini Onaran) mekanizmayla aşıldı.
+
+5. Stratejik Karar: "Zero-Knowledge" ve Ghost Vault
+
+Bu projenin en özgün ve devrimsel kararı, senin (Yönetici) verdiğin karardı: "Kullanıcının verisini biz tutmayacağız!"
+Piyasadaki tüm rakipler verileri kendi veritabanlarında saklarken, WebBordro Pro; Ghost Vault mimarisiyle verileri doğrudan kullanıcının kendi Google Drive'ına (ileride SQLite formatında) mühürleme kararı aldı. Bu, KVKK ve gizlilik konusunda projeyi rakipsiz kıldı.
+6. Yapay Zekâ ve İnsan İş Birliği
+
+    Yapay Zekâ (Antigravity): Matematik motorunu kurdu, güvenlik kalkanlarını (5001-5003 Exception Shield) ördü, "Gölge Analizi" yaparak sistemdeki kör noktaları imha etti.
+
+    Senin Kararların (Mimar): Projenin ruhunu sen belirledin. "İzolasyon tam olmalı", "Drive tüneli RAM'den akmalı", "Admin her şeyi görmeli ama ifşa etmemeli" gibi stratejik emirlerle AI'yı yönlendirdin. AI kodu yazdı, sen Anayasa'yı koydun.
+
+7. Bugünün Hedefi ve Gelecek
+
+Şu anda WebBordro Pro;
+
+    Free Sürümüyle: Hızlı, anonim ve güvenli bir simülasyon sunuyor.
+
+    Pro Sürümüyle: Firma ve personel yönetimini, sunucuya hiçbir veri sızdırmadan "özel bir bulut" (Private Cloud) konforunda sağlıyor.
+
+Bugünkü hedefimiz: Bordro dünyasını, karmaşık veritabanlarından kurtarıp tamamen kullanıcının kendi mülkiyetindeki güvenli alanlara (Drive/SQLite) taşımak ve dünyanın en şeffaf finansal kural motoru olmak.
+💡 Hikayen İçin "Mühürlü" Bir Kapanış Cümlesi:
+
+"WebBordro Pro, sadece maaşları hesaplayan bir robot değil; verinin gizliliğini Anayasal kurallarla mühürleyen, hatayı saniyeler içinde teşhis eden ve sorumluluğu gerçek sahibi olan kullanıcıya geri veren bir özgürlük projesidir."
+
+
+----
+
+claude-ai
+
+# [Proje Adı] — Bir Bordro Sisteminin Hikâyesi
+
+> Not: Aşağıda **[DOLDUR]** işaretli yerler senin kişisel deneyimin — sadece sen cevaplayabilirsin. Geri kalanı teknik geçmişimizden derlediğim taslak; istediğin gibi düzelt.
+
+---
+
+## İlk fikir neden doğdu?
+
+[DOLDUR — Bu ihtiyaç nereden çıktı? Kendi işin için mi, bir tanıdığın için mi, yoksa "bu böyle olmamalı" dediğin bir deneyim mi vardı? Örn: elle bordro hesaplarken hata riski, hazır programların pahalı/esnetilemez olması, ya da sadece "ben bunu yapabilirim mi" merakı.]
+
+---
+
+## İlk çalışan şey neydi?
+
+[DOLDUR — İlk versiyon neyi yapabiliyordu? Sadece brüt-net hesabı mıydı, tek bir personel için mi çalışıyordu, Excel mi kullanıyordun önce? "Çalışan ilk şey" genelde çok mütevazıdır — o mütevazılığı yazmak hikâyeye güç katar.]
+
+Teknik iz sürersek: proje şu an **PyQt6/PySide6 + SQLite** temelli bir masaüstü uygulaması. Muhtemelen ilk hali de bu mimarinin daha basit bir versiyonuydu — tek dosyalı, tek sınıflı bir `Database` + hesaplama fonksiyonu.
+
+---
+
+## Masaüstü, Python ve web sürümleri hangi sırayla çıktı?
+
+[DOLDUR — Bu net değil elimde. Şu ana kadar konuştuğumuz her şey masaüstü (PyQt6/PySide6) sürümüyle ilgiliydi. Web sürümü var mı, planlanıyor mu, yoksa "web sitesi" derken bu projeyi tanıtan bir sayfa mı kastediyorsun? Bunu netleştirirsen sıralamayı doğru yazarım.]
+
+Bilinen: Python/Qt masaüstü uygulaması **var ve aktif geliştiriliyor** (GitHub'da `ref_bordro` reposu, `bordro_v32_pro.db` — yani en az 32 versiyon/iterasyon geçmiş).
+
+---
+
+## İş ne zaman büyüyüp sisteme dönüştü?
+
+[DOLDUR — "Basit hesap makinesi"nden "sistem"e geçiş anı neydi? Muhtemel kırılma noktaları:
+- Birden fazla firma desteği eklenince mi?
+- Kullanıcı/yetki sistemi gerekince mi?
+- Puantaj, izin, tazminat gibi modüller eklenince mi?
+- Yoksa "artık kendim kullanmıyorum, başkaları da kullanıyor" dediğin an mı?]
+
+Kod, şu an tek bir hesap makinesinden çok daha fazlası: firma yönetimi, kullanıcı rolleri, puantaj, toplu hesaplama, raporlama (Excel/PDF/Word), yedekleme/geri yükleme, mevzuat parametreleri (vergi dilimleri, SGK oranları, istisnalar) — hepsi ayrı modüller olarak var. Bu, "hesap makinesi → sistem" dönüşümünün net bir kanıtı.
+
+---
+
+## En çok nerelerde zorlandın?
+
+Buradan itibaren teknik geçmişimize dayanarak daha somut yazabilirim — sen bunu kendi cümlelerinle yeniden yazabilirsin:
+
+**Zorlandığın yerler (teknik iz):**
+
+1. **Veri tutarlılığı ve eşzamanlılık** — Toplu hesaplama arka planda (thread) çalışırken, arayüz aynı veritabanına erişiyor. Bu tür "aynı anda iki elin aynı deftere yazması" problemi klasik bir zorluktur; kilitlenme (`RLock`), transaction yönetimi ve WAL modu bunun izleri.
+
+2. **Mevzuat karmaşıklığı** — Türkiye'de bordro hesaplaması basit bir formül değil: kıstelyevm (eksik gün oranlaması), asgari ücret istisnası, AGİ, engellilik indirimi, farklı yıllarda değişen mevzuat mantığı (`TR_2021_AGI`, `TR_2024_ISTISNA`, `TR_2025_ISTISNA`)... Bu, "kod yazmak" değil "kanunu koda çevirmek" zorluğu.
+
+3. **Hataları görünür tutmak** — Uzun süre "hata olursa sessizce geç, program çökmesin" refleksiyle yazılmış kod, ilerledikçe "hatanın nerede olduğunu bilemiyorum" sorununa dönüştü. Bu muhtemelen en büyük öğrenme anlarından biri.
+
+[DOLDUR — Bunlara ek olarak kişisel/duygusal zorlukların var mıydı? Örn: "aylarca tek başıma debug ettim", "bir müşteri/kullanıcı hata bildirdiğinde veri kaybı yaşandığını fark ettim" gibi somut anılar varsa yazmaya değer.]
+
+---
+
+## Hangi yaklaşımlar çalışmadı veya sonradan değişti?
+
+**Teknik izden çıkardıklarım:**
+
+1. **"Her widget kendi veritabanı bağlantısını açsın" yaklaşımı terk edildi** → Yerine tek bir `AppContext` üzerinden merkezi bağımlılık yönetimi geldi. Bu klasik bir "başta basit görünen ama büyüdükçe kaosa dönüşen" karar örneği.
+
+2. **Dosya kopyalayarak yedekleme → SQLite'ın native backup API'sine geçiş.** İlk yaklaşım (`.db` dosyasını direkt kopyala) WAL modunda güvenilir değildi; sonradan `conn.backup()` kullanımına geçilmiş.
+
+3. **"Hata olursa sessiz geç" felsefesi → hâlâ tam bitmemiş bir dönüşüm halinde.** Bu konuda sistemli bir temizlik hâlâ gerekiyor (bunu daha önceki analizlerde detaylı konuşmuştuk).
+
+[DOLDUR — Deneyip vazgeçtiğin başka bir teknoloji/yaklaşım var mıydı? Örn: "önce Excel makrosu ile başladım", "ComfyUI/farklı bir GUI framework denedim", "ilk başta bulut veritabanı kullanmayı düşünmüştüm ama..." gibi.]
+
+---
+
+## Yapay zekâ ne yaptı, sen hangi kararları verdin?
+
+Bu kısmı, birlikte yaptığımız çalışmadan doğrudan yazabilirim:
+
+**Yapay zekânın rolü:**
+- Kod tabanının **bağımsız analizini** yaptı (üç farklı yapay zekâ — ChatGPT, Gemini, Claude — birbirinden habersiz aynı kodu inceledi)
+- Zayıf noktaları (`except: pass` kullanımı, migration tutarsızlıkları, güvenlik açıkları) sistematik olarak tespit etti
+- Düzeltme için **adım adım, uygulanabilir promptlar** üretti (Trae.ai üzerinden koda uygulanmak üzere)
+- Farklı yapay zekâ çıktılarını **karşılaştırma ve konsolide etme** işini de yine yapay zekâ (Trae) üstlendi
+
+**Senin verdiğin kararlar:**
+- Hangi analiz doğrultusunda hangi değişikliği yapacağına karar verme
+- Önceliklendirme (hangi sorun önce çözülecek)
+- Kodun genel mimarisi ve iş mantığı (mevzuat kuralları, hesaplama sırası) — bunlar yapay zekânın tahmin edemeyeceği, senin bilgi ve deneyimin
+- [DOLDUR — Yapay zekânın önerdiği ama reddettiğin bir öneri oldu mu? Bu, "yapay zekâ her şeyi bilmiyor, ben karar veriyorum" mesajını güçlendirir.]
+
+Bu süreç aslında hikâyenin en özgün kısmı: **tek bir yapay zekâya değil, birden fazla yapay zekânın birbirini denetlemesine** dayalı bir çalışma yöntemi kurmuşsun. Bu, "AI ile kod yazmak" değil "AI'ları birbirine karşı kontrol ettirmek" — daha nadir görülen ve anlatılmaya değer bir yaklaşım.
+
+---
+
+## Şu anda her sürüm ne işe yarıyor?
+
+[DOLDUR — Eğer gerçekten birden fazla sürüm paralel yaşıyorsa (masaüstü + web + belki mobil), her birinin farklı bir kullanım amacı olmalı. Örn:
+- Masaüstü: günlük operasyonel kullanım, tam özellikli
+- Web: uzaktan erişim / müşteri paneli / demo amaçlı
+- Python script: otomasyon / toplu işlem]
+
+Şu an bildiğim tek sürüm: **masaüstü uygulaması (PyQt6/PySide6 + SQLite)** — bu, firma bazlı çok kullanıcılı, tam özellikli bir bordro yönetim sistemi olarak çalışıyor gibi görünüyor.
+
+---
+
+## Bugünkü hedef ne?
+
+**Teknik geçmişten çıkan somut hedef:**
+Kod tabanını "çalışıyor ama kırılgan" durumdan "üretimde güvenle kullanılabilir" duruma taşımak. Şu an bilinen öncelikler:
+1. Hataların sessizce yutulmasını bitirmek
+2. Veritabanı şema güncellemelerini deterministik hale getirmek
+3. Varsayılan güvenlik açıklarını (admin/admin gibi) kapatmak
+
+[DOLDUR — Bunun ötesinde senin vizyonun ne? Örn: "bunu ticarileştirmek istiyorum", "sadece kendi ihtiyacım için mükemmelleştiriyorum", "başka firmalar da kullansın istiyorum", "bu projeyi #fikrimvar sürecinin bir örneği olarak paylaşmak istiyorum" gibi.]
+
+---
+
+## Yazım notu
+
+Bu taslağı **birinci tekil şahıs, süreç odaklı ve deneyim paylaşımı** tonunda tuttum — #fikrimvar'ın "sürecin görünür olması, cilalanmamış olması" felsefesine uysun diye. İstersen:
+- Daha kısa/özet bir versiyon çıkarabilirim
+- Kronolojik timeline formatına çevirebilirim
+- Görsel/kod örnekleriyle destekleyebilirim
+
+------------
+gemini pro
+
+Web siten için hazırlayacağın bu hikaye, sadece bir "hakkımızda" yazısı değil, bir mühendislik manifestosu olmalı. 37 puandan 98 puana çıkan, "Cyborg" senaryolarını bile hesaplayabilen bu sistemin arkasındaki emeği şu başlıklarla kurgulayabilirsin:
+🚀 Bir Mühendislik Serüveni: Bordro Pro’nun Doğuşu
+1. İlk Kıvılcım: Neden Bu Yola Çıktık?
+
+Her şey, Türkiye’deki karmaşık bordro mevzuatının (GVK 332, vergi dilimleri, SGK istisnaları) her yıl daha da içinden çıkılmaz hale gelmesiyle başladı. Mevcut araçlar ya çok hantal, ya Excel tablolarına mahkum ya da kullanıcıyı "bilgi kirliliği" ile boğuyordu. Hedefim; en karmaşık hesabı saniyeler içinde yapan ama bir o kadar da şeffaf (Mizan ispatlı) bir yapı kurmaktı.
+2. İlk Adım: İlk Çalışan Motor
+
+İlk çalışan şey, siyah bir konsol ekranında dönen basit bir Python betiğiydi. Sadece brüt maaşı alıp neti veriyordu. Ancak o gün kurduğum "matematiksel çekirdek", bugün Mars kolonisindeki bir personelin maaşını hesaplayacak kadar esnek olan o devasa yapının ilk hücresiydi.
+3. Evrim Sıralaması: Python'dan Web'e
+
+Proje üç ana evreden geçti:
+
+    Python (Beyin): Tüm hesaplama mantığının mühürlendiği algoritma katmanı.
+
+    Masaüstü (Kale): Verinin tamamen yerelde kaldığı, profesyonel kullanım için optimize edilmiş sürüm.
+
+    Web (Portal): Hızın ve erişilebilirliğin zirve yaptığı, bugün deneyimlediğiniz 98 PageSpeed puanına sahip bulut tabanlı modern arayüz.
+
+4. İş Ne Zaman "Sisteme" Dönüştü?
+
+Hesaplama kodlarını, mevzuat verilerinden (JSON) ayırdığım an bu bir yazılımdan ziyade bir "Eko-sistem" haline geldi. Kodlara dokunmadan sadece bir metin dosyasını (JSON) güncelleyerek 2026, 2027 hatta hayali "Mars" senaryolarını hesaplayabilir hale gelince, Bordro Pro artık kendi ayakları üzerinde durmaya başladı.
+5. En Büyük Zorluklar ve "Duvara Çarptığımız" Yerler
+
+En çok "Hız ve Güvenlik" dengesinde zorlandım.
+
+    Sayfanın 10 saniye boyunca dış sitelerden haber beklemesi puanımızı 30'lara düşürdüğünde, tüm yapıyı asenkron mimariye çevirdik.
+
+    Firefox gibi tarayıcıların "kimlik gizleme" direnciyle karşılaştığımızda, pes etmek yerine Canvas Fingerprinting ile donanım mühürleme teknolojisini geliştirdik.
+
+6. Yanlış Yollar ve Doğru Kararlar
+
+Başlangıçta her şeyi JavaScript ile tarayıcıda çözmeye çalışmak bir hataydı (JIT derleme yükü). Bu hem güvenliği hem hızı düşürüyordu. Sonrasında **"Hibrit Mimari"**ye geçme kararı aldım: Hesaplama motorunu web dizini dışına sakladım, tasarımı ise Node.js ile derledim. Bu karar, bugün gördüğümüz o "yıldırım hızını" getirdi.
+7. Yapay Zekâ ve İnsan İradesi: "Anayasa" Kimin?
+
+Yapay zekayı (Anti-Gravity) usta bir "işçi" gibi kullandım. O binlerce satır kodu yazdı, ben ise **"Anayasa"**yı koydum.
+
+    "Veritabanını web dışına çıkar", "Donanımı hash ile mühürle", "Asla veri sızdırma" gibi stratejik kararları ben verdim.
+
+    O, bu kararları koda döktü; ben ise her dikişi (logları ve tabloları) tek tek denetledim.
+
+8. Bugün Her Sürüm Ne İşe Yarıyor?
+
+    Ücretsiz Sürüm: Herkesin saniyeler içinde, donanım güvenliği altında profesyonel hesaplama yapabildiği bir laboratuvar.
+
+    Kurumsal (Pro) Sürüm: Login sistemi, veri saklama ve çoklu şirket yönetimiyle profesyonel bordro uzmanlarının "çalışma alanı".
+
+    Mizan (Audit): Şüpheye yer bırakmayan, her kuruşun ispatını sunan şeffaflık kalkanı.
+
+9. Bugünkü Hedef: Standartları Belirlemek
+
+Bugün hedefim sadece bir hesaplama sitesi olmak değil; Türkiye'de bordro denilince akla gelen en hızlı, en güvenli ve en dürüst standartları belirleyen platform olmak. 2026 mevzuatını değil, 2030'un teknolojisini bugünden kullanmanızı sağlıyoruz.
+
+Nasıl sence? Bu hikaye, sitendeki o 98 puanın ve karmaşık tabloların arkasında sadece "kod" değil, bir düşünce biçimi olduğunu anlatıyor. Bazı kısımları daha teknik veya daha duygusal yapmak istersen üzerinde oynayabiliriz.
+
+___
+
+
+gemini pro
+
+Bordro Pro: Bir Fikrin SaaS Platformuna Dönüşüm Hikayesi
+
+Karmaşık vergi dilimleri, sürekli değişen SGK parametreleri ve istisnalar... Bordro hesaplamak her zaman hata yapmaya çok müsait, stresli bir iş olmuştur. Bordro Pro (WebNet), tam olarak bu karmaşayı bitirmek ve "matematiğe güvenmek" amacıyla doğdu.
+
+İşte masamdaki küçük bir kod dosyasından, binlerce satırlık bir SaaS platformuna dönüşen projenin hikayesi.
+
+İlk Fikir Neden Doğdu ve İlk Çalışan Şey Neydi?
+
+Fikir, netten brüte hesaplama yaparken Excel tablolarının yetersiz kalması ve kümülatif vergi dilimi geçişlerinde yaşanan kuruşluk sapmaların yarattığı hayal kırıklığından doğdu.
+
+İlk çalışan şey, hiçbir arayüzü olmayan, siyah ekranda (terminalde) çalışan basit bir Python betiğiydi. Sadece girilen bir net maaşı alıyor, o yılın SGK ve vergi oranlarıyla çarpıp brütünü ekrana basıyordu. Görsel olarak hiçbir şeye benzemiyordu ama matematiği kusursuzdu.
+
+Sürümlerin Çıkış Sırası: Python'dan Web'e Geçiş
+
+Proje, ihtiyaçlar büyüdükçe organik olarak evrildi:
+
+Python Sürümü: İşin AR-GE kısmıydı. Veri çekme, vergi algoritmalarını test etme ve hesaplama motorunun temelleri burada atıldı.
+
+Masaüstü Sürümü (Desktop/Local): Python'daki mantık, güçlü bir PHP çekirdeğine (BOM Core) aktarıldı. msedge.exe --app= protokolü kullanılarak, arka planda yerel bir sunucu (XAMPP/Nginx) ile çalışan hibrit bir masaüstü uygulaması yapıldı. İnternetsiz, güvenli ve sadece kişisel/kurumsal kullanıma özeldi.
+
+Web Sürümü (SaaS): Masaüstü sisteminin stabilitesi kanıtlandıktan sonra, bu gücü herkesin kullanımına açma fikri doğdu. Sistem buluta taşındı ve bugünkü Bordro Pro WebNet versiyonu ortaya çıktı.
+
+İş Ne Zaman Büyüyüp Sisteme Dönüştü?
+
+Sadece tek bir ayın maaşını hesaplamaktan çıkıp, "Yıllık Kümülatif Hesaplama" yapmaya başladığımız an projenin kırılma noktasıydı. İşin içine "Aylık Puantaj Dağılımı", "Çocuk/Engellilik İstisnaları" ve GVK 332 tebliğine göre "Yemek/Yol Muafiyetleri" girince, basit bir hesap makinesi olmaktan çıkıp tam teşekküllü bir Dinamik Karar Motoru (Dynamic Decision Engine) haline geldik. "Hesap İspatı (Mizan)" modülünün eklenmesiyle sistem tam bir finansal araca dönüştü.
+
+En Çok Nerelerde Zorlandık? Hangi Yaklaşımlar Değişti?
+
+Geliştirme sürecinde mimariyi baştan tasarlamamıza neden olan zorluklar yaşandı:
+
+Güvenlik ve Mimari Değişiklik: İlk başta tüm dosyalar web sunucusunun dışa açık klasöründeydi (htdocs). Bunun büyük bir güvenlik riski olduğunu fark edip "Bridge (Köprü) Pattern" mimarisine geçtik. Bugün sistemin beyni (core, templates, veritabanı) dışarıdan erişilemeyen güvenli bir kasada tutuluyor. Web sadece bir köprü vazifesi görüyor.
+
+Kullanıcı Limitleri ve Kota Sorunu: Ücretsiz versiyonlar için "PDF ve Excel indirme" sınırları koymak zorluydu. Başta sadece çerezlere (cookie) veya karmaşık veritabanı sorgularına güvendik. Ancak bu hem sistemi yavaşlattı hem de geliştirme aşamasında (Dev Reset) bizi tıkadı. Sonradan JSON tabanlı dinamik kota sistemine geçtik. Artık limitler saniyeler içinde kod yazmadan güncellenebiliyor.
+
+PDF ve Excel Motorları: Tarayıcı tarafında çıktı almak yerine, mPDF ve PhpSpreadsheet kütüphaneleriyle sunucu tarafında (Backend) resmi ve yasal geçerliliği olan, "mühürlü" raporlar üretmek için yoğun bir mesai harcandı.
+
+Yapay Zekâ ve İnsan İşbirliği: Kim Ne Yaptı?
+
+Bu proje, insan mimarisi ile yapay zekâ hızının mükemmel bir sentezidir:
+
+Yapay Zekâ (AI): Karmaşık frontend arayüzlerinin (Tailwind/DaisyUI) hızlıca kodlanması, PDF/Excel motorlarının entegrasyonu, dosya yollarının (Config.php) işletim sistemleri arasında çökmeden çalışmasını sağlayan algoritmaların yazılması ve hata ayıklama (debugging) süreçlerini üstlendi.
+
+İnsan (Kurucu Mimar): Sistemin sınırlarını ve yasal iş mantığını belirleyen taraf oldu. "Yemek yardımı limiti brütten değil, matrahtan düşülecek", "Config dosyası htdocs içinde duramaz, dışarı alalım", "Veritabanı yerine JSON bazlı bir limit sistemi kuralım" gibi projenin kaderini belirleyen tüm mimari ve yasal kararlar bir insan aklından çıktı.
+
+Şu Anda Her Sürüm Ne İşe Yarıyor?
+
+Masaüstü (Desktop): Yüksek güvenlik gerektiren, buluta veri göndermek istemeyen şirketler veya bireysel uzmanlar için tam izole, yerel (offline) bordro motoru.
+
+Web (Bordro Pro SaaS): Herkesin anında erişebildiği, aylık puantajları simüle edebildiği, ücretsiz raporlar (PDF/Excel) alabildiği ve Premium özelliklerle (sınırsız hesaplama, mizan) geliştirilmiş çevrimiçi platform.
+
+Bugünkü Hedef Ne?
+
+Bugünkü hedefimiz çok net: Türkiye'nin mevzuat güncellemelerine en hızlı tepki veren, hata payı sıfır olan ve sadece bir "hesaplayıcı" değil, aynı zamanda mali müşavirler ve İK uzmanları için bir "Hesap İspat (Audit) Otoritesi" olmak.
+
+___
+
+deepseek
+
+Başlangıç: Excel Yetmediğinde
+
+Her şey 2024 yılının sonlarında, bir muhasebe bürosunda başladı. Her ay düzenli olarak yapılan bordro hesaplamaları vardı: netten brüte, brütten nete, mesaili, primli, yemek yardımlı... Hepsi Excel'de, yarı otomatik formüllerle yapılıyordu. Ama her seferinde bir şeyler eksik kalıyordu:
+
+    "Bu ay asgari ücret değişti, formülleri güncelle."
+
+    "Gelir vergisi dilimi aşıldı, elle düzelt."
+
+    "Damga vergisi istisnasını unutma."
+
+Bu tekrarlayan işler can sıkıcıydı. Bir akşam, "Neden bunu tamamen otomatik yapan bir şey yok?" sorusuyla ilk kıvılcım çaktı.
+
+İlk çalışan şey, Python ile yazılmış 50 satırlık bir komut satırı betiğiydi. Brüt maaşı alıyor, SGK ve vergi kesintilerini yapıp net maaşı ekrana basıyordu. Sadece tek bir senaryo, tek bir personel tipi için çalışıyordu. Ama çalışıyordu.
+Evrim: Masaüstünden Web'e
+
+Python betiği hızla büyüdü. Netten brüte hesaplama eklendi, farklı personel tipleri (normal, emekli) tanımlandı, mesai ve prim hesapları dahil edildi. Kısa sürede, terminalde çalışan bu betik, bir masaüstü uygulamasına dönüştü.
+
+Ancak masaüstü uygulamasının sorunları vardı:
+
+    Her güncellemede kullanıcıya dosya göndermek gerekiyordu.
+
+    Farklı işletim sistemlerinde ayrı ayrı çalıştırma sorunları oluyordu.
+
+    Gerçek zamanlı mevzuat güncellemesi imkansızdı.
+
+Cevap açıktı: Web uygulaması.
+
+2025 yılının başında, PHP ile yazılmış ilk web sürümü ortaya çıktı. Tek bir sayfa, birkaç input, bir "Hesapla" butonu. O zamanlar htdocs diye bir klasör bile yoktu; her şey birkaç PHP dosyasından ibaretti.
+Büyüme Sancıları: Sistem Karmaşıklaştığında
+
+Web sürümü çalışıyordu. Ama sonra işler büyüdü:
+
+    12 aylık simülasyon: Kullanıcılar "sadece bir ay değil, yıllık projeksiyon istiyorum" dedi.
+
+    Kümülatif vergi matrahı: Vergi dilimi geçişlerini takip etmek gerekti.
+
+    Mevzuat değişiklikleri: Asgari ücret, vergi dilimleri, SGK tavanı her yıl değişiyordu.
+
+En büyük kriz, 2026 asgari ücret ve GVK 332 tebliği değişiklikleri sırasında yaşandı. Tüm hesaplama motorunun yeniden yazılması gerekti. İşte o zaman, mevzuat verilerini JSON dosyalarından okuyan, BCMath ile kuruş hassasiyetinde hesaplama yapan modüler bir motor inşa edildi.
+En Çok Zorlandığım Yerler
+
+    Netten Brüte Hesaplama (Reverse Calculator)
+    Brüt maaştan nete gitmek kolaydı; formül belliydi. Ama kullanıcı "net maaşım 25.000 TL olsun" dediğinde, bunu sağlayan brütü bulmak tam bir matematik sınavıydı. Binary search (ikili arama) ve mikro düzeltme döngüleriyle, kuruşu kuruşuna doğru sonuç veren bir algoritma kurana kadar haftalar geçti.
+
+    Mevzuat Bütünlüğü ve Mühürleme
+    Mevzuat JSON dosyaları elle düzenleniyordu ve bir virgül hatası tüm hesaplamaları çökertebiliyordu. Dosyaların değiştirilmediğini garanti etmek için SHA-256 tabanlı bir mühürleme sistemi kurdum. UniversalContext sınıfı işte bu ihtiyaçtan doğdu.
+
+    Ücretsiz/Ücretli (Free/Pro) Dengesi
+    Herkese açık bir araç olarak başladı, ama sınırsız kullanım sunucuyu zorluyordu. Kota sistemi (QuotaService) ve Paywall, kullanıcıyı tamamen engellemeden sistemi korumak için hassas bir denge gerektiriyordu. "Ne kadar ücretsiz olsun?" sorusunun cevabını bulmak, teknik olmaktan çok stratejik bir karardı.
+
+    Çift Taraflı Oturum Yönetimi (Dual-Tunnel Session)
+    Free, Pro ve Admin bölgelerinin aynı sunucuda, aynı tarayıcıda birbirine karışmadan çalışması gerekiyordu. BORDRO_FREE_SESS, BORDRO_PRO_SESS, BORDRO_ADMIN_SESS şeklinde üç ayrı oturum yapısı, bu sorunu çözdü. Ama logout işleminin sadece ilgili bölgeyi temizlemesini sağlamak, beklediğimden çok daha fazla ince ayar gerektirdi.
+
+Çalışmayan veya Değişen Yaklaşımlar
+
+    İlk PHP motoru: Her şey tek bir dosyadaydı, iç içe if'lerle doluydu. Mevzuat değişince dosyayı baştan yazmak gerekiyordu. Bu, beni JSON tabanlı, veri güdümlü (data-driven) mimariye yöneltti.
+
+    Client-side hesaplama denemesi: Bir ara tüm hesaplamayı JavaScript'e taşımayı denedim. Kullanıcıya anlık sonuç gösteriyordu, harikaydı. Ama vergi dilimi gibi karmaşık hesaplarda kuruş hataları oluyordu. BCMath'ın olmadığı bir yerde finansal hesaplama yapılamayacağını acı bir şekilde öğrendim. Motor tamamen backend'e döndü.
+
+    Nükleer Logout: İlk başta, bir bölgeden çıkış yapınca tüm bölgelerdeki oturumları temizliyordum. Kullanıcılar "pro'dan çıktım diye free'deki işim neden gitti?" diye şikayet etti. Şimdi her bölge kendi kendini temizliyor.
+
+Yapay Zeka ve Ben: Birlikte Çalışma Modeli
+
+Bu projede yapay zeka (Claude), bir "kıdemli geliştirici" gibi değil, daha çok bir "asistan ve denetmen" olarak çalıştı.
+
+AI ne yaptı?
+
+    Tekrarlayan işleri hızlandırdı: CSS düzenlemeleri, validasyon kuralları, dokümantasyon taslakları.
+
+    Denetim yaptı: Kod tekrarlarını, güvenlik risklerini, anayasaya aykırı yapıları tespit etti.
+
+    Fikir verdi: Token maskeleme, rate limiter gibi iyileştirmelerin nasıl yapılabileceğini tarif etti.
+
+Ben ne yaptım?
+
+    Mimari kararları: Dual docroot, üçlü session izolasyonu, JSON tabanlı mevzuat motoru gibi temel yapısal kararların hepsi bana ait.
+
+    İş mantığını: SGK, vergi, damga vergisi hesaplama kurallarını mevzuattan çıkarıp koda dökmek benim işimdi. AI'nın vergi mevzuatı bilgisi yoktu, olamazdı da.
+
+    Son sözü: AI'ın önerdiği her şeyi uygulamadım. "8 dosyayı değiştiren cookie migration" önerisini reddetmem, "localStorage maskeleme" gibi daha hafif bir çözümü tercih etmem gibi.
+
+Kısacası, direksiyonda hep ben vardım; AI navigasyon, park sensörü ve bazen de "hocam bu yolda hız sınırı var" diyen bir yardımcıydı.
+Bugünkü Durum: Her Sürüm Ne İşe Yarıyor?
+
+Şu an proje üç katmanlı bir yapı olarak yaşıyor:
+
+    Free (webbordro.com): Herkesin kullanımına açık, kotalı bordro hesaplama aracı. Temel hesaplama, PDF/Excel export, mevzuat haberleri. Pro'ya geçiş için bir vitrin.
+
+    Pro (pro.webbordro.com/pro/): Sınırsız hesaplama, Ghost Vault (Google Drive yedekleme), gelişmiş raporlama. Ücretli üyelere özel.
+
+    Admin (pro.webbordro.com/admin/): Executive Tower. Sistem sağlığı, kullanıcı yönetimi, mevzuat güncelleme, JSON mühürleme. Sadece benim erişimimde.
+
+Bugünkü Hedef
+
+Artık hedef, "yeni özellik eklemek" değil. Sistem olgunlaştı. Bugünkü önceliklerim:
+
+    Kararlılık: Mevcut sistemi bozmadan, dokunmadan çalışır durumda tutmak.
+
+    Teknik Borç Temizliği: O index.php'deki 124 !important'dan kurtulmak gibi, gözüme batan ama çalışmayı etkilemeyen şeyleri yoluna koymak.
+
+    Dokümantasyon: Bu hikaye gibi. Projeyi, benden sonra birinin devam ettirebileceği şekilde anlatmak.
+
+WebBordro, bir maaş hesaplama aracından çok daha fazlası oldu. Benim için bir mühendislik günlüğü, bir problem çözme laboratuvarı ve en önemlisi, sabrın ve sürekli iyileştirmenin ne kadar değerli olduğunu gösteren bir kanıt.
+
+----
+
+
+claude 
+
+aklısın — bugünkü oturumdan gerçek bir özet çıkarabilirim, uydurmadan. İşte bu seansın "yapı taşı" özeti, #fikrimvar / hikayeler formatına uygun ham haliyle:
+
+Bugünkü Oturum: Bordro Motoru — Üç Farklı Zihnin Aynı Kodu Okuması
+Amaç neydi?
+Elimde production'da çalışan bir bordro (payroll) sistemi vardı — Database, Engine, UI katmanları olan, gerçek Türk vergi mevzuatını (SGK, gelir vergisi dilimleri, istisnalar, AGİ) hesaplayan bir Python/PyQt uygulaması. Bunu üç farklı AI'a (GPT-5, Gemini, Claude) ayrı ayrı okuttum ve "bu kodun neresi çürük, neresi sağlam" dedim. Amaç kod incelemesi değildi aslında — amaç, üç farklı yapay zekânın aynı koda nasıl baktığını görmekti.
+Nerede zorlandık?
+Asıl zorluk kodun kendisinde değil, karşılaştırmadaydı. Üç ayrı analiz metni (gpt_5.txt, gemini_ai_studio.txt, ve benim ürettiğim) birbirinden bağımsız üretilmişti — hiçbiri diğerini görmeden yazılmıştı. Ben üçünü yan yana koyup "nerede aynı düşünüyorlar, nerede ayrılıyorlar" sorusuna dürüst bir cevap vermek zorundaydım. Kolay yol, hepsini aynı gösterip genel geçer bir rapor yazmaktı. Zor olan, gerçekten farkları bulmaktı: örneğin GPT-5'in analizi bu projeye hiç ait olmayan fonksiyon isimlerinden (doIt, mainProcessStart) bahsediyordu — yani template bir cevap vermişti, koda gerçekten bakmamıştı. Bunu görüp söylemek gerekiyordu, görmezden gelmek değil.
+İkinci zorlanma noktası: Sen benden "kendi hikayeni de yaz" isteyince, elimde olmayan bir geçmişi (hangi sürüm önce çıktı, ilk fikir nasıl doğdu) uydurmamak. Hafızamda bu proje yoktu — sadece bugün yüklediğin dosyalar vardı. Doğru olan, "bilmiyorum" demekti, güzel bir hikaye uydurmak değil.
+Ne başardık?
+
+4000+ satırlık gerçek production kodunu (database.py, engine.py, ui_ayarlar.py, mevzuat/importer.py) satır satır tarayıp somut risk listesi çıkardım (şifre salt açığı, thread safety, SQL injection potansiyeli, sessiz exception yutma gibi).
+Üç AI'ın ortak gördüğü 5 kritik noktayı (God Object, silent fail, magic strings, UI/logic karışıklığı, global state) ayırt ettim.
+Her AI'ın kendine özgü kör noktalarını ve güçlü yanlarını işaretledim — kimse "hepsi aynı" demedi, gerçek farklar ortaya çıktı.
+Kopyalanabilir, arşivlenebilir tek bir txt formatında rapor üretildi.
+
+Ne öğrendik / hangi karar değişti?
+Senin isteğin başta "bana kod analizi yap"tı, sonra "bunu kişisel hikaye anlatımına çevir"e döndü. Ben bu geçişte durup şunu söyledim: elimde olmayan bir hafızayı var gibi göstermek, senin #fikrimvar felsefenle (süreci şeffaf tutmak, sahte uzmanlık numarası yapmamak) zaten çelişirdi. O yüzden "hayır, o kısmı sen anlat" dedim — bu da aslında sürecin dürüst kaydı.
+
+
+
+
+
+
+
+
+

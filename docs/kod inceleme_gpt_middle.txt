@@ -1,0 +1,340 @@
+Kodun şu an iyi yaptığı şey
+
+En önemli doğru karar şu: project ana varlık olmuş.
+
+Bu çok iyi. Çünkü senin modelinde “hikâye” ve “atölye” aslında iki ayrı şey değil; aynı işin iki hâli.
+
+Kodda da bu sezgi var:
+
+projects
+├─ stories
+├─ updates
+├─ media
+└─ links
+
+Yani bir proje/iş var. Onun hikâyesi olabiliyor, atölye kayıtları olabiliyor, medyası ve bağlantıları olabiliyor. Bu, senin “Atölye ↔ Hikâye” fikrine uygun.
+
+Atölye şu an kodda ne?
+
+Kodda Atölye büyük ölçüde updates tablosu üzerinden kurulmuş.
+
+Bu iyi bir başlangıç çünkü updates içinde şunlar var:
+
+tried → ne denedim?
+failed → ne çalışmadı?
+decision → ne karar verdim?
+next_step → sırada ne var?
+phase → hangi dönem/faz?
+is_milestone → dönüm noktası mı?
+medya bağlantısı
+link bağlantısı
+
+Bu bayağı Atölye kokuyor. Talaş kokusu var, kahve lekesi var, “denedim olmadı” dürüstlüğü var. 🛠️
+
+Ama eksik şu: Atölye kaydı türlenmemiş.
+
+Senin anlattığın Atölye’de kayıt türleri çok önemli:
+
+prompt
+yapay zekâ cevabı
+görsel çıktı
+video çıktı
+karar
+hata
+deneme
+not
+kaynak
+ara sonuç
+
+Şu an sistem bunları biraz tried / failed / decision / next_step içine gömüyor. Çalışır, ama ileride 20 hikâye ve yüzlerce kayıt olunca hepsi aynı çorbada döner.
+
+Hikâye şu an kodda ne?
+
+Hikâye tarafı stories, story_parts, story_sections, story_section_items ile kurulmuş.
+
+Bu da iyi. Çünkü hikâye “düzenlenmiş anlatı” olacaksa bölüm, parça, medya, alıntı, kod, timeline gibi yapıların olması doğru.
+
+En güzel detaylardan biri şu: story_sections içinde source_update_id alanı var.
+
+Bu çok önemli. Çünkü bu alan şunu sağlar:
+
+“Bu hikâye bölümü hangi atölye kaydından doğdu?”
+
+Ama gördüğüm kadarıyla story-builder.php şu an seçilen update’lerden timeline oluştururken source_update_id değerini doldurmuyor. Yani köprü için kolon var, ama köprüye korkuluk takılmamış.
+
+Bu düzeltilmeli.
+
+Şu anki akış ne durumda?
+
+Kodda “Atölyeden Hikâye oluştur” mantığı var. story-builder.php seçili update kayıtlarından hikâye taslağı oluşturuyor. İstersen atölyeyi kapatıyor.
+
+Yani mevcut akış şu:
+
+Atölye kayıtları seçiliyor
+↓
+Hikâye taslağı oluşuyor
+↓
+İstenirse Atölye kapanıyor
+
+Bu iyi.
+
+Ama senin anlattığın model bundan daha canlı:
+
+Atölye açılır
+↓
+Kayıtlar birikir
+↓
+Bazıları hikâyeye gönderilir
+↓
+Hikâye yayımlanır
+↓
+Gerekirse hikâye tekrar atölyeye döner
+↓
+İkisi yan yana yaşamaya devam eder
+
+Kod şu an ilk yarıyı yapıyor. İkinci yarı, yani hikâyeden tekrar atölyeye dönüş kavramı henüz tam yok.
+
+En önemli eksikler
+1. “Hikâyeye gönderildi” olayı ayrı kayıt değil
+
+Şu an story-builder hikâye oluşturuyor, ama bu olay kendi başına izlenebilir bir olay gibi durmuyor.
+
+Bence bir atölye kaydı hikâyeye taşındığında sistem bunu bilsin:
+
+Bu kayıt hikâyeye işlendi.
+Bu kayıt şu hikâye bölümüne dönüştü.
+
+Bunun için story_sections.source_update_id mutlaka kullanılmalı.
+
+2. “Hikâyeden Atölyeye döndü” kavramı yok
+
+projects.workshop_status şu an:
+
+none
+open
+paused
+closed
+
+Bu temel olarak yeterli ama senin fikrin için bir durum daha lazım:
+
+reopened
+
+Ya da status’u bozmadan ayrı alan:
+
+workshop_cycle
+returned_from_story_at
+
+Bence en temiz çözüm status’a fazla yük bindirmemek. Çünkü “open” zaten açık demek. Ama “neden açıldı?” bilgisini ayrı tutmak daha sağlıklı.
+
+Örnek:
+
+workshop_status = open
+workshop_context = returned_from_story
+
+Ama küçük sistemde daha pratik yol:
+
+workshop_status IN ('none','open','paused','closed','reopened')
+3. Atölye kayıt türü eksik
+
+Bunu bence eklemelisin.
+
+updates tablosuna:
+
+entry_type TEXT NOT NULL DEFAULT 'note'
+
+Değerler:
+
+note
+prompt
+ai_response
+output
+video
+image
+decision
+error
+source
+milestone
+
+Böylece Atölye sayfası ileride çok daha güçlü olur. Ziyaretçi “sadece kararları göster”, “promptları göster”, “videoları göster”, “hataları göster” diyebilir.
+
+4. Aynı işin birden fazla atölye dönemi yok
+
+Senin anlattığın şeyde bir iş kapanıp sonra tekrar açılabilir. Bu durumda atölye tek düz akış gibi değil, sezonlara ayrılabilir.
+
+Örnek:
+
+ai-context
+├─ Atölye dönemi 1: İlk CLI fikri
+├─ Hikâye: ai-context ne işe yaradı?
+├─ Atölye dönemi 2: Web arayüzüne dönüş
+
+Şu an updates.phase var, bu işi bir yere kadar çözer. Ama ileride daha net istersen workshop_sessions gibi bir tablo gerekebilir.
+
+Ama hemen şart mı? Hayır.
+
+Şimdilik phase alanı yeter. Büyük refactor yapma. Önce sistemi çalıştır.
+
+Mevcut kod için en doğru küçük revizyon
+
+Ben olsam şimdi Codex’e dev gibi refactor vermezdim. Önce şu dört noktayı düzeltirdim:
+
+source_update_id gerçekten kullanılsın.
+updates içine entry_type eklensin.
+Story sayfasında Atölye linki yalnızca open/paused iken değil, update varsa kapalıyken de görünsün.
+Admin’de “Hikâyeden Atölyeye geri aç” butonu eklensin.
+
+Şu an hikaye.php içinde Atölye linki yalnızca proje open veya paused ise çıkıyor. Ama senin modelinde kapalı atölye de geçmiş kayıt olarak okunabilir olmalı. Hatta kapalıysa “Atölye arşivi” diye görünmeli.
+
+Bence şu mantık daha doğru:
+
+if ($project && has_project_updates($project['id'])) {
+    // Atölye açık ise: "Canlı Atölye"
+    // Kapalı ise: "Atölye Arşivi"
+}
+
+Çünkü kapalı atölye yok olmaz; hikâyenin ham zemini olarak kalır.
+
+Codex’e verilecek net komut
+
+Bunu direkt verebilirsin:
+
+Kodda Atölye/Hikâye modelini küçük ama doğru bir revizyonla güçlendir. Büyük tasarım refactor yapma. Mevcut projects, stories, updates, story_sections yapısını koru.
+
+Kavramsal model:
+
+projects ana varlıktır.
+updates Atölye kayıtlarıdır.
+stories aynı projenin düzenlenmiş hikâyesidir.
+Atölye canlı çalışma alanıdır; prompt, deneme, hata, çıktı, karar, video, görsel ve YZ etkileşimi kayıtları burada birikir.
+Hikâye bu ham kayıtların seçilmiş, düzenlenmiş ve okunabilir anlatıya dönüştürülmüş hâlidir.
+Atölye kapanınca yok olmaz; hikâyenin ham arşivi olarak okunabilir kalır.
+Bir hikâye daha sonra tekrar Atölye’ye dönebilir. Bu durumda aynı projenin hem hikâyesi hem canlı atölyesi yan yana yaşayabilir.
+
+Yapılacaklar:
+
+updates tablosuna kayıt türü ekle:
+Alan adı: entry_type
+Varsayılan: note
+Önerilen değerler:
+note
+prompt
+ai_response
+output
+image
+video
+decision
+error
+source
+milestone
+
+SQLite migration ekle:
+ALTER TABLE updates ADD COLUMN entry_type TEXT NOT NULL DEFAULT 'note';
+
+Admin update formunda bu alan seçilebilir olsun.
+Türkçe etiketler:
+
+Not
+Prompt
+YZ cevabı
+Çıktı
+Görsel
+Video
+Karar
+Hata
+Kaynak
+Dönüm noktası
+story-builder.php içinde seçilen update kayıtlarından hikâye bölümü veya timeline item oluştururken kaynak bağlantısını kaybetme.
+Şema içinde story_sections.source_update_id zaten var. Bunu kullan.
+Eğer bir update doğrudan bir hikâye section’a dönüşüyorsa source_update_id o update id olsun.
+Eğer timeline section tek section olarak kalacaksa, en azından story_section_items için update bağlantısı tutacak ek alan düşün:
+source_update_id INTEGER
+Ama daha küçük değişiklik istiyorsan her seçili update için ayrı story_sections kaydı oluşturmak daha izlenebilir olabilir.
+
+Tercih edilen küçük çözüm:
+
+Timeline section kalsın.
+story_section_items tablosuna source_update_id INTEGER ekle.
+Story-builder seçili update’i item olarak eklerken source_update_id değerini doldursun.
+
+Migration:
+ALTER TABLE story_section_items ADD COLUMN source_update_id INTEGER;
+
+Hikâye sayfasındaki Atölye linki sadece open veya paused durumunda görünmesin.
+Eğer projede herhangi bir Atölye kaydı varsa link görünsün.
+Etiket şöyle değişsin:
+workshop_status open/paused ise: “Canlı Atölye”
+workshop_status closed ise: “Atölye Arşivi”
+workshop_status none ama update varsa: “Atölye Kayıtları”
+
+Bunun için küçük bir yardımcı fonksiyon eklenebilir:
+project_has_updates(int $projectId): bool
+
+Admin proje ekranına “Hikâyeden Atölyeye geri aç” aksiyonu ekle.
+Bu aksiyon:
+projects.workshop_status = 'open'
+show_in_widget = 1
+ended_at = NULL
+updated_at = CURRENT_TIMESTAMP
+yapsın.
+İsteğe bağlı olarak yeni bir update kaydı oluştursun:
+entry_type = 'decision'
+başlık: “Hikâye yeniden atölyeye döndü”
+summary: “Bu iş daha önce hikâyeye taşınmıştı; yeni denemeler için atölye yeniden açıldı.”
+phase: “Yeniden açılış”
+is_milestone = 1
+status = published
+visibility = public
+atolye.php sayfasında kayıtları entry_type etiketiyle göster.
+Örnek etiketler:
+Prompt
+YZ cevabı
+Karar
+Hata
+Çıktı
+Video
+Kaynak
+Not
+atolye.php sayfasındaki kapalı atölye mantığını koru.
+Kapalı atölye 404 olmamalı. Eğer update varsa Atölye Arşivi olarak okunabilmeli.
+Açık/paused ise Canlı Atölye olarak görünsün.
+Test raporu ver:
+Migration dosyaları eklendi mi?
+Var olan update kayıtları entry_type = note ile çalışıyor mu?
+Yeni update formunda entry type seçilebiliyor mu?
+Story-builder update kaynaklarını kaybediyor mu, koruyor mu?
+Kapalı atölyesi olan hikâyede “Atölye Arşivi” linki görünüyor mu?
+Hikâyeden Atölyeye geri aç aksiyonu çalışıyor mu?
+Daha büyük ama ileride yapılacak fikir
+
+Şu an hemen yapma ama bir sonraki aşamada “Atölye oturumu” kavramı çok yakışır.
+
+workshop_sessions
+├─ project_id
+├─ title
+├─ status
+├─ opened_at
+├─ closed_at
+├─ reason
+
+O zaman bir projenin birden fazla atölye dönemi olabilir:
+
+1. İlk deneme
+2. Hikâyeye gönderildi
+3. Yeniden açıldı
+4. Video üretim denemeleri
+
+Ama şimdi erken. Önce mevcut SQLite/PHP yapısını yormadan entry_type, source_update_id, Atölye Arşivi, Hikâyeden Atölyeye geri aç yeterli.
+
+Net hüküm
+
+Kodun fena değil, hatta beklediğimden daha doğru yönde. Özellikle projects ana gövde, updates atölye, stories düzenlenmiş anlatı ayrımı iyi kurulmuş.
+
+Ama şu an sistem daha çok şunu yapıyor:
+
+“Atölyeden seçip hikâye oluştur.”
+
+Senin asıl istediğin ise şu:
+
+“Bir iş yaşar, kaydolur, hikâyeye dönüşür, gerekirse tekrar yaşar.”
+
+Aradaki fark küçük görünür ama sitenin ruhunu belirleyen ana dişli orada.

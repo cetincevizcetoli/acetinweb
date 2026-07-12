@@ -38,13 +38,88 @@ if ($section) {
 }
 
 $error = '';
+
+function admin_section_item_has_content(array $item): bool
+{
+    foreach (['title', 'text', 'state', 'subtitle', 'step', 'value', 'url'] as $key) {
+        if (trim((string)($item[$key] ?? '')) !== '') return true;
+    }
+    return false;
+}
+
+function admin_section_has_post_items(array $items): bool
+{
+    foreach ($items as $item) {
+        if (is_array($item) && admin_section_item_has_content($item)) return true;
+    }
+    return false;
+}
+
+function admin_section_normalize_choice(string $type, string $layout, bool $hasItems, bool $hasMedia, bool $hasCode, bool $hasText, string $title): array
+{
+    $messages = [];
+    $originalType = $type;
+    $originalLayout = $layout;
+    $itemTypes = ['timeline', 'questions', 'compare', 'roles', 'status', 'lesson'];
+
+    if ($type === '') $type = 'text';
+    if ($layout === '') $layout = 'default';
+
+    if (in_array($type, $itemTypes, true) && !$hasItems) {
+        if ($hasCode) {
+            $type = 'code';
+        } elseif ($hasMedia && $hasText) {
+            $type = 'split';
+        } elseif ($hasMedia) {
+            $type = 'gallery';
+        } else {
+            $type = 'text';
+        }
+        $messages[] = 'Seçilen bölüm tipi satır gerektiriyordu; satır olmadığı için güvenli görünüme alındı.';
+    }
+
+    if (in_array($type, ['gallery', 'video'], true) && !$hasMedia) {
+        $type = $hasCode ? 'code' : 'text';
+        $messages[] = 'Medya odaklı bölümde medya olmadığı için bölüm güvenli görünüme alındı.';
+    }
+
+    if ($type === 'code' && !$hasCode) {
+        $type = $hasMedia && $hasText ? 'split' : ($hasMedia ? 'gallery' : 'text');
+        $messages[] = 'Kod bölümü için kod alanı boştu; bölüm güvenli görünüme alındı.';
+    }
+
+    if ($type === 'split' && !$hasMedia) {
+        $type = 'text';
+        $messages[] = 'Metin + medya yerleşiminde medya olmadığı için metin görünümüne alındı.';
+    }
+
+    $titleLength = function_exists('mb_strlen') ? mb_strlen($title, 'UTF-8') : strlen($title);
+    if (!$hasMedia && in_array($layout, ['hero-split', 'full-bleed', 'diagonal'], true)) {
+        $layout = 'default';
+        $messages[] = 'Seçilen yerleşim medya ister; medya olmadığı için dengeli akışa alındı.';
+    } elseif ($titleLength > 76 && in_array($layout, ['hero-split', 'diagonal'], true)) {
+        $layout = 'default';
+        $messages[] = 'Başlık uzun olduğu için taşma riskli yerleşim yerine dengeli akış kullanıldı.';
+    } elseif (in_array($type, ['timeline', 'questions', 'compare', 'roles', 'status', 'lesson', 'code'], true)) {
+        $layout = 'default';
+    }
+
+    if ($originalType !== $type || $originalLayout !== $layout) {
+        $messages[] = 'Public sayfada bozuk blok oluşmaması için bölüm tipi/yerleşimi kayıtta normalize edildi.';
+    }
+
+    return [$type, $layout, array_values(array_unique($messages))];
+}
+
 if (is_post()) {
     verify_csrf();
     try {
         db()->beginTransaction();
         $savedLinkCount = 0;
+        $normalizationMessages = [];
         $type = (string)($_POST['type'] ?? 'text');
         $layout = (string)($_POST['layout'] ?? 'default');
+        $postedItems = is_array($_POST['items'] ?? null) ? $_POST['items'] : [];
         $partId = ((int)($_POST['part_id'] ?? 0)) ?: null;
         if ($partId !== null) {
             $st = db()->prepare('SELECT COUNT(*) FROM story_parts WHERE id=? AND story_id=?');
@@ -59,6 +134,22 @@ if (is_post()) {
         $mediaId = $selectedPrimary ?: null;
         $uploaded = save_uploaded_files($projectId, (string)$story['project_slug'], 'media_files');
         if ($uploaded && !$mediaId) $mediaId = $uploaded[0];
+        $hasText = trim(old('body_text')) !== ''
+            || trim(old('intro_text')) !== ''
+            || trim(old('quote_text')) !== ''
+            || trim(old('note_text')) !== '';
+        $hasCode = trim(old('code_text')) !== '';
+        $hasItems = admin_section_has_post_items($postedItems);
+        $hasMedia = (bool)$mediaId || $selectedGalleryIds !== [] || $uploaded !== [];
+        [$type, $layout, $normalizationMessages] = admin_section_normalize_choice(
+            $type,
+            $layout,
+            $hasItems,
+            $hasMedia,
+            $hasCode,
+            $hasText,
+            trim(old('title'))
+        );
 
         if ($id) {
             $st = db()->prepare('UPDATE story_sections SET part_id=?,section_kind=?,type=?,layout=?,label=?,title=?,body_text=?,quote_text=?,intro_text=?,note_text=?,code_text=?,media_id=?,sort_order=?,updated_at=CURRENT_TIMESTAMP WHERE id=?');
@@ -81,7 +172,7 @@ if (is_post()) {
         }
 
         db()->prepare('DELETE FROM story_section_items WHERE section_id=?')->execute([$sectionId]);
-        foreach ($_POST['items'] ?? [] as $i => $it) {
+        foreach ($postedItems as $i => $it) {
             $hasContent = trim((string)($it['title'] ?? '')) !== ''
                 || trim((string)($it['text'] ?? '')) !== ''
                 || trim((string)($it['state'] ?? '')) !== ''
@@ -137,6 +228,9 @@ if (is_post()) {
         admin_audit($id ? 'update' : 'create', 'story_section', $sectionId);
         $mediaCount = count($gallery) + ($mediaId ? 1 : 0);
         flash('success', 'Hikâye bölümü kaydedildi · ' . $mediaCount . ' medya · ' . $savedLinkCount . ' bağlantı.');
+        foreach ($normalizationMessages as $message) {
+            flash('warning', $message);
+        }
         redirect('section-edit.php?id=' . $sectionId);
     } catch (Throwable $e) {
         if (db()->inTransaction()) db()->rollBack();
@@ -158,12 +252,32 @@ if ($id) {
 }
 
 $types = [
-    'opening' => 'Açılış', 'text' => 'Metin', 'split' => 'Metin + görsel',
-    'timeline' => 'Zaman çizgisi', 'questions' => 'Soru / cevap',
-    'compare' => 'Karşılaştırma', 'roles' => 'YZ / Ahmet ayrımı',
-    'status' => 'Güncel durum', 'lesson' => 'Öğrenilenler',
-    'gallery' => 'Galeri', 'video' => 'Video', 'code' => 'Kod / terminal'
+    'opening' => ['label' => 'Açılış / büyük giriş', 'note' => 'Hikâyenin ilk kuvvetli girişi. Bir hikâyede az kullan.'],
+    'text' => ['label' => 'Metin bölümü', 'note' => 'Ana anlatım için en güvenli seçim. Başlık, metin, alıntı ve not dengeli çalışır.'],
+    'split' => ['label' => 'Metin + birincil medya', 'note' => 'Metin ile tek ana görsel/video yan yana durur. Medya seçiliyse kullan.'],
+    'timeline' => ['label' => 'Zaman çizgisi', 'note' => 'Adım adım ilerleyen süreç veya tarih akışı için. Satırlar bölümün ana içeriğidir.'],
+    'questions' => ['label' => 'Soru / cevap', 'note' => 'Açılır teknik notlar veya SSS için. Satır başlıkları soru gibi yazılmalı.'],
+    'compare' => ['label' => 'Karşılaştırma', 'note' => 'Sol/sağ gruplu maddeler için. Satırlarda grup alanını kullan.'],
+    'roles' => ['label' => 'YZ / insan ayrımı', 'note' => 'YZ ve Ahmet taraflarını ayırmak için. Satır grupları ai/human olmalı.'],
+    'status' => ['label' => 'Güncel durum', 'note' => 'Birden fazla durum kartı için. Satırlarda durum ve metin kullan.'],
+    'lesson' => ['label' => 'Ders / çıkarım listesi', 'note' => 'Kısa öğrenilenler listesi için. Uzun paragraf yerine maddeler daha iyi durur.'],
+    'gallery' => ['label' => 'Galeri', 'note' => 'Birden fazla görsel/video aynı bölümün ana içeriği olacaksa.'],
+    'video' => ['label' => 'Video / medya odaklı', 'note' => 'Video veya medya bölümün ana sahnesiyse. Metin kısa tutulmalı.'],
+    'code' => ['label' => 'Kod / terminal', 'note' => 'Kod veya terminal çıktıları için. Kod alanı ana içerik olur.']
 ];
+
+$layouts = [
+    'default' => ['label' => 'Dengeli akış', 'note' => 'Çoğu bölüm için güvenli varsayılan yerleşim.'],
+    'wide' => ['label' => 'Geniş okuma', 'note' => 'Metin veya galeri daha geniş nefes alsın istendiğinde.'],
+    'hero-split' => ['label' => 'Büyük iki kolon', 'note' => 'Kuvvetli başlık + tek medya için. Uzun başlıkta dikkatli kullan.'],
+    'full-bleed' => ['label' => 'Tam geniş vurgu', 'note' => 'Özel görsel/vurgu bölümü için. Her bölümde kullanılmaz.'],
+    'offset' => ['label' => 'Kaydırılmış ritim', 'note' => 'Akışı kırmak için hafif kaydırmalı görünüm.'],
+    'cross' => ['label' => 'Çapraz karşılaştırma', 'note' => 'Karşılaştırma/rol ayrımı gibi iki taraflı içeriklerde daha uygun.'],
+    'diagonal' => ['label' => 'Diyagonal vurgu', 'note' => 'Kısa ve vurucu bölümlerde kullan; uzun metinde yorabilir.'],
+];
+
+$currentType = (string)($section['type'] ?? 'text');
+$currentLayout = (string)($section['layout'] ?? 'default');
 
 $sectionKinds = [
     '' => 'Otomatik belirle',
@@ -200,18 +314,34 @@ admin_head($id ? 'Bölümü düzenle' : 'Yeni bölüm');
         <section class="panel">
             <h2>Bölüm kimliği</h2>
             <div class="form-grid">
-                <div class="field"><label>Tür</label><select name="type"><?php foreach ($types as $k => $v): ?><option value="<?= e($k) ?>" <?= ($section['type'] ?? 'text') === $k ? 'selected' : '' ?>><?= e($v) ?></option><?php endforeach; ?></select></div>
-                <div class="field"><label>Yerleşim</label><select name="layout"><?php foreach (['default','wide','hero-split','full-bleed','offset','cross','diagonal'] as $v): ?><option <?= ($section['layout'] ?? 'default') === $v ? 'selected' : '' ?>><?= $v ?></option><?php endforeach; ?></select></div>
+                <div class="field"><label>İçerik tipi</label><select name="type" data-section-type><?php foreach ($types as $k => $v): ?><option value="<?= e($k) ?>" data-note="<?= e($v['note']) ?>" <?= $currentType === $k ? 'selected' : '' ?>><?= e($v['label']) ?></option><?php endforeach; ?></select><small data-section-type-note><?= e($types[$currentType]['note'] ?? '') ?></small></div>
+                <div class="field"><label>Sayfadaki yerleşim</label><select name="layout" data-section-layout><?php foreach ($layouts as $k => $v): ?><option value="<?= e($k) ?>" data-note="<?= e($v['note']) ?>" <?= $currentLayout === $k ? 'selected' : '' ?>><?= e($v['label']) ?></option><?php endforeach; ?></select><small data-section-layout-note><?= e($layouts[$currentLayout]['note'] ?? '') ?></small></div>
                 <div class="field"><label>Etiket</label><input name="label" value="<?= e($section['label'] ?? '') ?>" placeholder="BAŞLANGIÇ"></div>
                 <div class="field"><label>Sıra</label><input type="number" name="sort_order" value="<?= e((string)($section['sort_order'] ?? 999)) ?>"></div>
                 <div class="field"><label>Süreç parçası</label><select name="part_id"><option value="">Yok / otomatik akış</option><?php foreach ($parts as $part): ?><option value="<?= (int)$part['id'] ?>" <?= (int)($section['part_id'] ?? 0) === (int)$part['id'] ? 'selected' : '' ?>><?= e($part['title']) ?></option><?php endforeach; ?></select><small>Uzun hikâyelerde bölümün süreç haritasındaki yerini belirler.</small></div>
-                <div class="field"><label>Bölüm türü</label><select name="section_kind"><?php foreach ($sectionKinds as $k => $v): ?><option value="<?= e($k) ?>" <?= (string)($section['section_kind'] ?? '') === $k ? 'selected' : '' ?>><?= e($v) ?></option><?php endforeach; ?></select><small>Boş bırakılırsa tür mevcut bölüm tipinden okunur.</small></div>
+                <div class="field"><label>Okur etiketi</label><select name="section_kind"><?php foreach ($sectionKinds as $k => $v): ?><option value="<?= e($k) ?>" <?= (string)($section['section_kind'] ?? '') === $k ? 'selected' : '' ?>><?= e($v) ?></option><?php endforeach; ?></select><small>Public sayfada görünen küçük bölüm kimliği. Boş bırakılırsa sistem içerik tipinden seçer.</small></div>
                 <div class="field full"><label>Başlık</label><input name="title" value="<?= e($section['title'] ?? '') ?>"></div>
                 <div class="field full"><label>Ana metin</label><textarea name="body_text" rows="8"><?= e($section['body_text'] ?? '') ?></textarea><small>Paragrafları boş satırla ayır.</small></div>
                 <div class="field full"><label>Alıntı</label><textarea name="quote_text"><?= e($section['quote_text'] ?? '') ?></textarea></div>
                 <div class="field full"><label>Giriş / açıklama</label><textarea name="intro_text"><?= e($section['intro_text'] ?? '') ?></textarea></div>
                 <div class="field full"><label>Kenar notu</label><textarea name="note_text"><?= e($section['note_text'] ?? '') ?></textarea></div>
                 <div class="field full"><label>Kod / terminal</label><textarea name="code_text" rows="10" style="font-family:monospace"><?= e($section['code_text'] ?? '') ?></textarea></div>
+                <div class="section-preview full" data-section-preview>
+                    <div>
+                        <span>Önizleme mantığı</span>
+                        <strong data-preview-title><?= e($section['title'] ?: 'Bölüm başlığı') ?></strong>
+                        <p data-preview-body><?= e($section['body_text'] ?: $section['intro_text'] ?: $section['quote_text'] ?: 'Bu alan, seçtiğin içerik tipi ve yerleşimin public sayfada nasıl davranacağını gösterir.') ?></p>
+                    </div>
+                    <ul>
+                        <li><b>İçerik tipi</b><span data-preview-type><?= e($types[$currentType]['label'] ?? $currentType) ?></span></li>
+                        <li><b>Yerleşim</b><span data-preview-layout><?= e($layouts[$currentLayout]['label'] ?? $currentLayout) ?></span></li>
+                        <li><b>Uyarı</b><span data-preview-advice>Uzun başlıkta metin tabanlı yerleşimler daha güvenlidir.</span></li>
+                    </ul>
+                    <div class="section-rules">
+                        <strong>Yerleşim kuralı</strong>
+                        <p>Liste, karşılaştırma, durum ve ders tipleri satır ister. Satır yoksa sistem bölümü metin, kod veya galeri gibi güvenli görünüme alır.</p>
+                    </div>
+                </div>
             </div>
         </section>
 

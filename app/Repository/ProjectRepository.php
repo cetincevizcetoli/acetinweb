@@ -31,6 +31,9 @@ final class ProjectRepository
                 LEFT JOIN media m ON m.id=p.cover_media_id AND m.deleted_at IS NULL
                 LEFT JOIN stories s ON s.project_id=p.id AND s.deleted_at IS NULL
                 WHERE $projectVisibility AND $placement ";
+        if ($archiveOnly) {
+            $sql .= " AND p.workshop_status NOT IN ('open','paused')";
+        }
         // Public placement is canonical on projects.*; story show_* columns are kept only for legacy compatibility.
         $sql .= " AND $storyVisibility";
         $sql .= ' ORDER BY p.is_pinned DESC, p.sort_order ASC, COALESCE(p.updated_at,p.created_at) DESC';

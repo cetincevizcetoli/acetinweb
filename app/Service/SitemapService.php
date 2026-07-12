@@ -28,6 +28,7 @@ final class SitemapService
                 JOIN stories s ON s.project_id=p.id
                 WHERE $projectVisibility
                   AND p.show_in_archive=1
+                  AND p.workshop_status NOT IN ('open','paused')
                   AND $storyVisibility
                 ORDER BY p.is_pinned DESC, p.sort_order ASC, COALESCE(s.published_at,s.updated_at,p.updated_at,p.created_at) DESC";
 
@@ -37,6 +38,22 @@ final class SitemapService
                 'lastmod' => self::dateOnly((string)($row['story_updated_at'] ?: $row['story_published_at'] ?: $row['project_updated_at'] ?: '')),
                 'changefreq' => 'monthly',
                 'priority' => '0.8',
+            ];
+        }
+
+        $workshopSql = "SELECT p.slug, p.updated_at project_updated_at
+                FROM projects p
+                WHERE $projectVisibility
+                  AND p.workshop_status IN ('open','paused')
+                  AND p.show_in_widget=1
+                ORDER BY p.is_pinned DESC, p.sort_order ASC, COALESCE(p.updated_at,p.created_at) DESC";
+
+        foreach (db()->query($workshopSql)->fetchAll() as $row) {
+            $urls[] = [
+                'loc' => self::url('/atolye.php?slug=' . rawurlencode((string)$row['slug'])),
+                'lastmod' => self::dateOnly((string)($row['project_updated_at'] ?: '')),
+                'changefreq' => 'weekly',
+                'priority' => '0.7',
             ];
         }
 

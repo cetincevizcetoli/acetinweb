@@ -92,6 +92,16 @@ function render_story_media_collection(array $media, string $class = 'story-extr
 
 function render_story_section_extras(array $section, string $type, bool $primaryRendered): void
 {
+    if (!in_array($type, ['opening', 'split', 'text', 'video', 'code'], true) && trim((string)($section['body_text'] ?? '')) !== '') {
+        echo '<div class="story-section-body">';
+        render_paragraphs_text((string)$section['body_text']);
+        echo '</div>';
+    }
+
+    if (!in_array($type, ['opening', 'split', 'text', 'code'], true) && trim((string)($section['quote_text'] ?? '')) !== '') {
+        echo '<blockquote class="story-section-quote">' . e((string)$section['quote_text']) . '</blockquote>';
+    }
+
     if ($type !== 'compare' && trim((string)($section['intro_text'] ?? '')) !== '') {
         echo '<div class="story-section-intro">';
         render_paragraphs_text((string)$section['intro_text']);
@@ -157,19 +167,123 @@ function render_story_section_identity(array $section, int $index, int $total = 
     echo '</div>';
 }
 
+function story_section_text_payload(array $section): string
+{
+    $parts = [];
+    foreach (['body_text', 'intro_text', 'quote_text', 'note_text', 'code_text'] as $key) {
+        $value = trim((string)($section[$key] ?? ''));
+        if ($value !== '') $parts[] = $value;
+    }
+    return trim(implode("\n", $parts));
+}
+
+function story_section_has_payload(array $section): bool
+{
+    return story_section_text_payload($section) !== ''
+        || !empty($section['items'])
+        || !empty($section['links'])
+        || story_section_all_media($section) !== [];
+}
+
+function story_section_content_state(array $section): string
+{
+    if (!story_section_has_payload($section)) return 'title-only';
+
+    $hasMainText = trim((string)($section['body_text'] ?? '')) !== ''
+        || trim((string)($section['intro_text'] ?? '')) !== ''
+        || trim((string)($section['note_text'] ?? '')) !== ''
+        || trim((string)($section['quote_text'] ?? '')) !== '';
+
+    if (!$hasMainText && empty($section['items']) && story_section_all_media($section) === []) {
+        return 'sparse';
+    }
+
+    return 'complete';
+}
+
+function story_section_effective_type(array $section): string
+{
+    $type = (string)($section['type'] ?? 'text');
+    if ($type === '') $type = 'text';
+
+    $hasItems = !empty($section['items']);
+    $hasMedia = story_section_all_media($section) !== [];
+    $hasCode = trim((string)($section['code_text'] ?? '')) !== '';
+    $hasText = trim((string)($section['body_text'] ?? '')) !== ''
+        || trim((string)($section['intro_text'] ?? '')) !== ''
+        || trim((string)($section['quote_text'] ?? '')) !== ''
+        || trim((string)($section['note_text'] ?? '')) !== '';
+
+    $itemTypes = ['timeline', 'questions', 'compare', 'roles', 'status', 'lesson'];
+    if (in_array($type, $itemTypes, true) && !$hasItems) {
+        if ($hasCode) return 'code';
+        if ($hasMedia && $hasText) return 'split';
+        if ($hasMedia) return 'gallery';
+        return 'text';
+    }
+
+    if ($type === 'gallery' && !$hasMedia) {
+        if ($hasCode) return 'code';
+        return 'text';
+    }
+
+    if ($type === 'video' && !$hasMedia) {
+        if ($hasCode) return 'code';
+        return 'text';
+    }
+
+    if ($type === 'code' && !$hasCode) {
+        if ($hasMedia && $hasText) return 'split';
+        if ($hasMedia) return 'gallery';
+        return 'text';
+    }
+
+    if ($type === 'split' && !$hasMedia) {
+        return 'text';
+    }
+
+    return $type;
+}
+
+function story_section_effective_layout(array $section, string $type): string
+{
+    $layout = (string)($section['layout'] ?? 'default');
+    if ($layout === '') $layout = 'default';
+
+    if (story_section_content_state($section) === 'title-only') return 'compact';
+
+    $hasMedia = story_section_all_media($section) !== [];
+    $title = trim((string)($section['title'] ?? ''));
+    $titleLength = function_exists('mb_strlen') ? mb_strlen($title, 'UTF-8') : strlen($title);
+    $needsSpecialMedia = ['hero-split', 'full-bleed', 'diagonal'];
+
+    if (!$hasMedia && in_array($layout, $needsSpecialMedia, true)) return 'default';
+    if ($titleLength > 76 && in_array($layout, ['hero-split', 'diagonal'], true)) return 'default';
+    if (in_array($type, ['timeline', 'questions', 'compare', 'roles', 'status', 'lesson', 'code'], true)) return 'default';
+
+    return $layout;
+}
+
 function render_story_section(array $section, int $index, int $total = 0, array $context = []): void
 {
-    $type = (string)$section['type'];
-    $layout = (string)$section['layout'];
+    $type = story_section_effective_type($section);
+    $layout = story_section_effective_layout($section, $type);
+    $state = story_section_content_state($section);
     $number = str_pad((string)($index + 1), 2, '0', STR_PAD_LEFT);
     $id = $type === 'questions' ? ' id="teknik"' : '';
     $items = $section['items'] ?? [];
     $primary = story_section_primary_media($section);
     $primaryRendered = false;
 
-    echo '<section class="story-block story-block--' . e($type) . ' story-layout--' . e($layout) . '"' . $id . ' data-reveal>';
+    echo '<section class="story-block story-block--' . e($type) . ' story-layout--' . e($layout) . ' story-content--' . e($state) . '"' . $id . ' data-reveal>';
     echo '<span class="story-block-number" aria-hidden="true">' . e($number) . '</span>';
     render_story_section_identity($section, $index, $total, $context);
+
+    if ($state === 'title-only') {
+        echo '<div class="story-block-copy story-block-copy--compact"><p class="eyebrow">' . e((string)($section['label'] ?? '')) . '</p><h2>' . e((string)($section['title'] ?? 'Başlıksız bölüm')) . '</h2></div>';
+        echo '</section>';
+        return;
+    }
 
     switch ($type) {
         case 'opening':
@@ -239,7 +353,11 @@ function render_story_section(array $section, int $index, int $total = 0, array 
             break;
 
         case 'code':
-            echo '<div class="story-block-copy"><p class="eyebrow">' . e($section['label']) . '</p><h2>' . e($section['title']) . '</h2><p>' . e($section['note_text']) . '</p></div><pre class="code-window"><code>' . e($section['code_text']) . '</code></pre>';
+            echo '<div class="story-block-copy"><p class="eyebrow">' . e($section['label']) . '</p><h2>' . e($section['title']) . '</h2>';
+            render_paragraphs_text((string)($section['body_text'] ?? ''));
+            if (($section['quote_text'] ?? '') !== '') echo '<blockquote>' . e($section['quote_text']) . '</blockquote>';
+            if (($section['note_text'] ?? '') !== '') render_paragraphs_text((string)$section['note_text']);
+            echo '</div><pre class="code-window"><code>' . e($section['code_text']) . '</code></pre>';
             break;
 
         case 'gallery':
