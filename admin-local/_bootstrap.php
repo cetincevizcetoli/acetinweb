@@ -276,8 +276,8 @@ function admin_restore_story_to_atelier(int $projectId,int $storyId): array
             $decision=admin_text_excerpt((string)($section['quote_text'] ?: $section['note_text'] ?: $summary),260);
             $maxSort+=10;
 
-            $st=db()->prepare("INSERT INTO updates(project_id,slug,work_date,display_label,title,summary,tried,failed,decision,next_step,phase,is_milestone,status,visibility,show_in_recent,sort_order,published_at)
-              VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP)");
+            $st=db()->prepare("INSERT INTO updates(project_id,slug,work_date,display_label,title,summary,entry_kind,tried,failed,decision,next_step,phase,is_milestone,status,visibility,show_in_recent,sort_order,published_at)
+              VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP)");
             $st->execute([
                 $projectId,
                 $slug,
@@ -285,6 +285,7 @@ function admin_restore_story_to_atelier(int $projectId,int $storyId): array
                 $display,
                 $title,
                 $summary,
+                'decision',
                 admin_text_excerpt((string)($section['intro_text'] ?: $section['body_text']),320),
                 admin_text_excerpt((string)($section['note_text'] ?? ''),260),
                 $decision,

@@ -1,0 +1,33 @@
+/* Stories index layer: hikaye listesi ve filtre sayfasi icin sayfa ozel kurallar. */
+.stories-page .stories-hero-v6 h1 {
+  max-width: 11ch;
+  font-size: clamp(3rem, 6vw, 6rem);
+  line-height: .96;
+  letter-spacing: 0;
+}
+
+.stories-page .stories-hero-v6 p {
+  max-width: 62ch;
+}
+
+.stories-page .story-filter-bar {
+  align-items: end;
+}
+
+.stories-page .story-card h2 {
+  font-size: clamp(2rem, 3.1vw, 3.25rem);
+  line-height: 1.03;
+  letter-spacing: 0;
+}
+
+.stories-page .story-card p {
+  max-width: 58ch;
+}
+
+@media (max-width: 900px) {
+  .stories-page .stories-hero-v6 h1,
+  .stories-page .story-card h2 {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+}

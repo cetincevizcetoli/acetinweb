@@ -1,0 +1,73 @@
+/* Story page layer: public hikaye okumasi icin sayfa ozel tipografi ve akiskanlik. */
+.story-page {
+  --story-title-size: clamp(3rem, 5.2vw, 5.8rem);
+  --story-section-title-size: clamp(2rem, 3.05vw, 3.55rem);
+  --story-copy-width: 65ch;
+}
+
+.story-page .story-hero-v6-copy h1 {
+  max-width: 12.5ch;
+  font-size: var(--story-title-size);
+  line-height: .96;
+  letter-spacing: 0;
+}
+
+.story-page .story-hero-v6-copy p,
+.story-page .story-block-copy p,
+.story-page .story-block-heading p,
+.story-page .story-text,
+.story-page .story-note,
+.story-page .story-quote {
+  max-width: var(--story-copy-width);
+}
+
+.story-page .story-block-copy h2,
+.story-page .story-block-heading h2 {
+  max-width: 13.5ch;
+  font-size: var(--story-section-title-size);
+  line-height: 1.06;
+  letter-spacing: 0;
+}
+
+.story-page .story-block[data-content-state="title-only"] {
+  min-height: auto;
+  padding-block: clamp(44px, 7vw, 92px);
+}
+
+.story-page .story-block[data-content-state="title-only"] .story-block-copy h2,
+.story-page .story-block[data-content-state="sparse"] .story-block-copy h2 {
+  font-size: clamp(1.9rem, 2.7vw, 3.1rem);
+}
+
+.story-page .story-code pre,
+.story-page pre.story-code {
+  max-width: min(100%, 920px);
+  overflow-x: auto;
+}
+
+.admin-section-preview-page {
+  min-height: 100vh;
+  background: var(--paper);
+}
+
+.admin-section-preview-shell {
+  padding-block: 0;
+}
+
+.admin-section-preview-shell .story-block {
+  min-height: auto;
+}
+
+@media (max-width: 760px) {
+  .story-page {
+    --story-title-size: clamp(2.4rem, 15vw, 4.2rem);
+    --story-section-title-size: clamp(2rem, 10vw, 3.2rem);
+  }
+
+  .story-page .story-hero-v6-copy h1,
+  .story-page .story-block-copy h2,
+  .story-page .story-block-heading h2 {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+}

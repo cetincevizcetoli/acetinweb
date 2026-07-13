@@ -1,0 +1,34 @@
+/* Home page layer: ana sayfa icin style.css uzerine binen sayfa ozel kurallar. */
+.home-page .manifesto-copy h2 {
+  max-width: 13ch;
+  font-size: clamp(2.35rem, 4vw, 3.9rem);
+  line-height: 1.02;
+  letter-spacing: 0;
+}
+
+.home-page .journal-heading h2,
+.home-page .home-ending h2 {
+  max-width: 14ch;
+  font-size: clamp(2.25rem, 4vw, 4rem);
+  line-height: 1.04;
+  letter-spacing: 0;
+}
+
+.home-page .focus-copy h3,
+.home-page .trace-card h3 {
+  letter-spacing: 0;
+}
+
+.home-page .focus-card,
+.home-page .trace-card {
+  min-height: auto;
+}
+
+@media (max-width: 760px) {
+  .home-page .manifesto-copy h2,
+  .home-page .journal-heading h2,
+  .home-page .home-ending h2 {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+}

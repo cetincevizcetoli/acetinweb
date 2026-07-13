@@ -10,7 +10,7 @@ $st->execute([$projectId]);
 $project = $st->fetch();
 if (!$project) {
     http_response_code(404);
-    exit('Proje bulunamadi.');
+    exit('Proje bulunamadı.');
 }
 
 $error = '';
@@ -19,7 +19,19 @@ if (is_post()) {
     try {
         db()->beginTransaction();
         $title = trim(old('title'));
-        if ($title === '') throw new RuntimeException('Baslik gerekli.');
+        if ($title === '') throw new RuntimeException('Başlık gerekli.');
+
+        $entryKind = (string)($_POST['entry_kind'] ?? 'journal');
+        if (!atelier_entry_kind_is_valid($entryKind)) {
+            $entryKind = 'journal';
+        }
+        $storyRole = (string)($_POST['story_role'] ?? 'auto');
+        if (!atelier_story_role_is_valid($storyRole)) $storyRole = 'auto';
+        $storySectionType = (string)($_POST['story_section_type'] ?? 'auto');
+        if (!atelier_story_section_type_is_valid($storySectionType)) $storySectionType = 'auto';
+        $storyLayout = (string)($_POST['story_layout'] ?? 'auto');
+        if (!atelier_story_layout_is_valid($storyLayout)) $storyLayout = 'auto';
+        $storyLabel = trim(old('story_label'));
 
         $slug = unique_update_slug($projectId, old('slug') ?: $title);
         $status = (string)($_POST['status'] ?? 'draft');
@@ -29,8 +41,8 @@ if (is_post()) {
         if ($display === '' && $workDate) $display = date('d.m.Y', strtotime($workDate));
         $sortOrder = trim((string)($_POST['sort_order'] ?? '')) !== '' ? (float)$_POST['sort_order'] : admin_next_update_sort_order($projectId);
 
-        $st = db()->prepare("INSERT INTO updates(project_id,slug,work_date,display_label,title,summary,tried,failed,decision,next_step,phase,is_milestone,status,visibility,show_in_recent,sort_order,published_at)
-          VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        $st = db()->prepare("INSERT INTO updates(project_id,slug,work_date,display_label,title,summary,entry_kind,story_role,story_section_type,story_layout,story_label,tried,failed,decision,next_step,phase,is_milestone,status,visibility,show_in_recent,sort_order,published_at)
+          VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
         $st->execute([
             $projectId,
             $slug,
@@ -38,6 +50,11 @@ if (is_post()) {
             $display,
             $title,
             trim(old('summary')),
+            $entryKind,
+            $storyRole,
+            $storySectionType,
+            $storyLayout,
+            $storyLabel,
             trim(old('tried')),
             trim(old('failed')),
             trim(old('decision')),
@@ -60,7 +77,7 @@ if (is_post()) {
 
         db()->commit();
         admin_audit('create', 'update', $id, $title);
-        flash('success', 'Atolye kaydi eklendi.');
+        flash('success', 'Atölye kaydı eklendi.');
         redirect('update-edit.php?id=' . $id);
     } catch (Throwable $e) {
         if (db()->inTransaction()) db()->rollBack();
@@ -68,14 +85,14 @@ if (is_post()) {
     }
 }
 
-admin_head('Yeni Atolye kaydi');
+admin_head('Yeni Atölye kaydı');
 $newUpdateDefaults = ['sort_order' => admin_next_update_sort_order($projectId)];
 ?>
 <div class="page-head">
     <div>
         <p class="eyebrow"><?= e($project['title']) ?></p>
-        <h1>Yeni calisma kaydi</h1>
-        <p>Bugun girmek zorunda degilsin. Yalnizca kaybetmek istemedigin bir karar veya deneme oldugunda ekle.</p>
+        <h1>Yeni çalışma kaydı</h1>
+        <p>Bugün girmek zorunda değilsin. Yalnızca kaybetmek istemediğin bir karar veya deneme olduğunda ekle.</p>
     </div>
 </div>
 <?php if ($error): ?><div class="flash flash-error"><?= e($error) ?></div><?php endif; ?>
@@ -83,6 +100,6 @@ $newUpdateDefaults = ['sort_order' => admin_next_update_sort_order($projectId)];
     <input type="hidden" name="project_id" value="<?= $projectId ?>">
     <?= csrf_field() ?>
     <?php render_update_form($project, $newUpdateDefaults); ?>
-    <div class="form-actions"><button class="accent" type="submit">Kaydi olustur</button><a class="button secondary" href="project-edit.php?id=<?= $projectId ?>">Vazgec</a></div>
+    <div class="form-actions"><button class="accent" type="submit">Kaydı oluştur</button><a class="button secondary" href="project-edit.php?id=<?= $projectId ?>">Vazgeç</a></div>
 </form>
 <?php admin_foot(); ?>

@@ -45,6 +45,31 @@ body.atelier-page {
   color: var(--rust-dark);
 }
 
+.atelier-page .atelier-story-seed {
+  margin: 18px 0 20px;
+  padding: 14px 16px;
+  border-left: 3px solid var(--rust);
+  background: rgba(255, 255, 255, .32);
+}
+
+.atelier-page .atelier-story-seed span {
+  display: block;
+  margin-bottom: 6px;
+  font-family: var(--mono);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--rust-dark);
+}
+
+.atelier-page .atelier-story-seed p {
+  margin: 0;
+  color: #5f554b;
+  font-size: .92rem;
+  line-height: 1.6;
+}
+
 .atelier-page .atelier-stage-media,
 .atelier-page .atelier-entry-media figure,
 .atelier-page .atelier-media-grid figure {

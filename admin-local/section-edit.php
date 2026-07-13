@@ -342,6 +342,22 @@ admin_head($id ? 'Bölümü düzenle' : 'Yeni bölüm');
                         <p>Bu alan canlı önizleme değil, seçim rehberidir. Gerçek sonucu görmek için üstteki Önizle bağlantısını kullan.</p>
                     </div>
                 </div>
+                <div class="section-live-preview full">
+                    <div class="section-live-preview-head">
+                        <div>
+                            <span>Canlı bölüm önizlemesi</span>
+                            <strong><?= $id ? 'Kaydedilmiş bölümün public görünümü' : 'Önizleme için önce kaydet' ?></strong>
+                        </div>
+                        <?php if ($id): ?>
+                            <a class="button secondary" href="section-preview.php?id=<?= $id ?>" target="_blank" rel="noopener">Yeni sekmede aç</a>
+                        <?php endif; ?>
+                    </div>
+                    <?php if ($id): ?>
+                        <iframe title="Bölüm önizleme" src="section-preview.php?id=<?= $id ?>"></iframe>
+                    <?php else: ?>
+                        <p class="help">Yeni bölüm henüz veritabanına yazılmadığı için gerçek public önizleme oluşturulamıyor. Bölümü kaydettikten sonra burada görünür.</p>
+                    <?php endif; ?>
+                </div>
             </div>
         </section>
 
