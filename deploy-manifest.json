@@ -1,11 +1,11 @@
 {
     "site": "fikrimvar",
     "schema": 2,
-    "generated_at": "2026-07-11T13:34:18+02:00",
+    "generated_at": "2026-07-14T11:56:06+02:00",
     "version": "7.0.0",
     "code_commit": "",
-    "release_hash": "a52e52bab26bc7ae0a403051c3772ef7e32fef8c8e605cf970627f6def0eb321",
-    "public_assets_hash": "0a7b2bccd7d96045e56cdd1e046ee82c85b14cfc9bdee591cbe2cd1c0a92f3a6",
-    "code_file_count": 58,
-    "upload_file_count": 26
+    "release_hash": "03e85c98dfbbfed69ca8a2288c6c0118bab727db8cf4c40dcd656ec5435eb89c",
+    "public_assets_hash": "e2225f03ad39c900f3c7989d9927ee10f688d13ec76b1a2d4a06024c3c757b02",
+    "code_file_count": 66,
+    "upload_file_count": 34
 }
