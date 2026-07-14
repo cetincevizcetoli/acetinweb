@@ -115,6 +115,33 @@
   });
   if (new URLSearchParams(window.location.search).has('note')) openNotes();
 
+  const storyNotes = Array.from(document.querySelectorAll('[data-story-note]'));
+  if (storyNotes.length) {
+    const closeStoryNote = (note) => {
+      if (note instanceof HTMLDetailsElement) note.open = false;
+    };
+    const closeAllStoryNotes = () => storyNotes.forEach(closeStoryNote);
+    const syncStoryNoteState = () => {
+      document.body.classList.toggle('story-note-open', storyNotes.some((note) => note.open));
+    };
+    storyNotes.forEach((note) => {
+      note.addEventListener('toggle', () => {
+        if (note.open) {
+          storyNotes.forEach((candidate) => {
+            if (candidate !== note) closeStoryNote(candidate);
+          });
+        }
+        syncStoryNoteState();
+      });
+      note.querySelectorAll('[data-story-note-close]').forEach((button) => {
+        button.addEventListener('click', () => closeStoryNote(note));
+      });
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeAllStoryNotes();
+    });
+  }
+
   const atelierWidget = document.querySelector('[data-atelier-widget]');
   const atelierWidgetOverlay = document.querySelector('[data-atelier-widget-overlay]');
   const atelierWidgetOpeners = document.querySelectorAll('[data-atelier-widget-open]');
