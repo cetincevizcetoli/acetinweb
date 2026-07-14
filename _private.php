@@ -5,11 +5,11 @@ function fv7_private_roots(): array
 {
     $roots = [
         getenv('FV7_PRIVATE_ROOT') ?: '',
-        __DIR__,
-        __DIR__ . '/../acetinweb_private',
-        __DIR__ . '/../../acetinweb_private',
-        __DIR__ . '/../../../acetinweb_private',
         'C:/xampp/acetinweb_private',
+        __DIR__ . '/../../acetinweb_private',
+        __DIR__ . '/../acetinweb_private',
+        __DIR__ . '/../../../acetinweb_private',
+        __DIR__,
         dirname(__DIR__),
     ];
 

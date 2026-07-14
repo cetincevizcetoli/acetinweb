@@ -102,7 +102,8 @@ function render_story_section_extras(array $section, string $type, bool $primary
         echo '<blockquote class="story-section-quote">' . e((string)$section['quote_text']) . '</blockquote>';
     }
 
-    if ($type !== 'compare' && trim((string)($section['intro_text'] ?? '')) !== '') {
+    $handled_intro = ['opening', 'split', 'text', 'timeline', 'questions', 'roles', 'status', 'lesson', 'gallery', 'video', 'code'];
+    if ($type !== 'compare' && !in_array($type, $handled_intro, true) && trim((string)($section['intro_text'] ?? '')) !== '') {
         echo '<div class="story-section-intro">';
         render_paragraphs_text((string)$section['intro_text']);
         echo '</div>';
@@ -289,6 +290,7 @@ function render_story_section(array $section, int $index, int $total = 0, array 
         case 'opening':
         case 'split':
             echo '<div class="story-block-copy"><p class="eyebrow">' . e($section['label']) . '</p><h2>' . e($section['title']) . '</h2>';
+            if (trim((string)($section['intro_text'] ?? '')) !== '') { echo '<div class="story-section-intro">'; render_paragraphs_text((string)$section['intro_text']); echo '</div>'; }
             render_paragraphs_text((string)$section['body_text']);
             if ($section['quote_text'] !== '') echo '<blockquote>' . e($section['quote_text']) . '</blockquote>';
             echo '</div>';
@@ -299,7 +301,9 @@ function render_story_section(array $section, int $index, int $total = 0, array 
             break;
 
         case 'timeline':
-            echo '<header class="story-block-heading"><p class="eyebrow">' . e($section['label']) . '</p><h2>' . e($section['title']) . '</h2></header>';
+            echo '<header class="story-block-heading"><p class="eyebrow">' . e($section['label']) . '</p><h2>' . e($section['title']) . '</h2>';
+            if (trim((string)($section['intro_text'] ?? '')) !== '') { echo '<div class="story-section-intro">'; render_paragraphs_text((string)$section['intro_text']); echo '</div>'; }
+            echo '</header>';
             if ($primary) {
                 echo '<div class="timeline-map">';
                 render_story_media_item($primary);
@@ -325,13 +329,18 @@ function render_story_section(array $section, int $index, int $total = 0, array 
             break;
 
         case 'questions':
-            echo '<header class="story-block-heading"><p class="eyebrow">' . e($section['label']) . '</p><h2>' . e($section['title']) . '</h2></header><div class="question-stack">';
+            echo '<header class="story-block-heading"><p class="eyebrow">' . e($section['label']) . '</p><h2>' . e($section['title']) . '</h2>';
+            if (trim((string)($section['intro_text'] ?? '')) !== '') { echo '<div class="story-section-intro">'; render_paragraphs_text((string)$section['intro_text']); echo '</div>'; }
+            echo '</header><div class="question-stack">';
             foreach (array_values($items) as $i => $it) echo '<details' . ($i === 0 ? ' open' : '') . '><summary><span>' . str_pad((string)($i + 1), 2, '0', STR_PAD_LEFT) . '</span>' . e($it['title']) . '</summary><p>' . e($it['text']) . '</p></details>';
             echo '</div>';
             break;
 
         case 'roles':
-            echo '<header class="story-block-heading"><p class="eyebrow">' . e($section['label']) . '</p><h2>' . e($section['title']) . '</h2><p>' . e($section['note_text']) . '</p></header><div class="role-cross">';
+            echo '<header class="story-block-heading"><p class="eyebrow">' . e($section['label']) . '</p><h2>' . e($section['title']) . '</h2>';
+            if (trim((string)($section['intro_text'] ?? '')) !== '') { echo '<div class="story-section-intro">'; render_paragraphs_text((string)$section['intro_text']); echo '</div>'; }
+            if (trim((string)($section['note_text'] ?? '')) !== '') echo '<p>' . e($section['note_text']) . '</p>';
+            echo '</header><div class="role-cross">';
             foreach (['ai' => 'YAPAY ZEKÂ', 'human' => 'AHMET'] as $g => $title) {
                 echo '<div><small>' . $title . '</small>';
                 foreach ($items as $it) if ($it['group_key'] === $g) echo '<p>' . e($it['text']) . '</p>';
@@ -341,19 +350,24 @@ function render_story_section(array $section, int $index, int $total = 0, array 
             break;
 
         case 'status':
-            echo '<header class="story-block-heading"><p class="eyebrow">' . e($section['label']) . '</p><h2>' . e($section['title']) . '</h2></header><div class="status-orbit">';
+            echo '<header class="story-block-heading"><p class="eyebrow">' . e($section['label']) . '</p><h2>' . e($section['title']) . '</h2>';
+            if (trim((string)($section['intro_text'] ?? '')) !== '') { echo '<div class="story-section-intro">'; render_paragraphs_text((string)$section['intro_text']); echo '</div>'; }
+            echo '</header><div class="status-orbit">';
             foreach ($items as $it) echo '<article><small>' . e($it['state']) . '</small><h3>' . e($it['title']) . '</h3><p>' . e($it['text']) . '</p></article>';
             echo '</div>';
             break;
 
         case 'lesson':
-            echo '<header class="story-block-heading"><p class="eyebrow">' . e($section['label']) . '</p><h2>' . e($section['title']) . '</h2></header><ol class="lesson-list">';
+            echo '<header class="story-block-heading"><p class="eyebrow">' . e($section['label']) . '</p><h2>' . e($section['title']) . '</h2>';
+            if (trim((string)($section['intro_text'] ?? '')) !== '') { echo '<div class="story-section-intro">'; render_paragraphs_text((string)$section['intro_text']); echo '</div>'; }
+            echo '</header><ol class="lesson-list">';
             foreach ($items as $it) echo '<li>' . e($it['text']) . '</li>';
             echo '</ol>';
             break;
 
         case 'code':
             echo '<div class="story-block-copy"><p class="eyebrow">' . e($section['label']) . '</p><h2>' . e($section['title']) . '</h2>';
+            if (trim((string)($section['intro_text'] ?? '')) !== '') { echo '<div class="story-section-intro">'; render_paragraphs_text((string)$section['intro_text']); echo '</div>'; }
             render_paragraphs_text((string)($section['body_text'] ?? ''));
             if (($section['quote_text'] ?? '') !== '') echo '<blockquote>' . e($section['quote_text']) . '</blockquote>';
             if (($section['note_text'] ?? '') !== '') render_paragraphs_text((string)$section['note_text']);
@@ -361,13 +375,16 @@ function render_story_section(array $section, int $index, int $total = 0, array 
             break;
 
         case 'gallery':
-            echo '<header class="story-block-heading"><p class="eyebrow">' . e($section['label']) . '</p><h2>' . e($section['title']) . '</h2></header>';
+            echo '<header class="story-block-heading"><p class="eyebrow">' . e($section['label']) . '</p><h2>' . e($section['title']) . '</h2>';
+            if (trim((string)($section['intro_text'] ?? '')) !== '') { echo '<div class="story-section-intro">'; render_paragraphs_text((string)$section['intro_text']); echo '</div>'; }
+            echo '</header>';
             render_story_media_collection(story_section_all_media($section), 'story-gallery story-gallery--mixed');
             $primaryRendered = true;
             break;
 
         case 'video':
             echo '<div class="story-block-copy"><p class="eyebrow">' . e($section['label']) . '</p><h2>' . e($section['title']) . '</h2>';
+            if (trim((string)($section['intro_text'] ?? '')) !== '') { echo '<div class="story-section-intro">'; render_paragraphs_text((string)$section['intro_text']); echo '</div>'; }
             render_paragraphs_text((string)$section['body_text']);
             echo '</div>';
             render_story_media_collection(story_section_all_media($section), 'story-video-media');
@@ -376,6 +393,7 @@ function render_story_section(array $section, int $index, int $total = 0, array 
 
         default:
             echo '<div class="story-block-copy"><p class="eyebrow">' . e($section['label']) . '</p><h2>' . e($section['title']) . '</h2>';
+            if (trim((string)($section['intro_text'] ?? '')) !== '') { echo '<div class="story-section-intro">'; render_paragraphs_text((string)$section['intro_text']); echo '</div>'; }
             render_paragraphs_text((string)$section['body_text']);
             if ($section['quote_text'] !== '') echo '<blockquote>' . e($section['quote_text']) . '</blockquote>';
             echo '</div>';
