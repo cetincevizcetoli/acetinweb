@@ -266,6 +266,18 @@ CREATE TABLE updates (
   FOREIGN KEY(project_id) REFERENCES projects(id) ON DELETE CASCADE
 );
 
+CREATE TABLE update_blocks (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  update_id INTEGER NOT NULL,
+  block_type TEXT NOT NULL,
+  title TEXT NOT NULL DEFAULT '',
+  body TEXT NOT NULL DEFAULT '',
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(update_id) REFERENCES updates(id) ON DELETE CASCADE
+);
+
 CREATE INDEX idx_links_owner ON links(owner_type, owner_id, sort_order);
 
 CREATE INDEX idx_projects_public ON projects(visibility, deleted_at, show_in_archive, sort_order);
@@ -283,6 +295,8 @@ CREATE INDEX idx_stories_public ON stories(status, visibility, deleted_at, show_
 CREATE INDEX idx_updates_project ON updates(project_id, status, deleted_at, work_date, sort_order);
 
 CREATE INDEX idx_updates_recent ON updates(show_in_recent, status, visibility, deleted_at, work_date);
+
+CREATE INDEX idx_update_blocks_update ON update_blocks(update_id, sort_order, id);
 
 CREATE UNIQUE INDEX ux_story_section_media ON story_section_media(section_id,media_id);
 

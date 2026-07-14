@@ -240,14 +240,181 @@
     const day = atelierConsole.querySelector('[data-atelier-day]');
     const title = atelierConsole.querySelector('[data-atelier-title]');
     const summary = atelierConsole.querySelector('[data-atelier-summary]');
-    const tried = atelierConsole.querySelector('[data-atelier-tried]');
-    const failed = atelierConsole.querySelector('[data-atelier-failed]');
-    const decision = atelierConsole.querySelector('[data-atelier-decision]');
-    const next = atelierConsole.querySelector('[data-atelier-next]');
+    const seedLabel = atelierConsole.querySelector('[data-atelier-seed-label]');
+    const seedText = atelierConsole.querySelector('[data-atelier-seed-text]');
+    const artifactsRoot = atelierConsole.querySelector('[data-atelier-artifacts]');
+    const galleryRoot = atelierConsole.querySelector('[data-atelier-gallery]');
+    const linksRoot = atelierConsole.querySelector('[data-atelier-links]');
     const socialLinks = Array.from(atelierConsole.querySelectorAll('[data-social-field]'));
     const entries = Array.from(document.querySelectorAll('[data-atelier-entry]'));
 
     const setText = (node, value) => { if (node) node.textContent = value || ''; };
+    const isCodeArtifact = (artifact) => {
+      const type = artifact.type || '';
+      const body = artifact.body || '';
+      return ['prompt', 'code', 'output', 'log', 'error'].includes(type)
+        || /(<[a-z][\s\S]*>|```|\$ |PS |PROMPT:|SQLSTATE|Fatal error|SELECT |UPDATE |INSERT |function |class )/i.test(body);
+    };
+    const renderArtifacts = (entry) => {
+      if (!artifactsRoot) return;
+      let artifacts = [];
+      try { artifacts = JSON.parse(entry.dataset.artifacts || '[]'); } catch (_) { artifacts = []; }
+      const wrap = document.createElement('div');
+      wrap.className = 'atelier-artifacts atelier-artifacts--stage';
+      artifacts.forEach((artifact) => {
+        if (!artifact || !artifact.body) return;
+        const type = String(artifact.type || 'note').replace(/[^a-z0-9_-]/gi, '') || 'note';
+        const article = document.createElement('article');
+        article.className = `atelier-artifact atelier-artifact--${type}`;
+        const label = document.createElement('span');
+        label.textContent = artifact.label || '';
+        const heading = document.createElement('h4');
+        heading.textContent = artifact.title || artifact.label || '';
+        article.append(label, heading);
+        if (isCodeArtifact(artifact)) {
+          const pre = document.createElement('pre');
+          const code = document.createElement('code');
+          code.textContent = artifact.body || '';
+          pre.append(code);
+          article.append(pre);
+        } else {
+          const body = document.createElement('p');
+          body.textContent = artifact.body || '';
+          article.append(body);
+        }
+        wrap.append(article);
+      });
+      artifactsRoot.replaceChildren(wrap);
+    };
+    const renderGallery = (entry) => {
+      if (!galleryRoot) return;
+      let items = [];
+      try { items = JSON.parse(entry.dataset.gallery || '[]'); } catch (_) { items = []; }
+      if (!items.length) {
+        galleryRoot.replaceChildren();
+        return;
+      }
+      const section = document.createElement('div');
+      section.className = 'atelier-evidence-gallery';
+      const label = document.createElement('p');
+      label.className = 'atelier-material-label';
+      label.textContent = 'Medya / görsel kanıt';
+      const grid = document.createElement('div');
+      grid.className = 'atelier-media-grid';
+      items.forEach((item) => {
+        if (!item || !item.url) return;
+        const figure = document.createElement('figure');
+        const type = item.type || 'file';
+        if (type === 'image') {
+          const img = document.createElement('img');
+          img.src = item.url;
+          img.alt = item.alt || '';
+          figure.append(img);
+        } else if (type === 'video') {
+          const video = document.createElement('video');
+          video.controls = true;
+          video.playsInline = true;
+          video.preload = 'metadata';
+          const source = document.createElement('source');
+          source.src = item.url;
+          video.append(source);
+          figure.append(video);
+        } else if (type === 'audio') {
+          const audio = document.createElement('audio');
+          audio.controls = true;
+          audio.preload = 'metadata';
+          const source = document.createElement('source');
+          source.src = item.url;
+          audio.append(source);
+          figure.append(audio);
+        } else {
+          const link = document.createElement('a');
+          link.href = item.url;
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+          link.textContent = item.title || 'Dosyayı aç';
+          figure.append(link);
+        }
+        if (item.caption) {
+          const caption = document.createElement('figcaption');
+          caption.textContent = item.caption;
+          figure.append(caption);
+        }
+        grid.append(figure);
+      });
+      section.append(label, grid);
+      galleryRoot.replaceChildren(section);
+    };
+    const renderLinks = (entry) => {
+      if (!linksRoot) return;
+      let links = [];
+      try { links = JSON.parse(entry.dataset.links || '[]'); } catch (_) { links = []; }
+      if (!links.length) {
+        linksRoot.replaceChildren();
+        return;
+      }
+      const grid = document.createElement('div');
+      grid.className = 'content-link-cards';
+      grid.setAttribute('aria-label', 'İlgili bağlantılar');
+      links.forEach((link) => {
+        if (!link || !link.url) return;
+        const provider = String(link.provider || 'external').replace(/[^a-z0-9-]/gi, '') || 'external';
+        const card = document.createElement('article');
+        card.className = `content-link-card content-link-card--${provider}`;
+        if (link.embedKind === 'iframe' && link.embedUrl) {
+          const player = document.createElement('div');
+          player.className = 'content-link-player';
+          const frame = document.createElement('iframe');
+          frame.src = link.embedUrl;
+          frame.title = link.title || 'Bağlantı';
+          frame.loading = 'lazy';
+          frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+          frame.allowFullscreen = true;
+          player.append(frame);
+          card.append(player);
+        } else if (link.embedKind === 'video' && link.embedUrl) {
+          const player = document.createElement('div');
+          player.className = 'content-link-player';
+          const video = document.createElement('video');
+          video.controls = true;
+          video.playsInline = true;
+          video.preload = 'metadata';
+          const source = document.createElement('source');
+          source.src = link.embedUrl;
+          video.append(source);
+          player.append(video);
+          card.append(player);
+        } else if (link.embedKind === 'audio' && link.embedUrl) {
+          const audioBox = document.createElement('div');
+          audioBox.className = 'content-link-audio';
+          const audio = document.createElement('audio');
+          audio.controls = true;
+          audio.preload = 'metadata';
+          const source = document.createElement('source');
+          source.src = link.embedUrl;
+          audio.append(source);
+          audioBox.append(audio);
+          card.append(audioBox);
+        }
+        const main = document.createElement('a');
+        main.className = 'content-link-card-main';
+        main.href = link.url;
+        main.target = '_blank';
+        main.rel = 'noopener noreferrer';
+        const label = document.createElement('span');
+        label.textContent = link.providerLabel || provider;
+        const titleNode = document.createElement('strong');
+        titleNode.textContent = link.title || 'Bağlantı';
+        const small = document.createElement('small');
+        small.textContent = link.displayUrl || link.url;
+        const action = document.createElement('em');
+        action.textContent = 'Bağlantıyı aç';
+        main.append(label, titleNode, small, action);
+        card.append(main);
+        grid.append(card);
+      });
+      linksRoot.replaceChildren(grid);
+    };
     const activate = (entry) => {
       entries.forEach((candidate) => candidate.classList.toggle('is-active', candidate === entry));
       if (stageFigure) stageFigure.classList.add('is-changing');
@@ -269,10 +436,11 @@
         setText(day, entry.dataset.day);
         setText(title, entry.dataset.title);
         setText(summary, entry.dataset.summary);
-        setText(tried, entry.dataset.tried);
-        setText(failed, entry.dataset.failed);
-        setText(decision, entry.dataset.decision);
-        setText(next, entry.dataset.next);
+        setText(seedLabel, entry.dataset.seedLabel);
+        setText(seedText, entry.dataset.seedText);
+        renderArtifacts(entry);
+        renderGallery(entry);
+        renderLinks(entry);
         socialLinks.forEach((link) => {
           const field = link.dataset.socialField || '';
           const datasetKey = field.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());

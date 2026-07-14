@@ -111,9 +111,7 @@ function render_story_stage_marker(array $part, string $range): void
 $slug = safe_slug((string)($_GET['slug'] ?? ''));
 $project = project_by_slug($slug);
 $story = $project ? story_by_project((int)$project['id']) : null;
-if ($project && $story && VisibilityService::storyDetailReadable($project, $story) && in_array((string)$project['workshop_status'], ['open', 'paused'], true)) {
-    redirect('atolye.php?slug=' . rawurlencode($slug));
-}
+// Redirect was removed. If a user (or admin) can read the story, they should be able to view it.
 if (!$project || !$story || !VisibilityService::storyDetailReadable($project, $story)) {
     http_response_code(404);
 }

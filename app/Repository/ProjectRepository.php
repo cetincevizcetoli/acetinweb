@@ -77,7 +77,8 @@ final class ProjectRepository
         }
 
         $row['project_title'] = $row['title'];
-        if (($row['story_status'] ?? '') === 'published') {
+        $workshopStatus = (string)($row['workshop_status'] ?? 'none');
+        if (($row['story_status'] ?? '') === 'published' && !in_array($workshopStatus, ['open', 'paused'], true)) {
             $row['title'] = $row['story_title'] ?: $row['title'];
             $row['question'] = $row['story_question'] ?: $row['question'];
             $row['summary'] = $row['story_summary'] ?: $row['summary'];

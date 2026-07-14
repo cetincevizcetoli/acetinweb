@@ -69,6 +69,20 @@ if (is_post()) {
         ]);
 
         $id = (int)db()->lastInsertId();
+        $blockSource = [
+            'entry_kind' => $entryKind,
+            'summary' => trim(old('summary')),
+            'tried' => trim(old('tried')),
+            'failed' => trim(old('failed')),
+            'decision' => trim(old('decision')),
+            'next_step' => trim(old('next_step')),
+        ];
+        $blocks = UpdateBlockRepository::normalizeRows($_POST['blocks'] ?? []);
+        if ($blocks === []) {
+            $blocks = atelier_legacy_update_blocks($blockSource);
+        }
+        UpdateBlockRepository::saveForUpdate($id, $blocks);
+
         $existing = assert_project_media_ids($projectId, $_POST['existing_media_ids'] ?? [], 'Mevcut medya');
         $uploaded = save_uploaded_files($projectId, (string)$project['slug']);
         attach_update_media($id, $projectId, array_merge($uploaded, $existing));

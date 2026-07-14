@@ -11,7 +11,7 @@ function showcase_backup_db(): string
     }
     $path = $backupDir . '/fikrimvar-test-atelier-showcase-' . date('Ymd-His') . '.sqlite';
     if (!copy(FV7_DB, $path)) {
-        throw new RuntimeException('Veritabanı yedeği oluşturulamadı: ' . $path);
+        throw new RuntimeException('Veritabani yedegi olusturulamadi: ' . $path);
     }
     return $path;
 }
@@ -20,9 +20,9 @@ function showcase_project(string $slug): array
 {
     $st = db()->prepare('SELECT * FROM projects WHERE slug=?');
     $st->execute([$slug]);
-    $project = $st->fetch();
+    $project = $st->fetch(PDO::FETCH_ASSOC);
     if (!$project) {
-        throw new RuntimeException('Proje bulunamadı: ' . $slug);
+        throw new RuntimeException('Proje bulunamadi: ' . $slug);
     }
     return $project;
 }
@@ -35,14 +35,16 @@ function showcase_category_id(string $slug): ?int
     return $id === false ? null : (int)$id;
 }
 
-function showcase_svg(string $title, string $subtitle, string $accent = '#c45a36'): string
+function showcase_svg(string $title, string $subtitle, string $accent = '#c99b3f'): string
 {
-    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" width="1200" height="720"><rect width="1200" height="720" fill="#17130f"/><path d="M90 580 C230 300 390 650 540 350 S760 130 1110 260" fill="none" stroke="#6a8f67" stroke-width="5" opacity=".55"/><path d="M90 120 H1110 M90 600 H1110 M180 80 V640 M1020 80 V640" stroke="#40362b" stroke-width="2" opacity=".55"/><circle cx="260" cy="230" r="68" fill="none" stroke="#c99b3f" stroke-width="4" opacity=".6"/><circle cx="900" cy="470" r="105" fill="none" stroke="#c99b3f" stroke-width="4" opacity=".35"/><rect x="92" y="92" width="260" height="42" fill="' . $accent . '"/><text x="120" y="120" font-family="IBM Plex Mono, monospace" font-size="22" fill="#17130f">ATÖLYE / VİTRİN</text><text x="120" y="405" font-family="Georgia, serif" font-size="76" font-weight="700" fill="#f6efe3">' . htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '</text><text x="124" y="462" font-family="IBM Plex Mono, monospace" font-size="22" fill="#b7c6a9">' . htmlspecialchars($subtitle, ENT_QUOTES, 'UTF-8') . '</text></svg>';
+    $title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
+    $subtitle = htmlspecialchars($subtitle, ENT_QUOTES, 'UTF-8');
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" width="1200" height="720"><rect width="1200" height="720" fill="#17130f"/><path d="M92 560 H1110 M92 468 H1110 M92 376 H1110 M92 284 H1110 M92 192 H1110" stroke="#40362b" stroke-width="2" opacity=".65"/><path d="M230 120 V620 M520 120 V620 M810 120 V620" stroke="#40362b" stroke-width="2" opacity=".65"/><rect x="112" y="210" width="260" height="120" rx="10" fill="#efe5d4"/><rect x="465" y="330" width="260" height="120" rx="10" fill="#efe5d4"/><rect x="815" y="250" width="260" height="120" rx="10" fill="#efe5d4"/><path d="M373 270 H452 M728 390 H802" stroke="' . $accent . '" stroke-width="8"/><rect x="92" y="92" width="300" height="42" fill="' . $accent . '"/><text x="120" y="120" font-family="IBM Plex Mono, monospace" font-size="22" fill="#17130f">ATOLYE / SAHA NOTU</text><text x="120" y="520" font-family="Georgia, serif" font-size="72" font-weight="700" fill="#f6efe3">' . $title . '</text><text x="124" y="578" font-family="IBM Plex Mono, monospace" font-size="22" fill="#b7c6a9">' . $subtitle . '</text></svg>';
 }
 
 function showcase_map_svg(): string
 {
-    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" width="1200" height="720"><rect width="1200" height="720" fill="#efe5d4"/><g font-family="IBM Plex Mono, monospace" font-size="22" fill="#231b16"><text x="80" y="92">01 HAM KAYIT</text><text x="430" y="92">02 KAYIT TÜRÜ</text><text x="790" y="92">03 HİKÂYE BÖLÜMÜ</text></g><g fill="#17130f"><rect x="70" y="150" width="270" height="130" rx="8"/><rect x="425" y="150" width="270" height="130" rx="8"/><rect x="780" y="150" width="330" height="130" rx="8"/></g><g font-family="Georgia, serif" font-size="33" fill="#f6efe3"><text x="104" y="224">Deneme</text><text x="470" y="224">Sorun / Karar</text><text x="830" y="224">Sahne / Ders</text></g><path d="M350 215 H410 M705 215 H765" stroke="#c45a36" stroke-width="6"/><g font-family="Inter, sans-serif" font-size="24" fill="#5c5147"><text x="90" y="390">Bu demo özellikle her kayıt türünün farklı işe yaradığını gösterir.</text><text x="90" y="445">Günlük not bağlam verir; sorun gerilim kurar; karar yön değiştirir.</text><text x="90" y="500">Medya kanıt olur; kaynak dış referans olur; builder bunları bölümlere çevirir.</text></g></svg>';
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" width="1200" height="720"><rect width="1200" height="720" fill="#efe5d4"/><g font-family="IBM Plex Mono, monospace" font-size="22" fill="#231b16"><text x="80" y="92">SIPARIS</text><text x="430" y="92">URETIMDE</text><text x="800" y="92">TESLIM</text></g><g fill="#17130f"><rect x="70" y="150" width="280" height="130" rx="8"/><rect x="420" y="150" width="280" height="130" rx="8"/><rect x="790" y="150" width="280" height="130" rx="8"/></g><g font-family="Georgia, serif" font-size="31" fill="#f6efe3"><text x="104" y="224">Bekleyen</text><text x="458" y="224">Atolyede</text><text x="830" y="224">Biten</text></g><path d="M360 215 H410 M710 215 H780" stroke="#c45a36" stroke-width="6"/><g font-family="Inter, sans-serif" font-size="24" fill="#5c5147"><text x="90" y="390">Ilk taslakta rapor yok. Sadece is kartinin nerede durdugu gorunuyor.</text><text x="90" y="445">Usta telefonda cevap vermek yerine karti bir sutundan digerine surukleyecek.</text><text x="90" y="500">Hikayede bu gorsel, karar aninin kaniti olarak kullanilacak.</text></g></svg>';
 }
 
 function showcase_media(int $projectId, string $projectSlug, string $fileName, string $title, string $alt, string $svg): int
@@ -79,10 +81,26 @@ function showcase_update(int $projectId, array $data): int
     $st->execute([$projectId, $data['slug']]);
     $id = $st->fetchColumn();
     $values = [
-        $data['work_date'], $data['display_label'], $data['title'], $data['summary'], $data['entry_kind'],
-        $data['story_role'] ?? 'auto', $data['story_section_type'] ?? 'auto', $data['story_layout'] ?? 'auto', $data['story_label'] ?? '',
-        $data['tried'], $data['failed'], $data['decision'], $data['next_step'], $data['phase'],
-        $data['is_milestone'], 'published', 'public', $data['show_in_recent'], $data['sort_order'], now_sql(),
+        $data['work_date'],
+        $data['display_label'],
+        $data['title'],
+        $data['summary'],
+        $data['entry_kind'],
+        $data['story_role'],
+        $data['story_section_type'],
+        $data['story_layout'],
+        $data['story_label'],
+        $data['tried'],
+        $data['failed'],
+        $data['decision'],
+        $data['next_step'],
+        $data['phase'],
+        $data['is_milestone'],
+        'published',
+        'public',
+        $data['show_in_recent'],
+        $data['sort_order'],
+        now_sql(),
     ];
     if ($id !== false) {
         db()->prepare(
@@ -90,6 +108,7 @@ function showcase_update(int $projectId, array $data): int
         )->execute([...$values, (int)$id]);
         return (int)$id;
     }
+
     db()->prepare(
         'INSERT INTO updates(project_id,slug,work_date,display_label,title,summary,entry_kind,story_role,story_section_type,story_layout,story_label,tried,failed,decision,next_step,phase,is_milestone,status,visibility,show_in_recent,sort_order,published_at)
          VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
@@ -101,6 +120,11 @@ function showcase_attach(int $updateId, int $mediaId): void
 {
     db()->prepare('INSERT OR IGNORE INTO update_media(update_id,media_id,role,sort_order) VALUES (?,?,"gallery",10)')
         ->execute([$updateId, $mediaId]);
+}
+
+function showcase_blocks(int $updateId, array $blocks): void
+{
+    UpdateBlockRepository::saveForUpdate($updateId, $blocks);
 }
 
 function showcase_link(string $ownerType, int $ownerId, string $type, string $title, string $url, int $sortOrder): void
@@ -122,10 +146,10 @@ function showcase_story(int $projectId): int
     $st->execute([$projectId]);
     $id = $st->fetchColumn();
     $values = [
-        'Bir test projesi nasıl gerçek kullanım rehberine dönüşür?',
-        'Atölye kayıtlarını yalnızca günlük gibi değil, hikâyeyi kuran ham malzeme gibi kullanabilir miyim?',
-        'Bu hikâye, Atölye kayıt türlerinin bir anlatıya nasıl dönüştüğünü gösteren uygulamalı demo olarak hazırlandı.',
-        '5-6 dk',
+        'Bir ustanın telefon trafiği nasıl küçük bir üretim panosuna dönüştü?',
+        'Üç kişilik bir imalathanede işin nerede takıldığını görmek için gerçekten büyük bir sisteme ihtiyaç var mı?',
+        'Bu hikâye, küçük bir üretim atölyesinde defter, telefon ve Excel arasında kaybolan siparişleri görünür kılma denemesinden doğdu.',
+        '4-5 dk',
     ];
     if ($id !== false) {
         db()->prepare('UPDATE stories SET title=?,question=?,summary=?,reading_time=?,status="published",visibility="public",show_on_home=0,show_in_archive=0,published_at=COALESCE(published_at,CURRENT_TIMESTAMP),updated_at=CURRENT_TIMESTAMP,deleted_at=NULL WHERE id=?')
@@ -144,10 +168,20 @@ function showcase_section(int $storyId, array $data): int
         'INSERT INTO story_sections(story_id,source_update_id,type,layout,section_kind,label,title,body_text,quote_text,intro_text,note_text,code_text,media_id,sort_order)
          VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
     )->execute([
-        $storyId, $data['source_update_id'] ?? null, $data['type'], $data['layout'] ?? 'default',
-        $data['section_kind'] ?? '', $data['label'] ?? '', $data['title'] ?? '', $data['body_text'] ?? '',
-        $data['quote_text'] ?? '', $data['intro_text'] ?? '', $data['note_text'] ?? '', $data['code_text'] ?? '',
-        $data['media_id'] ?? null, $data['sort_order'],
+        $storyId,
+        $data['source_update_id'] ?? null,
+        $data['type'],
+        $data['layout'] ?? 'default',
+        $data['section_kind'] ?? '',
+        $data['label'] ?? '',
+        $data['title'] ?? '',
+        $data['body_text'] ?? '',
+        $data['quote_text'] ?? '',
+        $data['intro_text'] ?? '',
+        $data['note_text'] ?? '',
+        $data['code_text'] ?? '',
+        $data['media_id'] ?? null,
+        $data['sort_order'],
     ]);
     return (int)db()->lastInsertId();
 }
@@ -158,11 +192,37 @@ function showcase_item(int $sectionId, array $data): void
         'INSERT INTO story_section_items(section_id,group_key,item_type,step,title,subtitle,text,state,value,media_id,source_update_id,url,sort_order)
          VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)'
     )->execute([
-        $sectionId, $data['group_key'] ?? '', $data['item_type'] ?? 'item', $data['step'] ?? '',
-        $data['title'] ?? '', $data['subtitle'] ?? '', $data['text'] ?? '', $data['state'] ?? '',
-        $data['value'] ?? '', $data['media_id'] ?? null, $data['source_update_id'] ?? null,
-        $data['url'] ?? '', $data['sort_order'] ?? 0,
+        $sectionId,
+        $data['group_key'] ?? '',
+        $data['item_type'] ?? 'item',
+        $data['step'] ?? '',
+        $data['title'] ?? '',
+        $data['subtitle'] ?? '',
+        $data['text'] ?? '',
+        $data['state'] ?? '',
+        $data['value'] ?? '',
+        $data['media_id'] ?? null,
+        $data['source_update_id'] ?? null,
+        $data['url'] ?? '',
+        $data['sort_order'] ?? 0,
     ]);
+}
+
+function showcase_cleanup_old_meta_updates(int $projectId): void
+{
+    $keep = [
+        'saha-gorunumu',
+        'excel-denemesi',
+        'telefon-sorunu',
+        'uc-sutun-karari',
+        'pano-taslagi',
+        'usta-geri-bildirimi',
+        'rapor-degil-akis',
+        'hikaye-cekirdegi',
+    ];
+    $placeholders = implode(',', array_fill(0, count($keep), '?'));
+    db()->prepare("UPDATE updates SET deleted_at=CURRENT_TIMESTAMP, updated_at=CURRENT_TIMESTAMP WHERE project_id=? AND slug NOT IN ($placeholders)")
+        ->execute([$projectId, ...$keep]);
 }
 
 $backup = showcase_backup_db();
@@ -171,298 +231,278 @@ db()->beginTransaction();
 try {
     $project = showcase_project('test-atolye');
     $projectId = (int)$project['id'];
-    $categoryId = showcase_category_id('yz-yontem') ?? showcase_category_id('kod-sistem');
+    $categoryId = showcase_category_id('kod-sistem') ?? showcase_category_id('yz-yontem');
 
     db()->prepare(
-        "UPDATE projects SET title=?,question=?,summary=?,category_id=?,status='rehber',status_label='Atölye vitrini',type_label='Demo / rehber',visibility='public',workshop_status='open',workshop_question=?,show_on_home=0,show_in_archive=0,show_in_widget=1,home_section='none',sort_order=35,updated_at=CURRENT_TIMESTAMP,deleted_at=NULL WHERE id=?"
+        "UPDATE projects SET title=?,question=?,summary=?,category_id=?,status='working',status_label='Atölyede',type_label='Sanal üretim projesi',visibility='public',workshop_status='open',workshop_question=?,show_on_home=0,show_in_archive=0,show_in_widget=1,home_section='none',sort_order=35,updated_at=CURRENT_TIMESTAMP,deleted_at=NULL WHERE id=?"
     )->execute([
-        'İlk Test Projemiz',
-        'Bir Atölye kaydı hangi anda hikâyeye dönüşmeye başlar?',
-        'Bu proje artık basit test değil; Atölye kayıt türlerini, medya/kaynak kullanımını ve hikâye dönüşümünü gösteren canlı demo.',
+        'Mini Üretim Takip Sistemi',
+        'Üç kişilik üretimde işin nerede takıldığını nasıl görebiliriz?',
+        'Defter, telefon ve Excel arasında kaybolan küçük siparişleri tek ekranda izleme denemesi.',
         $categoryId,
-        'Atölye kayıt türlerini gerçek bir üretim masası gibi kullanmak ve hikâyeye nasıl beslendiğini göstermek.',
+        'Küçük imalathanede sipariş, üretim ve teslim akışını sade bir pano ile görünür yapmak.',
         $projectId,
     ]);
 
-    $coverId = showcase_media($projectId, 'test-atolye', 'showcase-cover.svg', 'Atölye vitrin kapağı', 'Atölye kayıtlarının hikâyeye dönüşümünü gösteren koyu kapak görseli.', showcase_svg('Atölye Vitrini', 'KAYIT TÜRÜ → HİKÂYE BİÇİMİ'));
-    $mapId = showcase_media($projectId, 'test-atolye', 'showcase-map.svg', 'Atölye hikâye haritası', 'Ham kayıt, kayıt türü ve hikâye bölümü arasındaki ilişkiyi gösteren şema.', showcase_map_svg());
+    $coverId = showcase_media(
+        $projectId,
+        'test-atolye',
+        'showcase-cover.svg',
+        'Mini üretim takip kapağı',
+        'Küçük üretim takibi için bekleyen, üretimde ve teslim sütunlarını gösteren kapak görseli.',
+        showcase_svg('Mini Üretim Takip', 'SIPARIS -> URETIM -> TESLIM')
+    );
+    $mapId = showcase_media(
+        $projectId,
+        'test-atolye',
+        'showcase-map.svg',
+        'Üretim panosu taslağı',
+        'Sipariş, üretimde ve teslim sütunlarından oluşan sade üretim panosu şeması.',
+        showcase_map_svg()
+    );
     db()->prepare('UPDATE projects SET cover_media_id=? WHERE id=?')->execute([$coverId, $projectId]);
 
     $updates = [];
-    $updates['legacy-opening'] = showcase_update($projectId, [
-        'slug' => 'atolyetest',
+    $updates['saha'] = showcase_update($projectId, [
+        'slug' => 'saha-gorunumu',
         'work_date' => '2026-07-12',
-        'display_label' => 'Gün 00',
-        'title' => 'Başlangıç sorusu: yeni proje dışarıdan nasıl görünür?',
-        'summary' => 'İlk kayıt, Atölye penceresi ve proje görünürlüğü davranışını anlamak için başlangıç noktası olarak korundu.',
-        'entry_kind' => 'journal',
-        'story_role' => 'opening',
-        'story_section_type' => 'opening',
-        'story_layout' => 'wide',
-        'story_label' => 'Başlangıç',
-        'tried' => 'Yeni proje oluşturulup Atölye görünürlüğü açıldığında ziyaretçinin ne gördüğü kontrol edildi.',
-        'failed' => 'Sadece proje açmak, hikâyeye dönüşecek bağlamı açıklamaya yetmedi.',
-        'decision' => 'Atölye kaydı, daha ilk anda hikâyedeki rolünü de taşımalı.',
-        'next_step' => 'Bir sonraki kayıtta görünürlük ve kayıt sırası ayrı ayrı doğrulanacak.',
-        'phase' => 'Başlangıç',
-        'is_milestone' => 1,
-        'show_in_recent' => 1,
-        'sort_order' => 10,
-    ]);
-    $updates['legacy-visibility'] = showcase_update($projectId, [
-        'slug' => 'ilk-kayit',
-        'work_date' => '2026-07-12',
-        'display_label' => 'Gün 00',
-        'title' => 'Görünürlük deneyi: Atölye kaydı tek başına yeterli mi?',
-        'summary' => 'Bu kayıt, hikâye olmadan da Atölye kaydının takip edilebilir olması gerektiğini gösterir.',
-        'entry_kind' => 'experiment',
-        'story_role' => 'experiment',
-        'story_section_type' => 'timeline',
-        'story_layout' => 'default',
-        'story_label' => 'Deneme',
-        'tried' => 'Proje Atölye durumuna alındı ve public görünürlük zinciri kontrol edildi.',
-        'failed' => 'Kayıt görünse bile hikâyedeki yeri belli değilse okur neye baktığını anlamıyor.',
-        'decision' => 'Atölye kaydı, yayın durumu kadar hikâye aday kimliğini de taşımalı.',
-        'next_step' => 'Sorun kaydıyla eksik kalan anlam katmanı işaretlenecek.',
-        'phase' => 'Görünürlük',
-        'is_milestone' => 0,
-        'show_in_recent' => 1,
-        'sort_order' => 20,
-    ]);
-    $updates['legacy-problem'] = showcase_update($projectId, [
-        'slug' => 'bu-nedir',
-        'work_date' => '2026-07-12',
-        'display_label' => 'Gün 00',
-        'title' => 'Sorun: kayıt var ama hikâyedeki karşılığı belirsiz',
-        'summary' => 'Atölye kaydı yalnızca soru-cevap gibi durduğunda, hikâyeye taşınacak bölüm kimliği zayıf kalıyor.',
-        'entry_kind' => 'problem',
-        'story_role' => 'problem',
-        'story_section_type' => 'questions',
-        'story_layout' => 'default',
-        'story_label' => 'Sorun',
-        'tried' => 'Kayıt alanları dolduruldu ve public Atölye görünümü kontrol edildi.',
-        'failed' => 'Bu kayıttan kategori, bölüm tipi ve anlatım rolü kendiliğinden güçlü çıkmadı.',
-        'decision' => 'Atölye formunda hikâyedeki rol ve bölüm tipi açıkça seçilebilmeli.',
-        'next_step' => 'Sıralama kararıyla Atölye akışı ve yayın akışı ayrılacak.',
-        'phase' => 'Sürtüşme',
-        'is_milestone' => 1,
-        'show_in_recent' => 1,
-        'sort_order' => 30,
-    ]);
-    $updates['legacy-order'] = showcase_update($projectId, [
-        'slug' => 'siralama-karari',
-        'work_date' => '2026-07-13',
         'display_label' => 'Gün 01',
-        'title' => 'Sıralama kararı: kayıt akışı ve yayın sırası ayrı tutulmalı',
-        'summary' => 'Atölye kaydının sırası proje içindeki çalışma akışını, yayın sırası ise public yerleşimi belirlemeli.',
-        'entry_kind' => 'decision',
-        'story_role' => 'decision',
-        'story_section_type' => 'lesson',
-        'story_layout' => 'default',
-        'story_label' => 'Karar',
-        'tried' => 'Aynı proje içinde çalışma kaydı sırası ve yayın sırası birlikte test edildi.',
-        'failed' => 'Aynı sayı iki farklı anlama gelince admin tarafında kafa karışıklığı oluştu.',
-        'decision' => 'Atölye sırası yalnızca proje içi kayıt akışıdır; yayın sırası ayrı kontrol edilir.',
-        'next_step' => 'Demo artık kayıt türü, hikâye rolü ve bölüm önerisini birlikte gösterecek.',
-        'phase' => 'Karar',
-        'is_milestone' => 1,
-        'show_in_recent' => 1,
-        'sort_order' => 40,
-    ]);
-    $updates['journal'] = showcase_update($projectId, [
-        'slug' => 'masa-kurulumu',
-        'work_date' => '2026-07-13',
-        'display_label' => 'Gün 01',
-        'title' => 'Masa kurulumu: bu demo neyi kanıtlayacak?',
-        'summary' => 'Demo, Atölye’nin yalnızca not tutma yeri değil hikâyeyi besleyen ana damar olduğunu göstermek için yeniden kuruldu.',
+        'title' => 'Ham kayıt: üretimde sorulan gerçek durum cümleleri',
+        'summary' => 'Telefon konuşmalarından ve defter düzeninden üretim takibinde gereken ilk veri çıkarıldı.',
         'entry_kind' => 'journal',
         'story_role' => 'opening',
         'story_section_type' => 'opening',
         'story_layout' => 'hero-split',
         'story_label' => 'Başlangıç',
-        'tried' => 'Önce projenin amacını netleştirdim: her kayıt türü gerçek bir kullanım senaryosu gösterecek.',
-        'failed' => 'İki kayıtlı basit test sayfası, sistemi anlatmak yerine eksik hissettiriyordu.',
-        'decision' => 'Demo proje, okuyana ve adminde çalışana yol gösterecek şekilde zenginleştirilecek.',
-        'next_step' => 'Deneme kaydıyla form alanlarının nasıl kullanılacağı gösterilecek.',
+        'tried' => "Saha notu:\n09:40 - “Mehmet ustanın parçası kesime girdi mi?”\n10:15 - “Dünkü sipariş montajda mı bekliyor?”\n11:05 - “Teslim bugün mü, yarın mı?”\n\nDefterde alanlar: müşteri, iş adı, adet, teslim tarihi.",
+        'failed' => 'Gözlem: defter siparişi saklıyor ama “şu anda nerede?” sorusuna hızlı cevap vermiyor.',
+        'decision' => 'İlk veri modeli siparişin konumuna odaklanacak: bekleyen, üretimde, teslim.',
+        'next_step' => 'Bu ham notları YZ’ye verip minimum pano alanlarını çıkart.',
         'phase' => 'Başlangıç',
-        'is_milestone' => 0,
+        'is_milestone' => 1,
         'show_in_recent' => 1,
-        'sort_order' => 50,
+        'sort_order' => 10,
     ]);
-    $updates['experiment'] = showcase_update($projectId, [
-        'slug' => 'form-denemesi',
-        'work_date' => '2026-07-13',
+    $updates['excel'] = showcase_update($projectId, [
+        'slug' => 'excel-denemesi',
+        'work_date' => '2026-07-12',
         'display_label' => 'Gün 01',
-        'title' => 'Deneme: kayıt türü formu yönlendirsin',
-        'summary' => 'Deneme kaydı, “ne denedim, ne olmadı, neye karar verdim?” çizgisini hızlı kurar.',
+        'title' => 'Prompt 01: ham notlardan minimum pano alanlarını çıkar',
+        'summary' => 'Saha notu YZ’ye verildi; ilk cevap fazla tablo koktuğu için daraltma gerekti.',
         'entry_kind' => 'experiment',
         'story_role' => 'experiment',
         'story_section_type' => 'timeline',
         'story_layout' => 'default',
         'story_label' => 'Deneme',
-        'tried' => 'Kayıt türü Deneme / test seçildi ve alanlar deneme mantığına göre dolduruldu.',
-        'failed' => 'Tek tip kayıt formu, kaynak notu ile teknik sorun kaydını aynı dilde göstermeye çalışıyordu.',
-        'decision' => 'Formun yardım metinleri seçilen kayıt türüne göre değişmeli.',
-        'next_step' => 'Sorun kaydıyla sürtüşme ve gerilim alanı gösterilecek.',
+        'tried' => "PROMPT:\nAşağıdaki üretim notlarından küçük bir atölye için minimum takip panosu alanlarını çıkar. CRM, stok veya muhasebe önerme. Sadece “iş nerede?” sorusuna cevap veren alanları ver.\n\nNotlar:\n- Kesime girdi mi?\n- Montajda mı bekliyor?\n- Teslim bugün mü?",
+        'failed' => "YZ cevabı:\n1. Sipariş no\n2. Müşteri\n3. Ürün adı\n4. Sorumlu kişi\n5. Durum\n6. Teslim tarihi\n7. Açıklama\n\nSorun: cevap hâlâ form/tablo gibi. Sahada hızlı bakılacak pano değil.",
+        'decision' => 'Alanları 4’e indir: iş adı, müşteri, teslim tarihi, durum.',
+        'next_step' => 'Bu dört alanla statik HTML kart iskeleti yaz.',
         'phase' => 'Deneme',
         'is_milestone' => 0,
         'show_in_recent' => 1,
-        'sort_order' => 60,
+        'sort_order' => 20,
     ]);
-    $updates['problem'] = showcase_update($projectId, [
-        'slug' => 'sig-demo-sorunu',
-        'work_date' => '2026-07-13',
+    $updates['telefon'] = showcase_update($projectId, [
+        'slug' => 'telefon-sorunu',
+        'work_date' => '2026-07-12',
         'display_label' => 'Gün 01',
-        'title' => 'Sorun: demo sığ kalınca sistem de küçük görünür',
-        'summary' => 'Atölye zenginleşmezse hikâyeleştirme de mekanik ve yüzeysel kalır.',
+        'title' => 'Test sonucu: tablo açılmadı, telefon trafiği devam etti',
+        'summary' => 'Excel benzeri takip denenince üretimde kimse dosyayı güncellemedi; problem çözülmedi.',
         'entry_kind' => 'problem',
         'story_role' => 'problem',
         'story_section_type' => 'questions',
         'story_layout' => 'default',
-        'story_label' => 'Sorun',
-        'tried' => 'Önce basit iki kayıtla örnek proje oluşturuldu.',
-        'failed' => 'Bu yaklaşım, mevcut hikâye bölüm türlerinin gücünü göstermedi; kullanıcıya “bunu böyle kullan” dedirtmedi.',
-        'decision' => 'Demo, gerçek üretim sürecini taklit edecek kadar kapsamlı olmalı.',
-        'next_step' => 'Karar kaydıyla Atölye-Hikâye eşleşmesi ana ilke olarak yazılacak.',
-        'phase' => 'Sürtüşme',
+        'story_label' => 'Hata kaydı',
+        'tried' => "Test:\nExcel benzeri liste oluşturuldu.\nDurum seçenekleri: Bekleyen / Üretimde / Teslim.\nKullanıcıdan gün içinde durum değiştirmesi istendi.",
+        'failed' => "Belirti / log:\n- Dosya 1 kez açıldı.\n- 3 siparişten yalnızca 1’i güncellendi.\n- “Bu iş nerede?” sorusu yine telefondan geldi.",
+        'decision' => 'Liste değil pano. Kullanıcı satır düzenlemeyecek; kartı başka sütuna taşıyacak.',
+        'next_step' => 'Üç sütunlu pano iskeleti kodlanacak.',
+        'phase' => 'Hata kayıtları',
         'is_milestone' => 1,
         'show_in_recent' => 1,
-        'sort_order' => 70,
+        'sort_order' => 30,
     ]);
-    $updates['decision'] = showcase_update($projectId, [
-        'slug' => 'ana-damar-karari',
+    $updates['karar'] = showcase_update($projectId, [
+        'slug' => 'uc-sutun-karari',
         'work_date' => '2026-07-13',
         'display_label' => 'Gün 02',
-        'title' => 'Karar: Atölye ham veri değil, anlatının kaynağı',
-        'summary' => 'Hikâye sonradan uydurulmayacak; Atölye’de doğru türle biriken kayıtlar seçilip düzenlenecek.',
+        'title' => 'Karar kaydı: ilk ekran üç sütunlu pano olacak',
+        'summary' => 'İlk sürüm yalnızca Bekleyen, Üretimde ve Teslim edildi akışını gösterecek.',
         'entry_kind' => 'decision',
         'story_role' => 'decision',
         'story_section_type' => 'lesson',
         'story_layout' => 'default',
-        'story_label' => 'Dönüm noktası',
-        'tried' => 'Atölye kayıt türleri hikâye bölüm türleriyle eşleştirildi.',
-        'failed' => 'Dönüm noktası tiki tek başına yeterli değil; kaydın türü de hikâyedeki rolünü belirlemeli.',
-        'decision' => 'Her önemli kayıt, hikâyede sahne, soru, ders, kanıt veya kaynak olarak karşılık bulacak.',
-        'next_step' => 'Medya kaydıyla görsel kanıtın nasıl kullanılacağı gösterilecek.',
+        'story_label' => 'Karar',
+        'tried' => "Kapsam listesi:\n1. Stok takibi\n2. Cari hesap\n3. Rapor ekranı\n4. Üç sütunlu pano\n5. Kullanıcı rolleri\n\nKullanıcı sorusu: “Şu iş nerede?”",
+        'failed' => 'Kanıt: stok/cari/rapor konuşulunca ilk problem kayboluyor. Telefonla sorulan şey stok değil, “iş nerede?” sorusu.',
+        'decision' => 'Kapsam: sadece üretim panosu. Stok, cari ve rapor ikinci aşamaya alınmayacak.',
+        'next_step' => 'Pano taslağı SVG olarak eklenecek ve kart alanları kontrol edilecek.',
         'phase' => 'Karar',
         'is_milestone' => 1,
         'show_in_recent' => 1,
-        'sort_order' => 80,
+        'sort_order' => 40,
     ]);
-    $updates['media'] = showcase_update($projectId, [
-        'slug' => 'medya-kaniti',
+    $updates['pano'] = showcase_update($projectId, [
+        'slug' => 'pano-taslagi',
         'work_date' => '2026-07-13',
         'display_label' => 'Gün 02',
-        'title' => 'Medya: akış haritası kanıt olarak dursun',
-        'summary' => 'Bir diyagram, Atölye ile Hikâye arasındaki ilişkiyi metinden daha hızlı anlatır.',
+        'title' => 'Görsel çıktı: üç sütunlu pano SVG eskizi',
+        'summary' => 'Sipariş kartları üç sütunda durunca işin nerede beklediği metin okumadan görüldü.',
         'entry_kind' => 'media',
         'story_role' => 'media',
         'story_section_type' => 'split',
         'story_layout' => 'wide',
         'story_label' => 'Görsel kanıt',
-        'tried' => 'Ham kayıt → kayıt türü → hikâye bölümü akışını gösteren şema eklendi.',
-        'failed' => 'Sadece açıklama yazmak, yeni kullanıcıya sistemi yeterince görünür kılmıyordu.',
-        'decision' => 'Demo projede medya kaydı özellikle hikâyede kanıt olarak kullanılacak.',
-        'next_step' => 'Kaynak kaydıyla dış referans ve sistem içi bağlantı örneği eklenecek.',
+        'tried' => "Dosya üretildi:\nuploads/projects/test-atolye/showcase-map.svg\n\nGörsel yapı:\n- Sol: SIPARIS / bekleyen\n- Orta: URETIMDE\n- Sağ: TESLIM\n- Kart akışı oklarla gösterildi.",
+        'failed' => 'Gözlem: karta çok bilgi koyunca pano tekrar tabloya benziyor.',
+        'decision' => 'Kartta yalnızca müşteri, iş adı ve teslim tarihi kalacak.',
+        'next_step' => 'Bu eskiz kullanıcıya gösterilecek; eksik alan sorulacak.',
         'phase' => 'Kanıt',
         'is_milestone' => 0,
         'show_in_recent' => 1,
-        'sort_order' => 90,
+        'sort_order' => 50,
     ]);
-    showcase_attach($updates['media'], $mapId);
-    $updates['source'] = showcase_update($projectId, [
-        'slug' => 'kaynak-ve-baglanti',
+    showcase_attach($updates['pano'], $mapId);
+    $updates['geri'] = showcase_update($projectId, [
+        'slug' => 'usta-geri-bildirimi',
         'work_date' => '2026-07-13',
         'display_label' => 'Gün 02',
-        'title' => 'Kaynak: bağlantı kaydı neden ayrı tutulur?',
-        'summary' => 'Bağlantılar hikâyede dayanak, dış referans veya çalışan demo olarak anlam kazanır.',
+        'title' => 'Görüşme notu: barkod sonraya, hızlı durum değişimi şimdi',
+        'summary' => 'İlk görüşmede barkod fikri konuşuldu, ama kullanıcı asıl ihtiyacın hızlı durum değiştirmek olduğunu söyledi.',
         'entry_kind' => 'source',
         'story_role' => 'source',
         'story_section_type' => 'questions',
         'story_layout' => 'default',
         'story_label' => 'Kaynak',
-        'tried' => 'Kaynak kaydına hem site içi Atölye bağlantısı hem depo bağlantısı bağlandı.',
-        'failed' => 'Bağlantı yalnızca “Bağlantı” diye görünürse ne işe yaradığı anlaşılmıyor.',
-        'decision' => 'Kaynak kaydı, bağlantının neden önemli olduğunu kendi metniyle açıklamalı.',
-        'next_step' => 'Bu kayıtlar hikâyede farklı bölüm biçimleriyle gösterilecek.',
-        'phase' => 'Kaynak',
+        'tried' => "Görüşme notu:\nSoru: “Barkod okutsak işi çözer mi?”\nCevap: “Önce işin nerede olduğunu hızlı görelim. Barkod sonra olabilir.”\n\nKaynak: kullanıcı görüşmesi / sözlü not.",
+        'failed' => 'Barkod ilk sürüm için fazla ağır. Etiket basma ve okutma düzeni yok.',
+        'decision' => 'İlk prototipte barkod yok. Kart durum değişimi tek işlem olacak.',
+        'next_step' => 'Kartı bir sütundan diğerine taşıyan küçük JS prototipi denenecek.',
+        'phase' => 'Saha notu',
         'is_milestone' => 0,
         'show_in_recent' => 1,
-        'sort_order' => 100,
+        'sort_order' => 60,
     ]);
-    showcase_link('update', $updates['source'], 'website', 'Bu Atölye kaydı', 'http://localhost/acetinweb/atolye.php?slug=test-atolye', 10);
-    showcase_link('project', $projectId, 'github', 'Kod deposu', 'https://github.com/cetincevizcetoli/acetinweb', 10);
-    $updates['status'] = showcase_update($projectId, [
-        'slug' => 'durum-kontrolu',
+    showcase_link('update', $updates['geri'], 'website', 'Atölye prototip notu', 'http://localhost/acetinweb/atolye.php?slug=test-atolye', 10);
+    $updates['durum'] = showcase_update($projectId, [
+        'slug' => 'rapor-degil-akis',
         'work_date' => '2026-07-13',
         'display_label' => 'Gün 03',
-        'title' => 'Durum: ne hazır, ne eksik, ne riskli?',
-        'summary' => 'Demo, yalnızca güzel görünmek için değil, hangi parçanın ne işe yaradığını kontrol etmek için de kullanılmalı.',
-        'entry_kind' => 'journal',
+        'title' => 'Kod kaydı: üç sütun ve örnek sipariş kartı',
+        'summary' => 'Pano davranışı için ilk HTML iskeleti ve örnek kart yapısı yazıldı.',
+        'entry_kind' => 'experiment',
         'story_role' => 'status',
         'story_section_type' => 'status',
         'story_layout' => 'default',
         'story_label' => 'Durum',
-        'tried' => 'Atölye, Hikâye, medya, kaynak ve builder karşılıkları tek projede kontrol edildi.',
-        'failed' => 'Görsel sunum güçlenirken kullanım amacı bulanık kalırsa demo yine eksik sayılır.',
-        'decision' => 'Hikâyeye ayrıca durum bölümü eklenecek.',
-        'next_step' => 'Son bölümde bu demo projenin nasıl kullanılacağı açıkça yazılacak.',
-        'phase' => 'Kontrol',
+        'tried' => "<section class=\"board\">\n  <div class=\"lane\" data-status=\"bekleyen\">\n    <article class=\"job-card\" data-id=\"S-1024\">\n      <strong>Kapak kesimi</strong>\n      <span>Mehmet Fırat · 12 Temmuz</span>\n    </article>\n  </div>\n  <div class=\"lane\" data-status=\"uretimde\"></div>\n  <div class=\"lane\" data-status=\"teslim\"></div>\n</section>",
+        'failed' => "Çıktı:\n- Kart görünüyor.\n- Sütunlar ayrılıyor.\n- Henüz taşıma yok.\n- Mobilde kart genişliği kontrol edilmedi.",
+        'decision' => 'Önce tek kartın okunaklılığı ve kolon yapısı doğrulanacak. Sonra taşıma davranışı eklenecek.',
+        'next_step' => 'Butonla durum değiştirme dene: “Üretime al”, “Teslim edildi”.',
+        'phase' => 'Kod / çıktı',
         'is_milestone' => 0,
         'show_in_recent' => 1,
-        'sort_order' => 110,
+        'sort_order' => 90,
     ]);
-    $updates['closing'] = showcase_update($projectId, [
-        'slug' => 'nasil-kullanilir',
+    $updates['cekirdek'] = showcase_update($projectId, [
+        'slug' => 'hikaye-cekirdegi',
         'work_date' => '2026-07-13',
         'display_label' => 'Gün 03',
-        'title' => 'Kapanış: bu proje kopyalanacak örnek değil, kullanım pusulası',
-        'summary' => 'Yeni gerçek projelerde önce Atölye kayıt türü seçilecek; hikâye sonra bu kayıtlardan kurulacak.',
+        'title' => 'Builder çıktısı kontrolü: kod kaydı hikâyeye girmesin',
+        'summary' => 'Hikâye taslağı için seçilecek kayıtlar ayrıldı; kod ve görüşme notu ham kanıt olarak bırakıldı.',
         'entry_kind' => 'decision',
         'story_role' => 'closing',
         'story_section_type' => 'text',
         'story_layout' => 'wide',
         'story_label' => 'Kapanış',
-        'tried' => 'Bütün kayıt türleri tek proje içinde örneklendi.',
-        'failed' => 'Demo birebir kopyalanacak metin değil; kullanım mantığını göstermeli.',
-        'decision' => 'Bu proje, yeni içerik girerken bakılacak referans olarak kalacak.',
-        'next_step' => 'Gerçek projelerde aynı mantıkla kayıt girilip builder çıktısı kontrol edilecek.',
+        'tried' => "Builder kontrol listesi:\n\nHikâyeye taşınacak kayıtlar:\n- saha notu: problemin nereden çıktığını kurar\n- prompt 01: YZ ile ilk daraltma denemesini gösterir\n- tablo testi hatası: listenin neden yetmediğini kanıtlar\n- üç sütun kararı: yön değişimini anlatır\n- pano SVG: okura görsel sonuç verir\n\nHam Atölye kanıtı olarak kalacak kayıtlar:\n- HTML kart iskeleti\n- görüşme notu",
+        'failed' => 'İlk taslak kod kaydını da ana anlatıya soktu; hikâye “neden bu projeye başladım?” sorusundan uzaklaşıp teknik rapora döndü.',
+        'decision' => 'Hikâye, telefon trafiğinden üç sütunlu panoya giden nedeni anlatacak. Kod kaydı Atölye içinde kanıt olarak kalacak.',
+        'next_step' => 'Story builder’da yalnızca dönüm noktası kayıtları işaretli kalacak; kod çıktısı gerekirse ilgili bölümde kısa kanıt olarak bağlanacak.',
         'phase' => 'Kapanış',
         'is_milestone' => 1,
         'show_in_recent' => 1,
-        'sort_order' => 120,
+        'sort_order' => 80,
     ]);
 
+    showcase_blocks($updates['saha'], [
+        ['block_type' => 'field_note', 'title' => 'Telefonla gelen gerçek sorular', 'body' => "09:40 - Mehmet ustanın parçası kesime girdi mi?\n10:15 - Dünkü sipariş montajda mı bekliyor?\n11:05 - Teslim bugün mü, yarın mı?", 'sort_order' => 10],
+        ['block_type' => 'observation', 'title' => 'Defterin yetmediği yer', 'body' => 'Defter siparişi saklıyor, ama üretim anında “şu iş nerede?” sorusuna hızlı cevap vermiyor.', 'sort_order' => 20],
+        ['block_type' => 'decision', 'title' => 'İlk veri sınırı', 'body' => 'İlk kayıt modeli yalnızca siparişin konumuna odaklanacak: bekleyen, üretimde, teslim.', 'sort_order' => 30],
+        ['block_type' => 'next', 'title' => 'YZ’ye sorulacak iş', 'body' => 'Bu ham notlardan minimum pano alanlarını çıkart; CRM, stok ve muhasebeyi dışarıda bırak.', 'sort_order' => 40],
+    ]);
+    showcase_blocks($updates['excel'], [
+        ['block_type' => 'prompt', 'title' => 'Prompt 01', 'body' => "Aşağıdaki üretim notlarından küçük bir atölye için minimum takip panosu alanlarını çıkar. CRM, stok veya muhasebe önerme. Sadece “iş nerede?” sorusuna cevap veren alanları ver.\n\nNotlar:\n- Kesime girdi mi?\n- Montajda mı bekliyor?\n- Teslim bugün mü?", 'sort_order' => 10],
+        ['block_type' => 'output', 'title' => 'İlk YZ cevabı', 'body' => "1. Sipariş no\n2. Müşteri\n3. Ürün adı\n4. Sorumlu kişi\n5. Durum\n6. Teslim tarihi\n7. Açıklama", 'sort_order' => 20],
+        ['block_type' => 'error', 'title' => 'Cevabın sorunu', 'body' => 'Cevap hâlâ form/tablo gibi. Sahada hızlı bakılacak pano fikrine dönüşmedi.', 'sort_order' => 30],
+        ['block_type' => 'decision', 'title' => 'Daraltma kararı', 'body' => 'Alanlar 4’e indirilecek: iş adı, müşteri, teslim tarihi, durum.', 'sort_order' => 40],
+    ]);
+    showcase_blocks($updates['telefon'], [
+        ['block_type' => 'field_note', 'title' => 'Test senaryosu', 'body' => "Excel benzeri liste oluşturuldu.\nDurum seçenekleri: Bekleyen / Üretimde / Teslim.\nKullanıcıdan gün içinde durum değiştirmesi istendi.", 'sort_order' => 10],
+        ['block_type' => 'evidence', 'title' => 'Gözlenen sonuç', 'body' => "Dosya 1 kez açıldı.\n3 siparişten yalnızca 1’i güncellendi.\n“Bu iş nerede?” sorusu yine telefondan geldi.", 'sort_order' => 20],
+        ['block_type' => 'decision', 'title' => 'Liste değil pano', 'body' => 'Kullanıcı satır düzenlemeyecek; kartı başka sütuna taşıyacak.', 'sort_order' => 30],
+        ['block_type' => 'next', 'title' => 'Sonraki prototip', 'body' => 'Üç sütunlu pano iskeleti kodlanacak.', 'sort_order' => 40],
+    ]);
+    showcase_blocks($updates['karar'], [
+        ['block_type' => 'field_note', 'title' => 'Masadaki seçenekler', 'body' => "Stok takibi\nCari hesap\nRapor ekranı\nÜç sütunlu pano\nKullanıcı rolleri", 'sort_order' => 10],
+        ['block_type' => 'evidence', 'title' => 'Kararı zorlayan soru', 'body' => 'Telefonla sorulan şey stok değil; “şu iş nerede?” sorusu.', 'sort_order' => 20],
+        ['block_type' => 'decision', 'title' => 'Net kapsam', 'body' => 'İlk sürüm sadece üretim panosu olacak. Stok, cari ve rapor ikinci aşamaya alınmayacak.', 'sort_order' => 30],
+        ['block_type' => 'next', 'title' => 'Uygulanacak iş', 'body' => 'Pano taslağı SVG olarak eklenecek ve kart alanları kontrol edilecek.', 'sort_order' => 40],
+    ]);
+    showcase_blocks($updates['pano'], [
+        ['block_type' => 'source', 'title' => 'Üretilen görsel', 'body' => 'uploads/projects/test-atolye/showcase-map.svg', 'sort_order' => 10],
+        ['block_type' => 'observation', 'title' => 'Görselin gösterdiği', 'body' => 'Sipariş kartları üç sütunda durunca işin nerede beklediği metin okumadan görülüyor.', 'sort_order' => 20],
+        ['block_type' => 'decision', 'title' => 'Kart sade kalacak', 'body' => 'Kartta yalnızca müşteri, iş adı ve teslim tarihi kalacak.', 'sort_order' => 30],
+    ]);
+    showcase_blocks($updates['geri'], [
+        ['block_type' => 'source', 'title' => 'Kullanıcı görüşmesi', 'body' => "Soru: Barkod okutsak işi çözer mi?\nCevap: Önce işin nerede olduğunu hızlı görelim. Barkod sonra olabilir.", 'sort_order' => 10],
+        ['block_type' => 'observation', 'title' => 'Barkod neden erken?', 'body' => 'Etiket basma ve okutma düzeni yok. İlk problem durum görünürlüğü.', 'sort_order' => 20],
+        ['block_type' => 'decision', 'title' => 'İlk prototip kararı', 'body' => 'Barkod yok. Kart durum değişimi tek işlem olacak.', 'sort_order' => 30],
+    ]);
+    showcase_blocks($updates['durum'], [
+        ['block_type' => 'code', 'title' => 'İlk HTML iskeleti', 'body' => "<section class=\"board\">\n  <div class=\"lane\" data-status=\"bekleyen\">\n    <article class=\"job-card\" data-id=\"S-1024\">\n      <strong>Kapak kesimi</strong>\n      <span>Mehmet Fırat · 12 Temmuz</span>\n    </article>\n  </div>\n  <div class=\"lane\" data-status=\"uretimde\"></div>\n  <div class=\"lane\" data-status=\"teslim\"></div>\n</section>", 'sort_order' => 10],
+        ['block_type' => 'output', 'title' => 'Kontrol çıktısı', 'body' => "Kart görünüyor.\nSütunlar ayrılıyor.\nHenüz taşıma yok.\nMobilde kart genişliği kontrol edilmedi.", 'sort_order' => 20],
+        ['block_type' => 'next', 'title' => 'Sıradaki test', 'body' => 'Butonla durum değiştirme dene: Üretime al, Teslim edildi.', 'sort_order' => 30],
+    ]);
+    showcase_blocks($updates['cekirdek'], [
+        ['block_type' => 'story_note', 'title' => 'Hikâyeye girecek kayıtlar', 'body' => "Saha notu: problemin nereden çıktığını kurar.\nPrompt 01: YZ ile ilk daraltma denemesini gösterir.\nTablo testi hatası: listenin neden yetmediğini kanıtlar.\nÜç sütun kararı: yön değişimini anlatır.\nPano SVG: okura görsel sonuç verir.", 'sort_order' => 10],
+        ['block_type' => 'decision', 'title' => 'Ham kalacak kayıtlar', 'body' => 'HTML kart iskeleti ve görüşme notu Atölye kanıtı olarak kalabilir; hikâye ana omurgasına doğrudan girmek zorunda değil.', 'sort_order' => 20],
+        ['block_type' => 'next', 'title' => 'Builder kontrolü', 'body' => 'Hikâye taslağı, “telefon trafiğinden üç sütunlu panoya” omurgasıyla kurulacak.', 'sort_order' => 30],
+    ]);
+
+    showcase_cleanup_old_meta_updates($projectId);
+
     $storyId = showcase_story($projectId);
-    $opening = showcase_section($storyId, [
+    showcase_section($storyId, [
         'type' => 'opening',
         'layout' => 'hero-split',
-        'section_kind' => 'scene',
+        'section_kind' => 'Başlangıç',
         'label' => 'BAŞLANGIÇ',
-        'title' => 'Basit testten gerçek Atölye vitrini çıkarmak.',
-        'body_text' => 'Bu proje önce sadece görünürlük ve sıra kontrolü için açılmıştı. Sonra eksik kaldığı görüldü: Atölye, Hikâye’ye malzeme veren yer olacaksa demo da bunu gösterecek kadar güçlü olmalıydı.',
-        'quote_text' => 'Demo, sistemin kendini anlattığı yerdir.',
+        'title' => 'İş defterde vardı; üretim masasının üstünde yoktu.',
+        'body_text' => 'Bu küçük üretim takip denemesi, büyük bir yazılım fikri olarak başlamadı. Bir işyerinde aynı siparişin durumunun gün içinde birkaç kez sorulmasıyla başladı.',
+        'quote_text' => 'Asıl problem veri tutmak değil, işin o anda nerede olduğunu görebilmekti.',
         'media_id' => $coverId,
-        'source_update_id' => $updates['journal'],
+        'source_update_id' => $updates['saha'],
         'sort_order' => 10,
     ]);
     $timeline = showcase_section($storyId, [
         'type' => 'timeline',
-        'label' => 'ÜRETİM AKIŞI',
-        'title' => 'Kayıtlar ham kaldı ama dağınık kalmadı.',
-        'intro_text' => 'Aşağıdaki akış doğrudan Atölye kayıtlarından kuruldu.',
+        'label' => 'ATÖLYEDEN GELENLER',
+        'title' => 'Hikâyeye dönüşmeden önce masada böyle ilerledi.',
+        'intro_text' => 'Bu bölüm doğrudan Atölye kayıtlarından kuruldu; her satırın kaynağı bir çalışma kaydıdır.',
         'media_id' => $mapId,
         'sort_order' => 20,
     ]);
     $i = 1;
-    foreach ($updates as $key => $updateId) {
-        $row = db()->query('SELECT * FROM updates WHERE id=' . (int)$updateId)->fetch();
+    foreach ($updates as $updateId) {
+        $row = db()->query('SELECT * FROM updates WHERE id=' . (int)$updateId)->fetch(PDO::FETCH_ASSOC);
         $cfg = atelier_entry_kind_config($row);
         showcase_item($timeline, [
             'item_type' => (string)$cfg['item_type'],
             'step' => str_pad((string)$i, 2, '0', STR_PAD_LEFT),
             'title' => (string)$row['title'],
-            'subtitle' => (string)$cfg['label'],
+            'subtitle' => atelier_story_label($row),
             'text' => (string)$row['summary'],
             'source_update_id' => $updateId,
             'sort_order' => $i,
@@ -471,64 +511,61 @@ try {
     }
     $compare = showcase_section($storyId, [
         'type' => 'compare',
-        'label' => 'ÖNCE / SONRA',
-        'title' => 'Sığ demo ile üretim vitrini aynı şey değil.',
-        'intro_text' => 'Bu bölüm aynı projenin iki kullanım biçimini karşılaştırır.',
+        'label' => 'YANLIŞ / DOĞRU',
+        'title' => 'Önce sistemi büyütmek istedim; sonra problemi küçülttüm.',
+        'intro_text' => 'Atölye kayıtları, hangi fikrin erken ve hangi kararın doğru olduğunu ayırdı.',
         'sort_order' => 30,
     ]);
-    showcase_item($compare, ['group_key' => 'left', 'item_type' => 'heading', 'title' => 'Önce', 'sort_order' => 1]);
-    showcase_item($compare, ['group_key' => 'left', 'item_type' => 'bullet', 'text' => 'İki kayıt vardı; sadece görünürlük test ediliyordu.', 'sort_order' => 2]);
-    showcase_item($compare, ['group_key' => 'left', 'item_type' => 'bullet', 'text' => 'Kayıtların hikâyede neye dönüşeceği anlaşılmıyordu.', 'sort_order' => 3]);
-    showcase_item($compare, ['group_key' => 'right', 'item_type' => 'heading', 'title' => 'Şimdi', 'sort_order' => 4]);
-    showcase_item($compare, ['group_key' => 'right', 'item_type' => 'bullet', 'text' => 'Her kayıt türü ayrı rol taşıyor: not, deneme, sorun, karar, medya, kaynak.', 'sort_order' => 5]);
-    showcase_item($compare, ['group_key' => 'right', 'item_type' => 'bullet', 'text' => 'Hikâye timeline, karşılaştırma, soru, durum, ders ve teknik notla kuruluyor.', 'sort_order' => 6]);
+    showcase_item($compare, ['group_key' => 'left', 'item_type' => 'heading', 'title' => 'Erken büyüyen fikir', 'sort_order' => 1]);
+    showcase_item($compare, ['group_key' => 'left', 'item_type' => 'bullet', 'text' => 'Stok, barkod, rapor ve kullanıcı rolleri aynı anda konuşuldu.', 'sort_order' => 2]);
+    showcase_item($compare, ['group_key' => 'left', 'item_type' => 'bullet', 'text' => 'Bu yol küçük atölyenin ilk sorununu çözmeden projeyi büyütüyordu.', 'sort_order' => 3]);
+    showcase_item($compare, ['group_key' => 'right', 'item_type' => 'heading', 'title' => 'Doğru ilk sürüm', 'sort_order' => 4]);
+    showcase_item($compare, ['group_key' => 'right', 'item_type' => 'bullet', 'text' => 'Bekleyen, üretimde ve teslim edildi sütunları yeterli başlangıç oldu.', 'sort_order' => 5]);
+    showcase_item($compare, ['group_key' => 'right', 'item_type' => 'bullet', 'text' => 'Her sipariş kartı gün içinde tek hareketle yer değiştirecek.', 'sort_order' => 6]);
+
     $questions = showcase_section($storyId, [
         'type' => 'questions',
         'label' => 'KARAR SORULARI',
-        'title' => 'Yeni kayıt girerken kendime ne soracağım?',
+        'title' => 'Bu Atölye kaydı hikâyede neye dönüşür?',
         'sort_order' => 40,
     ]);
-    showcase_item($questions, ['title' => 'Bu kayıt hangi tür?', 'text' => 'Eğer sadece ilerleme notuysa günlük; bir şeyi deniyorsam deneme; takıldıysam sorun; yön değiştiriyorsam karar.', 'source_update_id' => $updates['experiment'], 'sort_order' => 1]);
-    showcase_item($questions, ['title' => 'Hikâyeye girecek mi?', 'text' => 'Her kayıt girmek zorunda değil. Dönüm noktası olanlar işaretlenir, diğerleri ham günlükte kalır.', 'source_update_id' => $updates['decision'], 'sort_order' => 2]);
-    showcase_item($questions, ['title' => 'Kanıt veya kaynak var mı?', 'text' => 'Medya ve bağlantı ayrı kayıt türleriyle tutulursa hikâye daha ikna edici olur.', 'source_update_id' => $updates['media'], 'sort_order' => 3]);
+    showcase_item($questions, ['title' => 'Sorun kaydı neyi taşıdı?', 'text' => 'Telefon trafiği, hikâyede asıl çatışmayı kurdu: bilgi var ama doğru yerde değil.', 'source_update_id' => $updates['telefon'], 'sort_order' => 1]);
+    showcase_item($questions, ['title' => 'Karar kaydı neyi taşıdı?', 'text' => 'Üç sütun kararı, hikâyede dönüm noktası oldu; proje bundan sonra rapor değil akış ekranı olarak ilerledi.', 'source_update_id' => $updates['karar'], 'sort_order' => 2]);
+    showcase_item($questions, ['title' => 'Medya kaydı neyi taşıdı?', 'text' => 'Pano taslağı, okuyucuya kararın sadece fikir değil görünür bir çözüm olduğunu gösterdi.', 'source_update_id' => $updates['pano'], 'sort_order' => 3]);
+
     $status = showcase_section($storyId, [
         'type' => 'status',
-        'label' => 'DURUM PANOSU',
-        'title' => 'Bu demo hangi parçaları gösteriyor?',
-        'source_update_id' => $updates['status'],
+        'label' => 'BUGÜN NEREDE?',
+        'title' => 'İlk prototipin sınırı bilerek dar tutuldu.',
+        'source_update_id' => $updates['durum'],
         'sort_order' => 50,
     ]);
-    showcase_item($status, ['state' => 'Hazır', 'title' => 'Atölye türleri', 'text' => 'Kayıtlar tür bilgisiyle ayrılıyor.', 'sort_order' => 1]);
-    showcase_item($status, ['state' => 'Hazır', 'title' => 'Hikâye karşılığı', 'text' => 'Aynı kayıtlar farklı bölüm biçimlerine taşınıyor.', 'sort_order' => 2]);
-    showcase_item($status, ['state' => 'Kontrol', 'title' => 'Görsel sunum', 'text' => 'Atölye tarafı hâlâ hikâye kadar zenginleşmeye açık.', 'sort_order' => 3]);
+    showcase_item($status, ['state' => 'Hazır', 'title' => 'Üç sütunlu pano', 'text' => 'İşin günlük akışını anlatmaya yeterli.', 'sort_order' => 1]);
+    showcase_item($status, ['state' => 'Beklemede', 'title' => 'Barkod ve stok', 'text' => 'İlk problem çözülmeden eklenmeyecek.', 'sort_order' => 2]);
+    showcase_item($status, ['state' => 'Sıradaki', 'title' => 'Kart hareketi', 'text' => 'Sipariş kartını tek hareketle durum değiştirecek hale getirmek.', 'sort_order' => 3]);
+
     $lesson = showcase_section($storyId, [
         'type' => 'lesson',
-        'label' => 'KULLANIM DERSİ',
-        'title' => 'Bu projeyi nasıl okuyacağım?',
-        'source_update_id' => $updates['closing'],
+        'label' => 'DERS',
+        'title' => 'Bu sanal proje Atölye için ne öğretiyor?',
+        'source_update_id' => $updates['cekirdek'],
         'sort_order' => 60,
     ]);
-    showcase_item($lesson, ['text' => 'Atölye kaydı hızlı girilir; ama türü doğru seçilirse sonra hikâye kurmak kolaylaşır.', 'sort_order' => 1]);
-    showcase_item($lesson, ['text' => 'Dönüm noktası tiki, hikâyeye aday kayıtları ayırmak içindir.', 'sort_order' => 2]);
-    showcase_item($lesson, ['text' => 'Medya ve kaynak kayıtları, anlatıyı süslemek için değil kanıtlamak için kullanılır.', 'sort_order' => 3]);
-    showcase_item($lesson, ['text' => 'Demo proje, yeni içerik girerken bakılacak kullanım pusulasıdır.', 'sort_order' => 4]);
-    showcase_section($storyId, [
-        'type' => 'code',
-        'label' => 'SİSTEM HARİTASI',
-        'title' => 'Atölye türü hikâyede neye dönüşür?',
-        'body_text' => 'Bu teknik not, demo projenin arkasındaki eşleşmeyi açık bırakır.',
-        'code_text' => "journal    -> bağlam / geçiş\nexperiment -> deneme sahnesi\nproblem    -> soru / sürtüşme\ndecision   -> dönüm noktası / ders\nmedia      -> görsel kanıt\nsource     -> kaynak notu",
-        'sort_order' => 70,
-    ]);
+    showcase_item($lesson, ['text' => 'Atölye kaydı, hikâyeden önceki ham düşünceyi saklar; ama doğru rol verilirse hikâyeye temiz taşınır.', 'sort_order' => 1]);
+    showcase_item($lesson, ['text' => 'Her kayıt özellik listesi olmak zorunda değildir; bazen yalnızca sahne, bazen sorun, bazen karar olur.', 'sort_order' => 2]);
+    showcase_item($lesson, ['text' => 'İyi hikâye, Atölye kayıtlarını süslemez; içlerinden anlamlı olanları seçer.', 'sort_order' => 3]);
+
     showcase_section($storyId, [
         'type' => 'text',
         'layout' => 'wide',
-        'label' => 'NASIL KULLANDIM?',
-        'title' => 'Bu demo bilinçli olarak sistemi anlatacak şekilde yazıldı.',
-        'body_text' => "Önce zayıf kalan iki kayıt temizlendi.\n\nSonra aynı projeye farklı kayıt türleri eklendi: günlük, deneme, sorun, karar, medya, kaynak ve durum kontrolü.\n\nMedya kaydı için akış haritası üretildi; kaynak kaydı için bağlantı eklendi.\n\nHikâye tarafında aynı kayıtlar tek biçime sıkıştırılmadı; timeline, karşılaştırma, soru, durum, ders ve teknik not olarak dağıtıldı.",
-        'quote_text' => 'Bundan sonra gerçek projelerde Atölye önce üretir, Hikâye sonra seçer ve düzenler.',
-        'sort_order' => 80,
+        'label' => 'KAPANIŞ',
+        'title' => 'Hikâyeye geçerse ana omurga bu olacak.',
+        'body_text' => "Bir küçük imalathanede işlerin takılma nedeni büyük teknoloji eksikliği değildi.\n\nDefter vardı, Excel vardı, telefon vardı; ama üretim anında herkes aynı gerçeğe bakmıyordu.\n\nBu yüzden ilk karar küçük kaldı: rapor değil, günlük akışı gösteren üç sütunlu pano.",
+        'quote_text' => 'Bu proje büyürse, büyüme sebebi özellik isteği değil; sahada gerçekten tekrar eden sorunlar olacak.',
+        'source_update_id' => $updates['cekirdek'],
+        'sort_order' => 70,
     ]);
+
     db()->commit();
 } catch (Throwable $e) {
     if (db()->inTransaction()) {

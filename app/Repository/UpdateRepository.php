@@ -18,6 +18,7 @@ final class UpdateRepository
         foreach ($rows as &$row) {
             $row['media'] = MediaRepository::forUpdate((int)$row['id']);
             $row['links'] = LinkRepository::findByOwner('update', (int)$row['id']);
+            $row['blocks'] = UpdateBlockRepository::forUpdate((int)$row['id']);
             $row['_id'] = $row['slug'];
             $row['date_label'] = $row['display_label'] ?: ($row['work_date'] ? date('d.m.Y', strtotime($row['work_date'])) : '');
             $row['day'] = $row['display_label'];
@@ -63,6 +64,7 @@ final class UpdateRepository
             ]);
 
             $update['links'] = LinkRepository::findByOwner('update', (int)$update['id']);
+            $update['blocks'] = UpdateBlockRepository::forUpdate((int)$update['id']);
             $update['_id'] = $update['slug'];
             $update['date_label'] = $update['display_label'] ?: ($update['work_date'] ? date('d.m.Y', strtotime($update['work_date'])) : '');
             $out[] = ['update' => $update, 'story' => $project];

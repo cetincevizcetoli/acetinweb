@@ -179,6 +179,7 @@ require_once __DIR__ . '/Repository/ProjectRepository.php';
 require_once __DIR__ . '/Repository/StoryRepository.php';
 require_once __DIR__ . '/Repository/LinkRepository.php';
 require_once __DIR__ . '/Repository/MediaRepository.php';
+require_once __DIR__ . '/Repository/UpdateBlockRepository.php';
 require_once __DIR__ . '/AtelierEntry.php';
 require_once __DIR__ . '/Repository/UpdateRepository.php';
 require_once __DIR__ . '/Repository/SettingsRepository.php';

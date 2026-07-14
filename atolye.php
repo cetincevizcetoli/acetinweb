@@ -6,28 +6,35 @@ require __DIR__ . '/_bootstrap.php';
 $slug = safe_slug((string)($_GET['slug'] ?? ''));
 $project = project_by_slug($slug);
 $site = setting('site', []);
-$updates = $project ? project_updates((int)$project['id']) : [];
+$allUpdates = $project ? project_updates((int)$project['id'], !VisibilityService::isAdminViewingFrontend()) : [];
+$updates = array_values(array_filter($allUpdates, static fn(array $u): bool => !atelier_is_story_restore_copy($u)));
 $active = $updates ? end($updates) : null;
 if ($updates) {
     reset($updates);
 }
 
-$milestones = array_values(array_filter($updates, fn($u) => (int)$u['is_milestone'] === 1));
-if (!$milestones && $updates) {
-    $milestones = $updates;
-}
+$selectedCount = count(array_filter($updates, fn($u) => (int)$u['is_milestone'] === 1));
 
 $story = $project ? story_by_project((int)$project['id']) : null;
 $storySections = $story ? story_sections((int)$story['id']) : [];
+$updatesById = [];
+foreach ($updates as $u) {
+    $updatesById[(int)$u['id']] = $u;
+}
+$storySourceSections = [];
+$storyReferenceSections = [];
+foreach ($storySections as $section) {
+    $sourceId = (int)($section['source_update_id'] ?? 0);
+    if ($sourceId > 0 && isset($updatesById[$sourceId])) {
+        $storySourceSections[] = $section;
+    } else {
+        $storyReferenceSections[] = $section;
+    }
+}
 $atelierActive = $project && in_array((string)$project['workshop_status'], ['open', 'paused'], true);
 $atelierAvailable = $project && (in_array((string)$project['workshop_status'], ['open', 'paused', 'closed'], true) || $updates);
 if (!$atelierAvailable) {
     http_response_code(404);
-}
-
-$grouped = [];
-foreach ($updates as $u) {
-    $grouped[$u['phase'] ?: 'Genel'][] = $u;
 }
 
 function first_stage_media(array $u): ?array
@@ -36,6 +43,16 @@ function first_stage_media(array $u): ?array
         if (($m['media_type'] ?? '') === 'image') return $m;
     }
     return $u['media'][0] ?? null;
+}
+
+function atelier_is_story_restore_copy(array $u): bool
+{
+    $slug = (string)($u['slug'] ?? '');
+    $phase = (string)($u['phase'] ?? '');
+    $next = (string)($u['next_step'] ?? '');
+
+    return str_starts_with($slug, 'hikaye-')
+        && ($phase === 'Hikayeden gelen' || str_contains($next, 'eski hikaye bolumunden Atolye akisine geri alindi'));
 }
 
 function atelier_story_excerpt(array $section): string
@@ -60,6 +77,125 @@ function atelier_kind_short(array $u): string
 function atelier_kind_seed(array $u): string
 {
     return (string)atelier_entry_kind_config($u)['seed'];
+}
+
+function atelier_story_bridge_text(array $u): string
+{
+    $bridge = atelier_story_bridge($u);
+    $lower = static fn(string $value): string => function_exists('mb_strtolower') ? mb_strtolower($value, 'UTF-8') : strtolower($value);
+    $role = $lower((string)$bridge['reader_label']);
+    $type = $lower((string)$bridge['type_label']);
+    return 'Hikâyeye seçilirse ' . $role . ' olarak kullanılır; ilk taslakta ' . $type . ' bölümüne dönüşür.';
+}
+
+function atelier_work_data_attrs(array $u): string
+{
+    $json = json_encode(atelier_work_artifacts($u), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    return ' data-artifacts="' . e($json ?: '[]') . '"';
+}
+
+function atelier_gallery_items(array $u): array
+{
+    $items = [];
+    foreach (($u['media'] ?? []) as $m) {
+        $path = trim((string)($m['relative_path'] ?? ''));
+        if ($path === '') continue;
+        $items[] = [
+            'url' => media_url($path),
+            'type' => (string)($m['media_type'] ?? 'file'),
+            'title' => trim((string)($m['title'] ?? $m['original_name'] ?? '')),
+            'alt' => trim((string)($m['alt_text'] ?? $m['title'] ?? '')),
+            'caption' => trim((string)($m['caption'] ?? $m['title'] ?? $m['original_name'] ?? '')),
+        ];
+    }
+    return $items;
+}
+
+function atelier_gallery_data_attrs(array $u): string
+{
+    $json = json_encode(atelier_gallery_items($u), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    return ' data-gallery="' . e($json ?: '[]') . '"';
+}
+
+function atelier_link_models(array $links): array
+{
+    $models = [];
+    foreach ($links as $link) {
+        $model = LinkRenderer::fromRow(is_array($link) ? $link : []);
+        if (!$model) continue;
+        $models[] = [
+            'url' => $model->url,
+            'title' => $model->title,
+            'provider' => $model->provider,
+            'providerLabel' => $model->host !== '' ? $model->host : $model->provider,
+            'displayUrl' => $model->displayUrl,
+            'embedKind' => $model->embedKind,
+            'embedUrl' => $model->embedUrl,
+        ];
+    }
+    return $models;
+}
+
+function atelier_links_data_attrs(array $u): string
+{
+    $json = json_encode(atelier_link_models($u['links'] ?? []), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    return ' data-links="' . e($json ?: '[]') . '"';
+}
+
+function atelier_artifact_is_code(array $artifact): bool
+{
+    return in_array((string)($artifact['type'] ?? ''), ['prompt', 'code', 'output', 'log', 'error'], true)
+        || preg_match('/(<[a-z][\s\S]*>|```|\$ |PS |PROMPT:|SQLSTATE|Fatal error|SELECT |UPDATE |INSERT |function |class )/i', (string)($artifact['body'] ?? ''));
+}
+
+function render_atelier_artifacts(array $update, string $class = ''): void
+{
+    $artifacts = atelier_work_artifacts($update);
+    if (!$artifacts) return;
+    $className = trim('atelier-artifacts ' . $class);
+    echo '<div class="' . e($className) . '">';
+    foreach ($artifacts as $artifact) {
+        $type = preg_replace('/[^a-z0-9_-]/i', '', (string)($artifact['type'] ?? 'note')) ?: 'note';
+        echo '<article class="atelier-artifact atelier-artifact--' . e($type) . '">';
+        echo '<span>' . e((string)$artifact['label']) . '</span>';
+        echo '<h4>' . e((string)$artifact['title']) . '</h4>';
+        if (atelier_artifact_is_code($artifact)) {
+            echo '<pre><code>' . e((string)$artifact['body']) . '</code></pre>';
+        } else {
+            echo '<p>' . nl2br(e((string)$artifact['body'])) . '</p>';
+        }
+        echo '</article>';
+    }
+    echo '</div>';
+}
+
+function render_atelier_gallery(array $update): void
+{
+    $items = atelier_gallery_items($update);
+    if ($items === []) return;
+
+    echo '<div class="atelier-evidence-gallery">';
+    echo '<p class="atelier-material-label">Medya / görsel kanıt</p>';
+    echo '<div class="atelier-media-grid">';
+    foreach ($items as $item) {
+        $type = (string)$item['type'];
+        echo '<figure>';
+        if ($type === 'image') {
+            echo '<img src="' . e($item['url']) . '" alt="' . e($item['alt']) . '">';
+        } elseif ($type === 'video') {
+            echo '<video controls playsinline preload="metadata"><source src="' . e($item['url']) . '"></video>';
+        } elseif ($type === 'audio') {
+            echo '<audio controls preload="metadata"><source src="' . e($item['url']) . '"></audio>';
+        } else {
+            echo '<a href="' . e($item['url']) . '" target="_blank" rel="noopener noreferrer">' . e($item['title'] ?: 'Dosyayı aç') . '</a>';
+        }
+        if ($item['caption'] !== '') {
+            echo '<figcaption>' . e($item['caption']) . '</figcaption>';
+        }
+        echo '</figure>';
+    }
+    echo '</div>';
+    echo '</div>';
 }
 ?>
 <!doctype html>
@@ -108,7 +244,7 @@ function atelier_kind_seed(array $u): string
                 <p><?= e($project['summary']) ?></p>
                 <div class="atelier-meta">
                     <span><?= count($updates) ?> çalışma kaydı</span>
-                    <span><?= count($milestones) ?> hikâye adayı</span>
+                    <span><?= $selectedCount ?> hikâyeye seçili kayıt</span>
                     <span>Kayıt her gün zorunlu değil</span>
                 </div>
             </div>
@@ -119,22 +255,40 @@ function atelier_kind_seed(array $u): string
         <section class="atelier-closed-note"><div class="shell"><p class="eyebrow">ATÖLYE KAPALI</p><h2><?= e($project['closing_state'] ?: 'Bu hâliyle bitti') ?></h2><p><?= e($project['closing_note']) ?></p><?php if ($story): ?><a class="button button-rust" href="hikaye.php?slug=<?= e(rawurlencode($slug)) ?>">Hikâyeyi oku <?= icon('arrow') ?></a><?php endif; ?></div></section>
     <?php endif; ?>
 
-    <?php if ($storySections && (!$atelierActive || !$updates)): ?>
+    <?php if ($storyReferenceSections): ?>
         <section class="atelier-archive">
             <div class="shell atelier-archive-layout">
                 <header data-reveal>
-                    <p class="eyebrow"><?= $atelierActive ? 'ATÖLYEYE TAŞINAN GEÇMİŞ' : 'HİKÂYEDEN GELEN HAREKETLER' ?></p>
-                    <h2>Bu iş daha önce nerelerden geçmiş?</h2>
-                    <p><?= e($atelierActive ? 'Bu proje yeniden Atölye durumunda. Eski hikâye bölümleri burada geçmiş kayıt olarak durur; yeni kayıtlar altta Atölye akışına eklenir.' : 'Mevcut hikâye bölümleri burada geçmiş hareket olarak durur; yeni atölye kayıtları eklendikçe devam eden kısım altta büyür.') ?></p>
-                    <?php if ($story && !$atelierActive): ?><a class="atelier-archive-jump" href="hikaye.php?slug=<?= e(rawurlencode($slug)) ?>">Hikâyeyi oku <?= icon('arrow') ?></a><?php endif; ?>
+                    <p class="eyebrow">DÜZENLENMİŞ HİKÂYE REFERANSI</p>
+                    <h2>Bu projenin yayındaki anlatısı ayrı durur.</h2>
+                    <p>Bu bölümler ham Atölye kaydı değildir; daha önce düzenlenmiş hikâyeyi gösterir. Atölyeye yeni kayıt girildikçe yeni malzeme aşağıdaki çalışma akışında birikir.</p>
+                    <?php if ($story): ?><a class="atelier-archive-jump" href="hikaye.php?slug=<?= e(rawurlencode($slug)) ?>">Hikâyeyi oku <?= icon('arrow') ?></a><?php endif; ?>
                 </header>
                 <div>
-                    <?php foreach ($storySections as $i => $section): ?>
-                        <?php if ($atelierActive): ?>
-                            <article class="atelier-archive-entry"><time><?= str_pad((string)($i + 1), 2, '0', STR_PAD_LEFT) ?></time><strong><?= e($section['title'] ?: 'Başlıksız hareket') ?></strong><span><?= e(atelier_story_excerpt($section)) ?></span><em><?= e($section['label'] ?: $section['type']) ?></em></article>
-                        <?php else: ?>
-                            <a class="atelier-archive-entry" href="hikaye.php?slug=<?= e(rawurlencode($slug)) ?>#hikaye"><time><?= str_pad((string)($i + 1), 2, '0', STR_PAD_LEFT) ?></time><strong><?= e($section['title'] ?: 'Başlıksız hareket') ?></strong><span><?= e(atelier_story_excerpt($section)) ?></span><em><?= e($section['label'] ?: $section['type']) ?></em></a>
-                        <?php endif; ?>
+                    <?php foreach ($storyReferenceSections as $i => $section): ?>
+                        <a class="atelier-archive-entry" href="hikaye.php?slug=<?= e(rawurlencode($slug)) ?>#hikaye"><time><?= str_pad((string)($i + 1), 2, '0', STR_PAD_LEFT) ?></time><strong><?= e($section['title'] ?: 'Başlıksız hikâye bölümü') ?></strong><span><?= e(atelier_story_excerpt($section)) ?></span><em><?= e($section['label'] ?: $section['type']) ?></em></a>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </section>
+    <?php endif; ?>
+
+    <?php if ($storySourceSections): ?>
+        <section class="atelier-archive atelier-archive--source">
+            <div class="shell atelier-archive-layout">
+                <header data-reveal>
+                    <p class="eyebrow">HİKÂYEYE KAYNAK OLAN ATÖLYE KAYITLARI</p>
+                    <h2>Hikâyenin dayandığı iş kayıtları kaybolmaz.</h2>
+                    <p>Bu bölümler Atölye kayıtlarından seçilerek hikâyeye taşındı. Yeni çalışma kayıtları eklenirse hikâyeleştirme ekranında yeniden seçilebilir.</p>
+                </header>
+                <div>
+                    <?php foreach ($storySourceSections as $i => $section): ?>
+                        <?php
+                        $sourceId = (int)($section['source_update_id'] ?? 0);
+                        $source = $updatesById[$sourceId] ?? null;
+                        $href = $source ? '#update-' . rawurlencode((string)$source['slug']) : 'hikaye.php?slug=' . rawurlencode($slug) . '#hikaye';
+                        ?>
+                        <a class="atelier-archive-entry" href="<?= e($href) ?>"><time><?= str_pad((string)($i + 1), 2, '0', STR_PAD_LEFT) ?></time><strong><?= e($section['title'] ?: ($source['title'] ?? 'Kaynak kayit')) ?></strong><span><?= e($source ? (string)$source['summary'] : atelier_story_excerpt($section)) ?></span><em><?= e($source ? atelier_kind_short($source) : ($section['label'] ?: $section['type'])) ?></em></a>
                     <?php endforeach; ?>
                 </div>
             </div>
@@ -163,39 +317,36 @@ function atelier_kind_seed(array $u): string
                         <p data-atelier-day><?= e(trim((string)$active['date_label'] . ' · ' . atelier_kind_label($active), ' ·')) ?></p>
                         <h2 data-atelier-title><?= e($active['title']) ?></h2>
                         <p data-atelier-summary><?= e($active['summary']) ?></p>
-                        <div class="atelier-story-seed"><span><?= e(atelier_kind_short($active)) ?> · Hikâyeye taşınacak çekirdek</span><p><?= e(atelier_kind_seed($active)) ?></p></div>
-                        <dl>
-                            <div><dt>Deneme</dt><dd data-atelier-tried><?= e($active['tried']) ?></dd></div>
-                            <div><dt>Sürtüşme</dt><dd data-atelier-failed><?= e($active['failed']) ?></dd></div>
-                            <div><dt>Yön değişimi</dt><dd data-atelier-decision><?= e($active['decision']) ?></dd></div>
-                            <div><dt>Sonraki iz</dt><dd data-atelier-next><?= e($active['next_step']) ?></dd></div>
-                        </dl>
-                        <?php render_external_links($active['links']); ?>
+                        <div class="atelier-story-seed">
+                            <span data-atelier-seed-label><?= e(atelier_kind_short($active)) ?> · <?= e(atelier_story_bridge($active)['reader_label']) ?></span>
+                            <p data-atelier-seed-text><?= e(atelier_story_bridge_text($active)) ?></p>
+                        </div>
+                        <p class="atelier-material-label">İş kanıtları</p>
+                        <div data-atelier-artifacts>
+                            <?php render_atelier_artifacts($active, 'atelier-artifacts--stage'); ?>
+                        </div>
+                        <div data-atelier-gallery>
+                            <?php render_atelier_gallery($active); ?>
+                        </div>
+                        <div data-atelier-links>
+                            <?php render_external_links($active['links']); ?>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="atelier-log">
-                <header><p class="eyebrow">HİKÂYE ADAYLARI</p><h2><?= count($updates) ?> kaydın içinden yönü değiştirenler.</h2><p>Ham günlük aşağıda saklı. Burada hikâyeye taşınmaya aday kararlar ve kırılmalar var.</p></header>
-                <?php foreach ($milestones as $u): $sm = first_stage_media($u); ?>
-                    <button class="atelier-log-entry <?= $u['id'] === $active['id'] ? 'is-active' : '' ?>" id="update-<?= e($u['slug']) ?>" type="button" data-atelier-entry data-media="<?= e($sm ? media_url($sm['relative_path']) : $project['cover']) ?>" data-media-type="<?= e($sm['media_type'] ?? 'image') ?>" data-alt="<?= e($sm['alt_text'] ?? '') ?>" data-update-id="<?= e($u['slug']) ?>" data-day="<?= e(trim((string)$u['date_label'] . ' · ' . atelier_kind_label($u), ' ·')) ?>" data-title="<?= e($u['title']) ?>" data-summary="<?= e($u['summary']) ?>" data-tried="<?= e($u['tried']) ?>" data-failed="<?= e($u['failed']) ?>" data-decision="<?= e($u['decision']) ?>" data-next="<?= e($u['next_step']) ?>">
-                        <span><?= e($u['date_label']) ?> · <?= e(atelier_kind_short($u)) ?></span><strong><?= e($u['title']) ?></strong><small><?= e($u['summary']) ?></small>
+                <header>
+                    <p class="eyebrow">ÇALIŞMA AKIŞI</p>
+                    <h2>İş kayıtları hikâyeyi besleyen malzemedir.</h2>
+                    <p>Her kayıt yapılan işe ait blokları taşır: saha notu, prompt, kod, çıktı, hata, medya, bağlantı ve karar. Dönüm noktası olanlar hikâye taslağına seçilir; ham kalanlar çalışma kanıtı olarak kalır.</p>
+                </header>
+                <?php foreach ($updates as $u): $sm = first_stage_media($u); $bridge = atelier_story_bridge($u); ?>
+                    <button class="atelier-log-entry <?= $u['id'] === $active['id'] ? 'is-active' : '' ?>" id="update-<?= e($u['slug']) ?>" type="button" data-atelier-entry data-media="<?= e($sm ? media_url($sm['relative_path']) : $project['cover']) ?>" data-media-type="<?= e($sm['media_type'] ?? 'image') ?>" data-alt="<?= e($sm['alt_text'] ?? '') ?>" data-update-id="<?= e($u['slug']) ?>" data-day="<?= e(trim((string)$u['date_label'] . ' · ' . atelier_kind_label($u), ' ·')) ?>" data-title="<?= e($u['title']) ?>" data-summary="<?= e($u['summary']) ?>" data-seed-label="<?= e(atelier_kind_short($u) . ' · ' . $bridge['reader_label']) ?>" data-seed-text="<?= e(atelier_story_bridge_text($u)) ?>"<?= atelier_work_data_attrs($u) ?><?= atelier_gallery_data_attrs($u) ?><?= atelier_links_data_attrs($u) ?>>
+                        <span><?= e($u['date_label']) ?><b><?= e(atelier_kind_short($u)) ?></b></span>
+                        <strong><?= e($u['title']) ?></strong>
+                        <small><?= e($u['summary']) ?></small>
+                        <em><?= (int)$u['is_milestone'] === 1 ? 'Hikâyeye seçili' : 'Ham kayıt' ?> · <?= e($bridge['type_label']) ?></em>
                     </button>
-                <?php endforeach; ?>
-            </div>
-        </section>
-
-        <section class="atelier-raw-log">
-            <div class="shell">
-                <header data-reveal><p class="eyebrow">HAM ÇALIŞMA GÜNLÜĞÜ</p><h2>Atölye kayıtları</h2><p>Bu projenin ham çalışma akışı. Sıra, yalnızca bu proje içindeki kayıtların akışını belirler.</p></header>
-                <?php foreach ($grouped as $phase => $phaseUpdates): ?>
-                    <details class="atelier-phase">
-                        <summary><strong><?= e($phase) ?></strong><span><?= count($phaseUpdates) ?> kayıt</span></summary>
-                        <div class="atelier-phase-list">
-                            <?php foreach (array_reverse($phaseUpdates) as $u): ?>
-                                <article id="ham-<?= e($u['slug']) ?>"><div><small><?= e($u['date_label']) ?> · <?= e(atelier_kind_short($u)) ?></small><h3><?= e($u['title']) ?></h3><p><?= e($u['summary']) ?></p></div><?php render_media_items($u['media'], 'atelier-entry-media'); ?><?php render_external_links($u['links']); ?></article>
-                            <?php endforeach; ?>
-                        </div>
-                    </details>
                 <?php endforeach; ?>
             </div>
         </section>

@@ -9,23 +9,34 @@ final class VisibilityService
     public const HOME_SECTIONS = ['focus', 'trace'];
     public const WORKSHOP_WIDGET_STATUSES = ['open', 'paused'];
 
+    public static function isAdminViewingFrontend(): bool
+    {
+        if (empty($_SESSION['admin_user_id'])) return false;
+        $script = $_SERVER['SCRIPT_NAME'] ?? '';
+        return !str_contains($script, '/admin-local/');
+    }
+
     public static function publicProjectSql(string $alias = 'p'): string
     {
+        if (self::isAdminViewingFrontend()) return $alias . ".deleted_at IS NULL";
         return $alias . ".deleted_at IS NULL AND " . $alias . ".visibility='public'";
     }
 
     public static function publishedPublicStorySql(string $alias = 's'): string
     {
+        if (self::isAdminViewingFrontend()) return $alias . ".deleted_at IS NULL AND " . $alias . ".status='published'";
         return $alias . ".deleted_at IS NULL AND " . $alias . ".status='published' AND " . $alias . ".visibility='public'";
     }
 
     public static function publicReadableProjectSql(string $alias = 'p'): string
     {
+        if (self::isAdminViewingFrontend()) return $alias . ".deleted_at IS NULL";
         return $alias . ".deleted_at IS NULL AND " . $alias . ".visibility IN ('public','unlisted')";
     }
 
     public static function publishedReadableStorySql(string $alias = 's'): string
     {
+        if (self::isAdminViewingFrontend()) return $alias . ".deleted_at IS NULL AND " . $alias . ".status='published'";
         return $alias . ".deleted_at IS NULL AND " . $alias . ".status='published' AND " . $alias . ".visibility IN ('public','unlisted')";
     }
 
@@ -38,29 +49,29 @@ final class VisibilityService
 
     public static function projectIsPublic(array $project): bool
     {
+        if (empty($project['deleted_at']) && self::isAdminViewingFrontend()) return true;
         return ($project['visibility'] ?? '') === self::PUBLIC_VISIBILITY && empty($project['deleted_at']);
     }
 
     public static function storyIsPublishedPublic(?array $story): bool
     {
-        return is_array($story)
-            && ($story['status'] ?? '') === self::PUBLISHED_STATUS
-            && ($story['visibility'] ?? '') === self::PUBLIC_VISIBILITY
-            && empty($story['deleted_at']);
+        if (!is_array($story) || !empty($story['deleted_at']) || ($story['status'] ?? '') !== self::PUBLISHED_STATUS) return false;
+        if (self::isAdminViewingFrontend()) return true;
+        return ($story['visibility'] ?? '') === self::PUBLIC_VISIBILITY;
     }
 
     public static function projectIsPublicReadable(array $project): bool
     {
+        if (empty($project['deleted_at']) && self::isAdminViewingFrontend()) return true;
         return in_array((string)($project['visibility'] ?? ''), [self::PUBLIC_VISIBILITY, self::UNLISTED_VISIBILITY], true)
             && empty($project['deleted_at']);
     }
 
     public static function storyIsPublishedReadable(?array $story): bool
     {
-        return is_array($story)
-            && ($story['status'] ?? '') === self::PUBLISHED_STATUS
-            && in_array((string)($story['visibility'] ?? ''), [self::PUBLIC_VISIBILITY, self::UNLISTED_VISIBILITY], true)
-            && empty($story['deleted_at']);
+        if (!is_array($story) || !empty($story['deleted_at']) || ($story['status'] ?? '') !== self::PUBLISHED_STATUS) return false;
+        if (self::isAdminViewingFrontend()) return true;
+        return in_array((string)($story['visibility'] ?? ''), [self::PUBLIC_VISIBILITY, self::UNLISTED_VISIBILITY], true);
     }
 
     public static function storyDetailReadable(array $project, ?array $story): bool
@@ -105,13 +116,13 @@ final class VisibilityService
         if (self::homeVisible($project, $story)) return 'Ana sayfada görünür.';
 
         $reasons = [];
-        if (!self::projectIsPublic($project)) $reasons[] = 'proje herkese açık değil';
+        if (!self::projectIsPublic($project)) $reasons[] = 'proje gizli (sadece admin görebilir)';
         if (empty($project['show_on_home'])) $reasons[] = 'Ana sayfada göster kapalı';
         if (!self::homeSectionIsVisible((string)($project['home_section'] ?? 'none'))) $reasons[] = 'Ana sayfadaki yeri kapalı';
         if (!$story) $reasons[] = 'hikâye yok';
         elseif (!self::storyIsPublishedPublic($story)) $reasons[] = 'hikâye yayımlanmış/herkese açık değil';
 
-        return 'Görünmez: ' . implode(', ', $reasons) . '.';
+        return 'Kapalı nedeni: ' . implode(', ', $reasons) . '.';
     }
 
     public static function archiveReason(array $project, ?array $story): string
@@ -119,12 +130,12 @@ final class VisibilityService
         if (self::archiveVisible($project, $story)) return 'Hikâyeler sayfasında görünür.';
 
         $reasons = [];
-        if (!self::projectIsPublic($project)) $reasons[] = 'proje herkese açık değil';
+        if (!self::projectIsPublic($project)) $reasons[] = 'proje gizli (sadece admin görebilir)';
         if (empty($project['show_in_archive'])) $reasons[] = 'Hikâyeler sayfasında göster kapalı';
         if (!$story) $reasons[] = 'hikâye yok';
         elseif (!self::storyIsPublishedPublic($story)) $reasons[] = 'hikâye yayımlanmış/herkese açık değil';
 
-        return 'Görünmez: ' . implode(', ', $reasons) . '.';
+        return 'Kapalı nedeni: ' . implode(', ', $reasons) . '.';
     }
 
     public static function widgetReason(array $project): string
@@ -132,10 +143,10 @@ final class VisibilityService
         if (self::widgetVisible($project)) return 'Atölye penceresinde görünür.';
 
         $reasons = [];
-        if (!self::projectIsPublic($project)) $reasons[] = 'proje herkese açık değil';
+        if (!self::projectIsPublic($project)) $reasons[] = 'proje gizli (sadece admin görebilir)';
         if (!self::workshopStatusAllowsWidget((string)($project['workshop_status'] ?? 'none'))) $reasons[] = 'Atölye durumu Açık/Beklemede değil';
         if (empty($project['show_in_widget'])) $reasons[] = 'Atölye penceresinde göster kapalı';
 
-        return 'Görünmez: ' . implode(', ', $reasons) . '.';
+        return 'Kapalı nedeni: ' . implode(', ', $reasons) . '.';
     }
 }

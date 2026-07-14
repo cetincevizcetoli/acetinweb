@@ -82,8 +82,49 @@ function story_builder_mode_config(string $mode): array
     return $configs[$mode] ?? $configs['balanced'];
 }
 
-function story_builder_update_text(array $update, string $mode): string
+function story_builder_scope_options(): array
 {
+    return [
+        'short' => [
+            'label' => 'Kısa hikâye',
+            'help' => '3-4 bölüm. Uzun Atölyeden yalnızca ana kırılmaları alır.',
+            'narrative_limit' => 3,
+            'evidence_limit' => 1,
+            'status_limit' => 1,
+            'closing_limit' => 1,
+        ],
+        'standard' => [
+            'label' => 'Orta hikâye',
+            'help' => '4-5 bölüm. Çoğu proje için güvenli varsayılan.',
+            'narrative_limit' => 5,
+            'evidence_limit' => 2,
+            'status_limit' => 1,
+            'closing_limit' => 1,
+        ],
+        'detailed' => [
+            'label' => 'Detaylı hikâye',
+            'help' => '5-7 bölüm. Daha çok kanıt ve dönüm noktası taşır.',
+            'narrative_limit' => 8,
+            'evidence_limit' => 4,
+            'status_limit' => 2,
+            'closing_limit' => 1,
+        ],
+    ];
+}
+
+function story_builder_scope_config(string $scope): array
+{
+    $options = story_builder_scope_options();
+    return $options[$scope] ?? $options['standard'];
+}
+
+function story_builder_update_text(array $update, string $mode, string $purpose = 'narrative'): string
+{
+    $blockText = story_builder_update_block_text($update, $purpose);
+    if ($blockText !== '') {
+        return $blockText;
+    }
+
     $entryKind = atelier_entry_kind($update);
     $tried = trim((string)($update['tried'] ?? ''));
     $failed = trim((string)($update['failed'] ?? ''));
@@ -127,6 +168,82 @@ function story_builder_update_text(array $update, string $mode): string
     }
 
     return implode("\n\n", array_values(array_unique($parts)));
+}
+
+function story_builder_update_block_text(array $update, string $purpose = 'narrative'): string
+{
+    $blocks = atelier_update_blocks($update);
+    if ($blocks === []) return '';
+
+    $parts = [];
+    $fallback = [];
+    foreach ($blocks as $block) {
+        $body = trim((string)($block['body'] ?? ''));
+        if ($body === '') continue;
+
+        $title = trim((string)($block['title'] ?? ''));
+        $type = UpdateBlockRepository::validType((string)($block['block_type'] ?? 'field_note'));
+        $label = UpdateBlockRepository::typeLabel($type);
+        $head = $title !== '' ? $title : $label;
+        $summary = story_builder_block_summary($type, $head, $body, $purpose);
+        if (story_builder_block_allowed_for_purpose($type, $purpose)) {
+            $parts[] = $summary;
+        } else {
+            $fallback[] = $summary;
+        }
+    }
+
+    if ($parts === []) {
+        $parts = array_slice($fallback, 0, 2);
+    }
+
+    return implode("\n\n", $parts);
+}
+
+function story_builder_block_allowed_for_purpose(string $type, string $purpose): bool
+{
+    $type = UpdateBlockRepository::validType($type);
+
+    return match ($purpose) {
+        'opening' => in_array($type, ['field_note', 'observation', 'source', 'decision', 'story_note'], true),
+        'evidence' => in_array($type, ['prompt', 'code', 'output', 'error', 'evidence', 'source', 'observation'], true),
+        'status' => in_array($type, ['next', 'decision', 'observation', 'error', 'field_note', 'story_note'], true),
+        'closing' => in_array($type, ['decision', 'next', 'story_note', 'observation'], true),
+        default => in_array($type, ['field_note', 'observation', 'error', 'decision', 'evidence', 'next', 'story_note'], true),
+    };
+}
+
+function story_builder_trim_text(string $text, int $limit = 420): string
+{
+    $text = trim(preg_replace('/\s+/u', ' ', $text) ?? $text);
+    if ($text === '') return '';
+    if (function_exists('mb_strimwidth')) {
+        return mb_strimwidth($text, 0, $limit, '...', 'UTF-8');
+    }
+    return strlen($text) > $limit ? substr($text, 0, $limit - 3) . '...' : $text;
+}
+
+function story_builder_block_summary(string $type, string $head, string $body, string $purpose = 'narrative'): string
+{
+    $limit = match ($purpose) {
+        'evidence' => in_array($type, ['prompt', 'code', 'output'], true) ? 360 : 460,
+        'opening' => 280,
+        default => in_array($type, ['prompt', 'code', 'output'], true) ? 220 : 360,
+    };
+    $body = story_builder_trim_text($body, $limit);
+    if ($body === '') return '';
+
+    return match ($type) {
+        'prompt' => 'Prompt / girdi - ' . $head . ': ' . $body,
+        'code' => 'Kod / komut - ' . $head . ': ' . $body,
+        'output' => 'Çıktı / cevap - ' . $head . ': ' . $body,
+        'error' => 'Hata / belirti - ' . $head . ': ' . $body,
+        'evidence' => 'Kanıt - ' . $head . ': ' . $body,
+        'source' => 'Kaynak - ' . $head . ': ' . $body,
+        'decision' => 'Karar - ' . $head . ': ' . $body,
+        'next' => 'Sonraki iş - ' . $head . ': ' . $body,
+        default => $head . ': ' . $body,
+    };
 }
 
 function story_builder_update_title(array $update, string $mode): string
@@ -188,7 +305,204 @@ function story_builder_primary_media_id_for_update(int $updateId): int
     return $media ? (int)$media[0]['media_id'] : 0;
 }
 
-function story_builder_insert_item(int $sectionId, array $update, int $index, string $mode, bool $hasItemSource): void
+function story_builder_copy_update_media_to_section(int $sectionId, array $updates): void
+{
+    $sort = 0;
+    $seen = [];
+    $st = db()->prepare('SELECT media_id,caption_override,sort_order FROM update_media WHERE update_id=? ORDER BY sort_order,id');
+    $insert = db()->prepare(
+        "INSERT OR IGNORE INTO story_section_media(section_id,media_id,role,caption_override,sort_order)
+         VALUES (?,?,'gallery',?,?)"
+    );
+
+    foreach ($updates as $update) {
+        $st->execute([(int)$update['id']]);
+        foreach ($st->fetchAll() as $row) {
+            $mediaId = (int)$row['media_id'];
+            if ($mediaId <= 0 || isset($seen[$mediaId])) continue;
+            $seen[$mediaId] = true;
+            $insert->execute([$sectionId, $mediaId, (string)($row['caption_override'] ?? ''), ++$sort]);
+        }
+    }
+}
+
+function story_builder_copy_update_links_to_section(int $sectionId, array $updates): void
+{
+    $sort = 0;
+    $seen = [];
+    $st = db()->prepare("SELECT link_type,title,url FROM links WHERE owner_type='update' AND owner_id=? ORDER BY sort_order,id");
+    $insert = db()->prepare(
+        "INSERT INTO links(owner_type,owner_id,link_type,title,url,sort_order)
+         VALUES ('story_section',?,?,?,?,?)"
+    );
+
+    foreach ($updates as $update) {
+        $st->execute([(int)$update['id']]);
+        foreach ($st->fetchAll() as $row) {
+            $url = safe_external_url((string)($row['url'] ?? ''));
+            if ($url === '' || isset($seen[$url])) continue;
+            $seen[$url] = true;
+            $insert->execute([$sectionId, (string)($row['link_type'] ?? 'external'), (string)($row['title'] ?? ''), $url, ++$sort]);
+        }
+    }
+}
+
+function story_builder_group_updates(array $updates): array
+{
+    $groups = [
+        'opening' => [],
+        'narrative' => [],
+        'evidence' => [],
+        'status' => [],
+        'closing' => [],
+    ];
+
+    foreach ($updates as $update) {
+        $role = atelier_default_story_role($update);
+        $type = atelier_default_story_section_type($update);
+        $kind = atelier_entry_kind($update);
+
+        if ($role === 'opening') {
+            $groups['opening'][] = $update;
+        } elseif ($role === 'closing') {
+            $groups['closing'][] = $update;
+        } elseif ($role === 'status') {
+            $groups['status'][] = $update;
+        } elseif (in_array($role, ['media', 'source'], true) || in_array($type, ['gallery', 'video', 'code'], true) || in_array($kind, ['media', 'source'], true)) {
+            $groups['evidence'][] = $update;
+        } else {
+            $groups['narrative'][] = $update;
+        }
+    }
+
+    if ($groups['opening'] === [] && $updates !== []) {
+        $groups['opening'][] = array_shift($updates);
+        $openingId = (int)$groups['opening'][0]['id'];
+        foreach (['narrative', 'evidence', 'status', 'closing'] as $key) {
+            $groups[$key] = array_values(array_filter(
+                $groups[$key],
+                static fn(array $update): bool => (int)$update['id'] !== $openingId
+            ));
+        }
+    }
+
+    return $groups;
+}
+
+function story_builder_update_strength(array $update): int
+{
+    $score = 0;
+    if (!empty($update['is_milestone'])) $score += 120;
+
+    $role = atelier_default_story_role($update);
+    $kind = atelier_entry_kind($update);
+    $score += match ($role) {
+        'opening' => 90,
+        'decision', 'lesson' => 80,
+        'problem' => 70,
+        'media', 'source' => 60,
+        'status', 'closing' => 50,
+        default => 35,
+    };
+    $score += match ($kind) {
+        'decision' => 30,
+        'problem' => 25,
+        'experiment' => 18,
+        'media', 'source' => 15,
+        default => 8,
+    };
+
+    $blocks = atelier_update_blocks($update);
+    $score += min(30, count($blocks) * 5);
+    if (!empty($update['media'])) $score += 18;
+    if (!empty($update['links'])) $score += 12;
+    if (trim((string)($update['decision'] ?? '')) !== '') $score += 15;
+    if (trim((string)($update['failed'] ?? '')) !== '') $score += 10;
+
+    return $score;
+}
+
+function story_builder_limit_updates(array $updates, int $limit): array
+{
+    if ($limit <= 0 || $updates === []) return [];
+    if (count($updates) <= $limit) return array_values($updates);
+
+    $ranked = [];
+    foreach (array_values($updates) as $index => $update) {
+        $ranked[] = [
+            'index' => $index,
+            'score' => story_builder_update_strength($update),
+            'update' => $update,
+        ];
+    }
+
+    usort($ranked, static function (array $a, array $b): int {
+        if ($a['score'] === $b['score']) {
+            return $a['index'] <=> $b['index'];
+        }
+        return $b['score'] <=> $a['score'];
+    });
+    $picked = array_slice($ranked, 0, $limit);
+    usort($picked, static fn(array $a, array $b): int => $a['index'] <=> $b['index']);
+
+    return array_map(static fn(array $row): array => $row['update'], $picked);
+}
+
+function story_builder_apply_scope(array $groups, array $scope): array
+{
+    $groups['opening'] = story_builder_limit_updates($groups['opening'] ?? [], 1);
+    $groups['narrative'] = story_builder_limit_updates($groups['narrative'] ?? [], (int)$scope['narrative_limit']);
+    $groups['evidence'] = story_builder_limit_updates($groups['evidence'] ?? [], (int)$scope['evidence_limit']);
+    $groups['status'] = story_builder_limit_updates($groups['status'] ?? [], (int)$scope['status_limit']);
+    $groups['closing'] = story_builder_limit_updates($groups['closing'] ?? [], (int)$scope['closing_limit']);
+
+    return $groups;
+}
+
+function story_builder_count_grouped_updates(array $groups): int
+{
+    $count = 0;
+    foreach (['opening', 'narrative', 'evidence', 'status', 'closing'] as $key) {
+        $count += count($groups[$key] ?? []);
+    }
+    return $count;
+}
+
+function story_builder_group_label(string $key): string
+{
+    return match ($key) {
+        'opening' => 'Açılış',
+        'narrative' => 'Hikâye omurgası',
+        'evidence' => 'Kanıtlar',
+        'status' => 'Durum / sonraki iş',
+        'closing' => 'Kapanış',
+        default => $key,
+    };
+}
+
+function story_builder_attach_blocks(array $updates): array
+{
+    foreach ($updates as $i => $update) {
+        $updates[$i]['blocks'] = UpdateBlockRepository::forUpdate((int)$update['id']);
+    }
+    return $updates;
+}
+
+function story_builder_mode_middle_type(string $mode, array $config): string
+{
+    if ($mode === 'reflection') return 'lesson';
+    if ($mode === 'discovery') return 'questions';
+    return (string)$config['middle_type'];
+}
+
+function story_builder_insert_grouped_items(int $sectionId, array $updates, string $mode, bool $hasItemSource, string $purpose = 'narrative'): void
+{
+    foreach (array_values($updates) as $i => $update) {
+        story_builder_insert_item($sectionId, $update, $i, $mode, $hasItemSource, $purpose);
+    }
+}
+
+function story_builder_insert_item(int $sectionId, array $update, int $index, string $mode, bool $hasItemSource, string $purpose = 'narrative'): void
 {
     $kindConfig = atelier_entry_kind_config($update);
     $itemType = (string)$kindConfig['item_type'];
@@ -204,7 +518,7 @@ function story_builder_insert_item(int $sectionId, array $update, int $index, st
         (string)$kindConfig['short'],
     ]);
     $subtitle = implode(' · ', array_values(array_unique($subtitleParts)));
-    $text = story_builder_update_text($update, $mode);
+    $text = story_builder_update_text($update, $mode, $purpose);
 
     if ($hasItemSource) {
         $st = db()->prepare(
@@ -220,6 +534,93 @@ function story_builder_insert_item(int $sectionId, array $update, int $index, st
          VALUES (?,'',?,?,?,?,?,?)"
     );
     $st->execute([$sectionId, $itemType, $step, $title, $subtitle, $text, $index + 1]);
+}
+
+function story_builder_insert_opening_from_updates(int $storyId, array $updates, array $project, array $config, int $sortOrder): int
+{
+    $update = $updates[0] ?? null;
+    if (!$update) {
+        return story_builder_insert_section(
+            $storyId,
+            'opening',
+            $config['opening_layout'],
+            $config['opening_label'],
+            trim((string)($project['question'] ?: $project['title'])),
+            trim((string)($project['summary'] ?? '')),
+            '',
+            'Bu taslak, Atölye kayıtlarından seçilerek oluşturuldu.',
+            $sortOrder
+        );
+    }
+
+    $title = story_builder_update_title($update, 'scene');
+    $summary = trim((string)($update['summary'] ?? $project['summary'] ?? ''));
+    $body = story_builder_update_text($update, 'scene', 'opening');
+    $mediaId = story_builder_primary_media_id_for_update((int)$update['id']);
+
+    $sectionId = story_builder_insert_section(
+        $storyId,
+        'opening',
+        atelier_default_story_layout($update),
+        atelier_story_label($update),
+        $title,
+        $body,
+        $summary,
+        trim((string)($project['question'] ?? '')),
+        $sortOrder,
+        (int)$update['id'],
+        atelier_story_label($update),
+        '',
+        '',
+        $mediaId
+    );
+    story_builder_copy_update_media_to_section($sectionId, [$update]);
+    story_builder_copy_update_links_to_section($sectionId, [$update]);
+    return $sectionId;
+}
+
+function story_builder_insert_group_section(
+    int $storyId,
+    string $type,
+    string $layout,
+    string $label,
+    string $title,
+    string $intro,
+    array $updates,
+    int $sortOrder,
+    string $mode,
+    bool $hasItemSource,
+    string $purpose = 'narrative'
+): int {
+    if ($updates === []) return 0;
+
+    $mediaId = 0;
+    foreach ($updates as $update) {
+        $mediaId = story_builder_primary_media_id_for_update((int)$update['id']);
+        if ($mediaId > 0) break;
+    }
+
+    $sectionId = story_builder_insert_section(
+        $storyId,
+        $type,
+        $layout,
+        $label,
+        $title,
+        '',
+        $intro,
+        '',
+        $sortOrder,
+        0,
+        $label,
+        '',
+        '',
+        $mediaId
+    );
+    story_builder_insert_grouped_items($sectionId, $updates, $mode, $hasItemSource, $purpose);
+    story_builder_copy_update_media_to_section($sectionId, $updates);
+    story_builder_copy_update_links_to_section($sectionId, $updates);
+
+    return $sectionId;
 }
 
 function story_builder_section_item_type(string $sectionType, array $update, string $mode): string
@@ -249,7 +650,7 @@ function story_builder_insert_update_section(int $storyId, array $update, int $s
         $sectionId = story_builder_insert_section(
             $storyId,
             $type,
-            'default',
+            $layout,
             $label,
             $title,
             '',
@@ -310,6 +711,8 @@ if (is_post()) {
     try {
         $mode = (string)($_POST['draft_mode'] ?? 'balanced');
         $config = story_builder_mode_config($mode);
+        $scopeName = (string)($_POST['story_scope'] ?? 'standard');
+        $scope = story_builder_scope_config($scopeName);
         $selected = array_values(array_unique(array_map('intval', $_POST['update_ids'] ?? [])));
         if (!$selected) throw new RuntimeException('En az bir kayıt seçmelisin.');
 
@@ -339,36 +742,87 @@ if (is_post()) {
         }
 
         $max = (int)db()->query('SELECT COALESCE(MAX(sort_order),0) FROM story_sections WHERE story_id=' . $storyId)->fetchColumn();
-        if ($max === 0 || checkbox('replace_sections')) {
-            story_builder_insert_section(
-                $storyId,
-                'opening',
-                $config['opening_layout'],
-                $config['opening_label'],
-                trim((string)($project['question'] ?: $project['title'])),
-                trim((string)($project['summary'] ?? '')),
-                '',
-                'Bu taslak, Atölye kayıtlarından seçilerek oluşturuldu.',
-                ++$max
-            );
-        }
-
+        $needsOpening = ($max === 0 || checkbox('replace_sections'));
         $q = db()->prepare('SELECT * FROM updates WHERE id=? AND project_id=?');
         $hasItemSource = story_builder_has_column('story_section_items', 'source_update_id');
+        $selectedUpdates = [];
         foreach ($selected as $i => $uid) {
             $q->execute([$uid, $projectId]);
             $update = $q->fetch();
             if (!$update) continue;
-            story_builder_insert_update_section($storyId, $update, ++$max, $mode, $hasItemSource);
+            $update['blocks'] = UpdateBlockRepository::forUpdate((int)$update['id']);
+            $selectedUpdates[] = $update;
+        }
+        if ($selectedUpdates === []) {
+            throw new RuntimeException('Seçilen kayıtlar bu projede bulunamadı.');
         }
 
+        $groups = story_builder_group_updates($selectedUpdates);
+        $groups = story_builder_apply_scope($groups, $scope);
+        $usedUpdateCount = story_builder_count_grouped_updates($groups);
+        if ($needsOpening) {
+            story_builder_insert_opening_from_updates($storyId, $groups['opening'], $project, $config, ++$max);
+        }
+        $narrativeUpdates = $needsOpening
+            ? $groups['narrative']
+            : array_merge($groups['opening'], $groups['narrative']);
+        story_builder_insert_group_section(
+            $storyId,
+            story_builder_mode_middle_type($mode, $config),
+            'default',
+            $config['middle_label'],
+            $config['middle_title'],
+            $config['middle_intro'],
+            $narrativeUpdates,
+            ++$max,
+            $mode,
+            $hasItemSource,
+            'narrative'
+        );
+
+        story_builder_insert_group_section(
+            $storyId,
+            'gallery',
+            'wide',
+            'KANITLAR',
+            'Atölyeden hikâyeye taşınan kanıtlar.',
+            'Görseller, videolar, bağlantılar, promptlar veya çıktılar burada hikâyenin dayanağı olarak toplanır.',
+            $groups['evidence'],
+            ++$max,
+            $mode,
+            $hasItemSource,
+            'evidence'
+        );
+
+        story_builder_insert_group_section(
+            $storyId,
+            'status',
+            'default',
+            'DURUM',
+            'Bugün bu iş nerede duruyor?',
+            'Atölyede kalan durum notları ve sonraki adımlar.',
+            $groups['status'],
+            ++$max,
+            $mode,
+            $hasItemSource,
+            'status'
+        );
+
+        $closingUpdates = $groups['closing'];
+        $closingBody = trim((string)($_POST['closing_note'] ?? $project['closing_note']));
+        if ($closingUpdates !== []) {
+            $closingBody = trim($closingBody . "\n\n" . implode("\n\n", array_map(
+                static fn(array $update): string => story_builder_update_text($update, $mode, 'closing'),
+                $closingUpdates
+            )));
+        }
         story_builder_insert_section(
             $storyId,
             'text',
             'wide',
             $config['ending_label'],
             $config['ending_title'],
-            trim((string)($_POST['closing_note'] ?? $project['closing_note'])) ?: 'Bu bölüm hikâye düzenleyicisinden tamamlanacak.',
+            $closingBody ?: 'Bu bölüm hikâye düzenleyicisinden tamamlanacak.',
             '',
             '',
             ++$max
@@ -388,8 +842,8 @@ if (is_post()) {
         }
 
         db()->commit();
-        admin_audit('build_story', 'story', $storyId, 'Mode: ' . $mode . ' / Selected updates: ' . implode(',', $selected));
-        flash('success', 'Hikâye taslağı oluşturuldu. Mod: ' . $config['label']);
+        admin_audit('build_story', 'story', $storyId, 'Mode: ' . $mode . ' / Scope: ' . $scopeName . ' / Used updates: ' . $usedUpdateCount . ' / Selected updates: ' . implode(',', $selected));
+        flash('success', 'Hikâye taslağı oluşturuldu. Seçilen ' . count($selectedUpdates) . ' kayıttan ' . $usedUpdateCount . ' kayıt taslağa taşındı. Kalanlar Atölye kaydı olarak duruyor.');
         redirect('story-edit.php?project_id=' . $projectId);
     } catch (Throwable $e) {
         if (db()->inTransaction()) db()->rollBack();
@@ -398,6 +852,17 @@ if (is_post()) {
 }
 
 $draftModes = ['balanced', 'discovery', 'scene', 'reflection'];
+$storyScopes = story_builder_scope_options();
+$defaultSelectedUpdates = array_values(array_filter($updates, static fn(array $update): bool => !empty($update['is_milestone'])));
+$defaultGroups = [];
+$defaultUsedCount = 0;
+if ($defaultSelectedUpdates !== []) {
+    $defaultGroups = story_builder_apply_scope(
+        story_builder_group_updates(story_builder_attach_blocks($defaultSelectedUpdates)),
+        story_builder_scope_config('standard')
+    );
+    $defaultUsedCount = story_builder_count_grouped_updates($defaultGroups);
+}
 
 admin_head('Atölyeden Hikâye');
 ?>
@@ -430,6 +895,43 @@ admin_head('Atölyeden Hikâye');
             </div>
         </section>
 
+        <section class="panel">
+            <h2>Hikâye yoğunluğu</h2>
+            <p class="help">Uzun Atölye kayıtları doğrudan hikâyeye dökülmez. Bu seçim, kaç kaydın hikâye omurgasına taşınacağını belirler; kalan kayıtlar Atölye arşivinde kalır.</p>
+            <div class="draft-mode-grid">
+                <?php foreach ($storyScopes as $scopeKey => $scope): ?>
+                    <label class="draft-mode-card">
+                        <input type="radio" name="story_scope" value="<?= e($scopeKey) ?>" <?= $scopeKey === 'standard' ? 'checked' : '' ?>>
+                        <strong><?= e($scope['label']) ?></strong>
+                        <span><?= e($scope['help']) ?></span>
+                    </label>
+                <?php endforeach; ?>
+            </div>
+        </section>
+
+        <section class="panel story-plan-panel">
+            <h2>Varsayılan taslak planı</h2>
+            <?php if ($defaultSelectedUpdates === []): ?>
+                <p class="help">Henüz dönüm noktası işaretli kayıt yok. Hikâye taslağı oluşturmadan önce aşağıdan hangi kayıtların omurgaya gireceğini seç.</p>
+            <?php else: ?>
+                <p class="help"><?= count($defaultSelectedUpdates) ?> dönüm noktasından orta yoğunlukta <?= $defaultUsedCount ?> kayıt hikâye iskeletine girer. Kalanlar Atölye kaydı olarak durur.</p>
+                <div class="story-plan-grid">
+                    <?php foreach (['opening', 'narrative', 'evidence', 'status', 'closing'] as $groupKey): $groupUpdates = $defaultGroups[$groupKey] ?? []; ?>
+                        <div>
+                            <strong><?= e(story_builder_group_label($groupKey)) ?></strong>
+                            <?php if ($groupUpdates === []): ?>
+                                <small>Kayıt yok</small>
+                            <?php else: ?>
+                                <?php foreach ($groupUpdates as $update): ?>
+                                    <small><?= e((string)$update['title']) ?></small>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        </section>
+
         <aside class="panel">
             <h2>Kapanis ve taslak</h2>
             <?php if ($story): ?>
@@ -453,13 +955,15 @@ admin_head('Atölyeden Hikâye');
 
         <section class="panel">
             <h2>Kayıtları seç</h2>
+            <p class="help">Burada seçilenler hikâyenin iskeletine girer. Prompt, çıktı, medya ve linkler kanıt olarak kalır; hikâye dili daha sonra Hikâye editöründe temizlenir.</p>
             <div class="list">
-                <?php foreach ($updates as $update): $kind = atelier_entry_kind_config($update); ?>
+                <?php foreach ($updates as $update): $kind = atelier_entry_kind_config($update); $bridge = atelier_story_bridge($update); $blockCount = count(atelier_update_blocks($update)); $mediaCount = count(update_media((int)$update['id'])); $linkCount = count(owner_links('update', (int)$update['id'])); ?>
                     <label class="list-row">
                         <input type="checkbox" name="update_ids[]" value="<?= (int)$update['id'] ?>" <?= $update['is_milestone'] ? 'checked' : '' ?>>
                         <span>
                             <strong><?= e($update['title']) ?></strong>
-                            <small><?= e($update['date_label']) ?> · <?= e($update['phase']) ?> · Hikâyede: <?= e(atelier_story_label($update)) ?> / <?= e(atelier_story_section_type_options()[atelier_default_story_section_type($update)]['label'] ?? atelier_default_story_section_type($update)) ?></small>
+                            <small><?= e($update['date_label']) ?> · <?= e($update['phase']) ?> · Hikâyede: <?= e($bridge['reader_label']) ?> / <?= e($bridge['type_label']) ?> / <?= e($bridge['layout_label']) ?></small>
+                            <small><?= $blockCount ?> iş bloğu · <?= $mediaCount ?> medya · <?= $linkCount ?> bağlantı</small>
                         </span>
                         <span class="chip <?= $update['is_milestone'] ? 'ok' : '' ?>"><?= $update['is_milestone'] ? 'Dönüm noktası' : 'Ham kayıt' ?></span>
                     </label>
