@@ -1,22 +1,63 @@
 /* Stories index layer: hikaye listesi ve filtre sayfasi icin sayfa ozel kurallar. */
+.stories-page .stories-hero-v6 {
+  padding-block: clamp(46px, 6vw, 66px);
+}
+
+.stories-page .stories-hero-v6-grid {
+  grid-template-columns: minmax(0, 5fr) minmax(360px, 6fr);
+  gap: clamp(34px, 5vw, 64px);
+}
+
 .stories-page .stories-hero-v6 h1 {
-  max-width: 11ch;
-  font-size: clamp(3rem, 6vw, 6rem);
-  line-height: .96;
+  max-width: 12ch;
+  font-size: clamp(2.75rem, 5vw, 5rem);
+  line-height: 1;
   letter-spacing: 0;
 }
 
 .stories-page .stories-hero-v6 p {
-  max-width: 62ch;
+  max-width: 66ch;
+  font-size: clamp(1rem, 1.15vw, 1.12rem);
+  line-height: 1.7;
+}
+
+.stories-page .stories-browser {
+  padding-top: clamp(38px, 5vw, 56px);
 }
 
 .stories-page .story-filter-bar {
   align-items: end;
+  gap: 24px;
+}
+
+.stories-page .story-results-bar {
+  align-items: center;
+  gap: 24px;
+}
+
+.stories-page .stories-mosaic {
+  gap: clamp(34px, 4vw, 48px) clamp(22px, 3vw, 32px);
+}
+
+.stories-page .mosaic-story figure {
+  margin-bottom: 18px;
+}
+
+.stories-page .mosaic-story figure img {
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
 }
 
 .stories-page .story-card h2 {
-  font-size: clamp(2rem, 3.1vw, 3.25rem);
-  line-height: 1.03;
+  font-size: clamp(1.75rem, 2.45vw, 2.75rem);
+  line-height: 1.07;
+  letter-spacing: 0;
+}
+
+.stories-page .mosaic-story-copy h2 {
+  max-width: 16ch;
+  font-size: clamp(1.75rem, 2.45vw, 2.8rem);
+  line-height: 1.06;
   letter-spacing: 0;
 }
 
@@ -25,8 +66,13 @@
 }
 
 @media (max-width: 900px) {
+  .stories-page .stories-hero-v6-grid {
+    grid-template-columns: 1fr;
+  }
+
   .stories-page .stories-hero-v6 h1,
-  .stories-page .story-card h2 {
+  .stories-page .story-card h2,
+  .stories-page .mosaic-story-copy h2 {
     max-width: 100%;
     overflow-wrap: anywhere;
   }

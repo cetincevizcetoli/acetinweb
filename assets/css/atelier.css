@@ -17,12 +17,31 @@ body.atelier-page {
 
 .atelier-page .atelier-hero {
   color: var(--ink);
+  padding-block: clamp(50px, 6vw, 76px);
+}
+
+.atelier-page .atelier-hero-grid {
+  gap: clamp(32px, 5vw, 64px);
+  align-items: center;
 }
 
 .atelier-page .atelier-hero h1,
 .atelier-page .atelier-log h2,
 .atelier-page .atelier-stage-copy h2 {
   color: var(--ink);
+}
+
+.atelier-page .atelier-hero h1 {
+  max-width: 15ch;
+  font-size: clamp(2.9rem, 5vw, 5.45rem);
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.atelier-page .atelier-question {
+  max-width: 34ch;
+  font-size: clamp(1.15rem, 1.75vw, 1.65rem);
+  line-height: 1.45;
 }
 
 .atelier-page .atelier-hero-grid > div:last-child > p:last-of-type,
@@ -43,6 +62,79 @@ body.atelier-page {
   padding-left: 16px;
   font-family: var(--mono);
   color: var(--rust-dark);
+}
+
+.atelier-page .atelier-archive {
+  padding-block: clamp(34px, 4.8vw, 56px);
+}
+
+.atelier-page .atelier-archive-layout {
+  grid-template-columns: minmax(220px, 3fr) minmax(0, 9fr);
+  gap: clamp(28px, 4vw, 48px);
+}
+
+.atelier-page .atelier-archive header {
+  position: static;
+}
+
+.atelier-page .atelier-archive h2,
+.atelier-page .atelier-rule h2,
+.atelier-page .atelier-raw-log h2 {
+  max-width: 18ch;
+  font-size: clamp(1.8rem, 2.45vw, 2.7rem);
+  line-height: 1.08;
+  letter-spacing: 0;
+}
+
+.atelier-page .atelier-archive header > p:last-child,
+.atelier-page .atelier-rule p,
+.atelier-page .atelier-raw-log header > p:last-child {
+  max-width: 64ch;
+  font-size: clamp(.92rem, 1vw, 1.02rem);
+  line-height: 1.62;
+}
+
+.atelier-page .atelier-archive-entry {
+  grid-template-columns: 42px minmax(0, 1fr) max-content;
+  gap: 10px 18px;
+  padding-block: 13px;
+}
+
+.atelier-page .atelier-archive-entry strong {
+  font-size: clamp(.98rem, 1.08vw, 1.12rem);
+  line-height: 1.24;
+}
+
+.atelier-page .atelier-archive-entry span {
+  max-width: 70ch;
+  font-size: .84rem;
+  line-height: 1.55;
+}
+
+.atelier-page .atelier-rule {
+  padding-block: clamp(44px, 6vw, 66px);
+}
+
+.atelier-page .atelier-rule-grid {
+  grid-template-columns: minmax(150px, 2fr) minmax(0, 4fr) minmax(0, 5fr);
+  gap: clamp(22px, 3vw, 38px);
+}
+
+.atelier-page .atelier-console {
+  padding-block: clamp(56px, 7vw, 86px);
+}
+
+.atelier-page .atelier-stage-copy h2 {
+  max-width: 18ch;
+  font-size: clamp(1.85rem, 2.8vw, 3.15rem);
+  line-height: 1.05;
+  letter-spacing: 0;
+}
+
+.atelier-page .atelier-log h2 {
+  max-width: 18ch;
+  font-size: clamp(1.65rem, 2.25vw, 2.55rem);
+  line-height: 1.08;
 }
 
 .atelier-page .atelier-story-seed {
@@ -113,6 +205,7 @@ body.atelier-page {
 .atelier-page .atelier-raw-log header {
   border-bottom: 1px solid rgba(41, 31, 22, .14);
   padding-bottom: 18px;
+  max-width: 1040px;
 }
 
 .atelier-page .atelier-log-entry {
@@ -130,6 +223,8 @@ body.atelier-page {
 
 .atelier-page .atelier-log-entry strong {
   color: var(--ink);
+  font-size: clamp(1rem, 1.18vw, 1.18rem);
+  line-height: 1.28;
 }
 
 .atelier-page .atelier-log-entry small {
@@ -177,6 +272,26 @@ body.atelier-page {
 
 .atelier-page .atelier-phase {
   background: rgba(255, 255, 255, .22);
+}
+
+.atelier-page .atelier-phase > summary {
+  padding-block: 16px;
+}
+
+.atelier-page .atelier-phase > summary span {
+  font-size: clamp(1rem, 1.25vw, 1.2rem);
+}
+
+.atelier-page .atelier-phase-list > article {
+  grid-template-columns: minmax(230px, .9fr) minmax(0, 1.35fr);
+  gap: 22px;
+  padding-block: 22px;
+}
+
+.atelier-page .atelier-phase-list h3 {
+  max-width: 22ch;
+  font-size: clamp(1.22rem, 1.75vw, 1.8rem);
+  line-height: 1.12;
 }
 
 .atelier-page .atelier-artifacts {
@@ -310,6 +425,52 @@ body.atelier-page {
 @media (max-width: 760px) {
   body.atelier-page {
     background-size: 22px 22px;
+  }
+
+  .atelier-page .atelier-hero {
+    padding-block: 42px 52px;
+  }
+
+  .atelier-page .atelier-hero h1 {
+    font-size: clamp(2.25rem, 9.8vw, 3rem);
+    line-height: 1.02;
+  }
+
+  .atelier-page .atelier-question {
+    font-family: var(--sans);
+    font-size: clamp(1rem, 4.4vw, 1.12rem);
+    line-height: 1.45;
+  }
+
+  .atelier-page .atelier-archive {
+    padding-block: 34px 42px;
+  }
+
+  .atelier-page .atelier-archive h2,
+  .atelier-page .atelier-rule h2,
+  .atelier-page .atelier-raw-log h2 {
+    font-size: clamp(1.65rem, 7vw, 2.05rem);
+  }
+
+  .atelier-page .atelier-archive-entry {
+    padding-block: 12px;
+  }
+
+  .atelier-page .atelier-hero h1,
+  .atelier-page .atelier-archive h2,
+  .atelier-page .atelier-rule h2,
+  .atelier-page .atelier-raw-log h2,
+  .atelier-page .atelier-stage-copy h2,
+  .atelier-page .atelier-log h2,
+  .atelier-page .atelier-phase-list h3 {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .atelier-page .atelier-archive-layout,
+  .atelier-page .atelier-rule-grid,
+  .atelier-page .atelier-phase-list > article {
+    grid-template-columns: 1fr;
   }
 
   .atelier-page .atelier-stage-media::before,

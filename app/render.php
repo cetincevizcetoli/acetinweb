@@ -110,9 +110,14 @@ function render_story_section_extras(array $section, string $type, bool $primary
     }
 
     if (!in_array($type, ['roles', 'code'], true) && trim((string)($section['note_text'] ?? '')) !== '') {
-        echo '<aside class="story-section-note"><strong>Kenar notu</strong>';
+        echo '<details class="story-section-note" data-story-note><summary><span>Kenar notu</span></summary>';
+        echo '<button type="button" class="story-section-note-backdrop" data-story-note-close aria-label="Kenar notunu kapat"></button>';
+        echo '<div class="story-section-note-panel" role="note" aria-label="Kenar notu">';
+        echo '<button type="button" class="story-section-note-close" data-story-note-close aria-label="Kenar notunu kapat">Kapat</button>';
+        echo '<p class="story-section-note-kicker">Kenar notu</p>';
         render_paragraphs_text((string)$section['note_text']);
-        echo '</aside>';
+        echo '</div>';
+        echo '</details>';
     }
 
     if ($type !== 'code' && trim((string)($section['code_text'] ?? '')) !== '') {
@@ -310,7 +315,9 @@ function render_story_section(array $section, int $index, int $total = 0, array 
                 echo '</div>';
                 $primaryRendered = true;
             }
-            echo '<div class="timeline-track">';
+            $timelineClass = 'timeline-track';
+            if (count($items) <= 2) $timelineClass .= ' timeline-track--compact';
+            echo '<div class="' . e($timelineClass) . '">';
             foreach ($items as $it) echo '<article><span>' . e($it['step']) . '</span><small>' . e($it['subtitle']) . '</small><h3>' . e($it['title']) . '</h3><p>' . e($it['text']) . '</p></article>';
             echo '</div>';
             break;
