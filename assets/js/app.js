@@ -491,3 +491,52 @@
     }
   }
 })();
+
+
+// DX CONCEPT MICRO-INTERACTIONS
+
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. SCROLL PROGRESS BAR
+    const progressBar = document.createElement('div');
+    progressBar.className = 'dx-scroll-progress';
+    document.body.appendChild(progressBar);
+
+    window.addEventListener('scroll', () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        progressBar.style.width = scrolled + '%';
+    });
+
+    // 2. MAGNETIC BUTTONS (Nav Links)
+    const navLinks = document.querySelectorAll('.story-signature nav a, .inner-header nav a, .story-paths a');
+    navLinks.forEach(link => {
+        link.addEventListener('mousemove', (e) => {
+            const rect = link.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            link.style.transform = "translate(${x * 0.2}px, ${y * 0.2}px)";
+        });
+
+        link.addEventListener('mouseleave', () => {
+            link.style.transform = 'translate(0px, 0px)';
+        });
+    });
+
+    // 3. DIKIs IZI (SEAM) TOOLTIPS FOR TIMELINES
+    const timelineArticles = document.querySelectorAll('.story-section-timeline article');
+    timelineArticles.forEach((article, index) => {
+        article.classList.add('dx-context-wrapper');
+        
+        const marker = document.createElement('div');
+        marker.className = 'dx-context-marker';
+        marker.innerHTML = '?';
+        
+        const tooltip = document.createElement('div');
+        tooltip.className = 'dx-tooltip';
+        tooltip.innerHTML = "<strong>Kayýt #${index + 1}</strong><br>Bu kararýn Atölye'deki ham notlarýna, sayfa sonundaki arþiv baðlantýsýndan ulaþabilirsiniz.";
+        
+        article.appendChild(marker);
+        article.appendChild(tooltip);
+    });
+});

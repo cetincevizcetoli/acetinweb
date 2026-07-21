@@ -484,3 +484,20 @@ body.atelier-page {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* --- DX CONCEPT ATELIER HOVERS --- */
+.atelier-archive-entry, .atelier-update {
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease, border-color 0.4s ease, background 0.4s ease;
+}
+
+.atelier-archive-entry:hover, .atelier-update:hover {
+    transform: translateX(15px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    border-left: 4px solid var(--rust);
+}
+
+:root[data-theme="dark"] .atelier-archive-entry:hover, :root[data-theme="dark"] .atelier-update:hover {
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
+}
+
