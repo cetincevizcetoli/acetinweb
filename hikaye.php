@@ -254,8 +254,12 @@ if ($project && $hasWorkshopPage) {
 </main>
 <footer class="site-footer">
     <div class="shell footer-inner">
-        <p>© <?= e((string)($site['year'] ?? date('Y'))) ?> Ahmet Çetin · #FikrimVar</p>
-        <a href="hikayeler.php">Hikâyelere dön</a>
+        <p>© <?= e((string)($site['year'] ?? date('Y'))) ?> Ahmet Çetin · #FikrimVar<span class="ai-credit"> · Co-created with <a href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">Gemini</a> &amp; <a href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer">ChatGPT</a></span></p>
+        <nav>
+            <a href="hikayeler.php">Bütün hikâyeler</a>
+            <a href="index.php">Ana sayfaya dön</a>
+            <a href="#hikaye-main">Başa dön ↑</a>
+        </nav>
     </div>
 </footer>
 </body>

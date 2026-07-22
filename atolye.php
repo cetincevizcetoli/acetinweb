@@ -365,6 +365,6 @@ function render_atelier_gallery(array $update): void
     <section class="story-signature story-signature--dark"><div class="shell story-signature-grid" data-reveal><p class="eyebrow">#FikrimVar</p><blockquote>Kusursuz olmak değil; denemek, yanılmak, öğrenmek ve fikri hayata geçirmek.</blockquote><nav><a href="hikayeler.php">Bütün hikâyeler <?= icon('arrow') ?></a><a href="index.php">Ana sayfa <?= icon('arrow') ?></a></nav></div></section>
 <?php endif; ?>
 </main>
-<footer class="site-footer site-footer--dark"><div class="shell footer-inner"><p>© <?= e((string)($site['year'] ?? date('Y'))) ?> Ahmet Çetin · #FikrimVar</p><a href="index.php">Ana sayfaya dön</a></div></footer>
+<footer class="site-footer site-footer--dark"><div class="shell footer-inner"><p>© <?= e((string)($site['year'] ?? date('Y'))) ?> Ahmet Çetin · #FikrimVar<span class="ai-credit"> · Co-created with <a href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">Gemini</a> &amp; <a href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer">ChatGPT</a></span></p><a href="index.php">Ana sayfaya dön</a></div></footer>
 </body>
 </html>
