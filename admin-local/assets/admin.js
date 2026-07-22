@@ -104,4 +104,51 @@
     [typeSelect, layoutSelect].forEach((el) => el?.addEventListener('change', syncPreview));
     syncPreview();
   });
+
+  // Admin UX: Unsaved Changes Protection
+  let isDirty = false;
+  document.addEventListener('input', (e) => {
+    if (e.target.closest('form')) isDirty = true;
+  });
+  document.addEventListener('change', (e) => {
+    if (e.target.closest('form')) isDirty = true;
+  });
+  document.addEventListener('submit', () => {
+    isDirty = false;
+  });
+  window.addEventListener('beforeunload', (e) => {
+    if (isDirty) {
+      e.preventDefault();
+      e.returnValue = '';
+    }
+  });
+
+  // Admin UX: Ctrl+S / Cmd+S Shortcut
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+      e.preventDefault();
+      const saveBtn = document.querySelector('button[type="submit"][value="save"], button[type="submit"].accent');
+      if (saveBtn) {
+        saveBtn.click();
+      } else {
+        const form = document.querySelector('form');
+        if (form) {
+          const submitEvent = new Event('submit', { cancelable: true, bubbles: true });
+          if (form.dispatchEvent(submitEvent)) form.submit();
+        }
+      }
+    }
+  });
+
+  // Admin UX: Auto-resizing Textareas
+  const autoResize = (el) => {
+    if (el.scrollHeight > el.clientHeight) {
+      el.style.height = 'auto';
+      el.style.height = el.scrollHeight + 10 + 'px';
+    }
+  };
+  document.querySelectorAll('textarea').forEach(el => {
+    el.addEventListener('input', () => autoResize(el));
+    if (el.value) setTimeout(() => autoResize(el), 100);
+  });
 })();

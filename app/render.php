@@ -426,3 +426,8 @@ function render_external_links(array $links): void
 {
     LinkRenderer::renderList($links);
 }
+
+function public_lazy_load_images(string $html): string
+{
+    return preg_replace('/<img(?![^>]*loading=)([^>]+)>/i', '<img loading="lazy"$1>', $html);
+}

@@ -3,6 +3,16 @@ declare(strict_types=1);
 
 require __DIR__ . '/_bootstrap.php';
 
+function story_reading_time(array $sections): int
+{
+    $text = '';
+    foreach ($sections as $section) {
+        $text .= ($section['body_text'] ?? '') . ' ' . ($section['intro_text'] ?? '') . ' ' . ($section['quote_text'] ?? '') . ' ' . ($section['note_text'] ?? '') . ' ';
+    }
+    $wordCount = str_word_count(strip_tags($text));
+    return (int)ceil($wordCount / 200) ?: 1;
+}
+
 function story_reading_mode(array $sections, array $parts): string
 {
     $count = count($sections);
@@ -138,6 +148,12 @@ if ($project && $hasWorkshopPage) {
     <meta name="theme-color" content="#101319">
     <meta name="description" content="<?= e($story['summary'] ?? 'Çalışma hikâyesi') ?>">
     <title><?= e($story['question'] ?? $project['title'] ?? 'Hikâye') ?> | #FikrimVar</title>
+    <meta property="og:title" content="<?= e($story['question'] ?? $project['title'] ?? 'Hikâye') ?> | #FikrimVar">
+    <meta property="og:description" content="<?= e($story['summary'] ?? 'Çalışma hikâyesi') ?>">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://www.acetin.com.tr/hikaye.php?slug=<?= e(rawurlencode($slug)) ?>">
+    <meta property="og:image" content="<?= e(!empty($story['cover']) ? $story['cover'] : (!empty($project['cover']) ? $project['cover'] : asset_url('assets/img/hero/hero-core.png'))) ?>">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="canonical" href="https://www.acetin.com.tr/hikaye.php?slug=<?= e(rawurlencode($slug)) ?>">
     <?= public_theme_boot_script() ?>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -181,7 +197,10 @@ if ($project && $hasWorkshopPage) {
                 <p class="story-dek"><?= e($story['summary']) ?></p>
                 <div class="story-meta-line">
                     <span><?= e($story['title']) ?></span>
-                    <?php if ($story['reading_time'] !== ''): ?><span><?= e($story['reading_time']) ?></span><?php endif; ?>
+                    <?php
+                        $calcTime = story_reading_time($sections);
+                    ?>
+                    <span><?= e((string)$calcTime) ?> dk okuma (Otomatik)</span>
                     <span><?= count($sections) ?> bölüm</span>
                 </div>
                 <div class="story-paths">

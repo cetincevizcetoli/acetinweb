@@ -52,9 +52,9 @@ body.atelier-page {
 }
 
 .atelier-page .atelier-meta span {
-  color: #5a4f44;
-  border-color: rgba(41, 31, 22, .18);
-  background: rgba(255, 255, 255, .24);
+  color: var(--ink);
+  border-color: var(--line);
+  background: var(--paper-2);
 }
 
 .atelier-page .atelier-question {

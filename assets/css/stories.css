@@ -77,3 +77,11 @@
     overflow-wrap: anywhere;
   }
 }
+
+/* --- DX CONCEPT EMPTY STATE --- */
+.story-no-results { text-align: center; padding: 60px 20px; border: 1px dashed var(--line); border-radius: 8px; margin-top: 40px; background: rgba(0,0,0,0.02); }
+:root[data-theme="dark"] .story-no-results { background: rgba(255,255,255,0.02); }
+.empty-state-icon { font-size: 3rem; color: var(--rust); opacity: 0.5; margin-bottom: 20px; font-family: var(--serif); animation: float 4s ease-in-out infinite; }
+.story-no-results h3 { font-family: var(--serif); font-size: 1.5rem; color: var(--ink); margin-bottom: 10px; }
+.story-no-results p { color: var(--muted); font-size: 1rem; line-height: 1.6; }
+@keyframes float { 0% { transform: translateY(0); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0); } }

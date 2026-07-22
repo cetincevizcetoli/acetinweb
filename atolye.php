@@ -206,6 +206,12 @@ function render_atelier_gallery(array $update): void
     <meta name="theme-color" content="#0d1014">
     <meta name="description" content="<?= e($project['summary'] ?? 'Canlı atölye günlüğü') ?>">
     <title><?= e($project['title'] ?? 'Atölye') ?> | #FikrimVar</title>
+    <meta property="og:title" content="<?= e($project['title'] ?? 'Atölye') ?> | #FikrimVar">
+    <meta property="og:description" content="<?= e($project['summary'] ?? 'Canlı atölye günlüğü') ?>">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://www.acetin.com.tr/atolye.php?slug=<?= e(rawurlencode($slug)) ?>">
+    <meta property="og:image" content="<?= e(!empty($project['cover']) ? $project['cover'] : asset_url('assets/img/hero/hero-core.png')) ?>">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="canonical" href="https://www.acetin.com.tr/atolye.php?slug=<?= e(rawurlencode($slug)) ?>">
     <?= public_theme_boot_script() ?>
     <link rel="preconnect" href="https://fonts.googleapis.com">

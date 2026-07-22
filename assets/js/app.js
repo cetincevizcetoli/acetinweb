@@ -335,7 +335,7 @@
         if (type === 'image') {
           const img = document.createElement('img');
           img.src = item.url;
-          img.alt = item.alt || '';
+          img.alt = item.alt || ''; img.loading = 'lazy';
           figure.append(img);
         } else if (type === 'video') {
           const video = document.createElement('video');
@@ -456,7 +456,7 @@
             stageFigure.innerHTML = `<div class="atelier-audio-stage"><audio controls preload="metadata"><source src="${src}"></audio></div>`;
           } else {
             const img = document.createElement('img');
-            img.src = src; img.alt = alt; img.setAttribute('data-atelier-media', '');
+            img.src = src; img.alt = alt; img.setAttribute('data-atelier-media', ''); img.loading = 'lazy';
             stageFigure.replaceChildren(img);
           }
         }
@@ -539,4 +539,103 @@ document.addEventListener('DOMContentLoaded', () => {
         article.appendChild(marker);
         article.appendChild(tooltip);
     });
+});
+
+// DX CUSTOM MEDIA PLAYER (Vanilla JS)
+class DXMediaPlayer {
+    constructor(mediaEl) {
+        if (mediaEl.hasAttribute('data-dx-player')) return;
+        this.media = mediaEl;
+        this.isAudio = mediaEl.tagName.toLowerCase() === 'audio';
+        this.init();
+    }
+
+    init() {
+        this.media.setAttribute('data-dx-player', 'true');
+        this.media.removeAttribute('controls');
+        
+        this.wrapper = document.createElement('div');
+        this.wrapper.className = 'dx-media-player dx-' + (this.isAudio ? 'audio' : 'video');
+        
+        this.media.parentNode.insertBefore(this.wrapper, this.media);
+        this.wrapper.appendChild(this.media);
+        
+        this.controls = document.createElement('div');
+        this.controls.className = 'dx-media-controls';
+        
+        this.playBtn = document.createElement('button');
+        this.playBtn.className = 'dx-play-btn';
+        this.playBtn.innerHTML = '▶';
+        
+        this.progressContainer = document.createElement('div');
+        this.progressContainer.className = 'dx-progress-container';
+        
+        this.progressBar = document.createElement('div');
+        this.progressBar.className = 'dx-progress-bar';
+        this.progressContainer.appendChild(this.progressBar);
+        
+        this.timeLabel = document.createElement('span');
+        this.timeLabel.className = 'dx-time';
+        this.timeLabel.textContent = '0:00';
+        
+        this.controls.appendChild(this.playBtn);
+        this.controls.appendChild(this.progressContainer);
+        this.controls.appendChild(this.timeLabel);
+        
+        this.wrapper.appendChild(this.controls);
+        this.bindEvents();
+    }
+
+    formatTime(seconds) {
+        if (isNaN(seconds)) return '0:00';
+        const m = Math.floor(seconds / 60);
+        const s = Math.floor(seconds % 60);
+        return m + ':' + (s < 10 ? '0' : '') + s;
+    }
+
+    bindEvents() {
+        this.playBtn.addEventListener('click', () => {
+            if (this.media.paused) this.media.play();
+            else this.media.pause();
+        });
+
+        this.media.addEventListener('play', () => this.playBtn.innerHTML = '⏸');
+        this.media.addEventListener('pause', () => this.playBtn.innerHTML = '▶');
+
+        this.media.addEventListener('timeupdate', () => {
+            const percent = (this.media.currentTime / this.media.duration) * 100;
+            this.progressBar.style.width = percent + '%';
+            this.timeLabel.textContent = this.formatTime(this.media.currentTime) + ' / ' + this.formatTime(this.media.duration);
+        });
+
+        this.media.addEventListener('loadedmetadata', () => {
+            this.timeLabel.textContent = '0:00 / ' + this.formatTime(this.media.duration);
+        });
+
+        this.progressContainer.addEventListener('click', (e) => {
+            const rect = this.progressContainer.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            this.media.currentTime = pos * this.media.duration;
+        });
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Wrap existing media elements
+    document.querySelectorAll('audio, video').forEach(el => new DXMediaPlayer(el));
+
+    // Observe dynamically added media elements (e.g. from Atelier entries)
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach(mutation => {
+            mutation.addedNodes.forEach(node => {
+                if (node.nodeType === 1) {
+                    if (node.tagName === 'AUDIO' || node.tagName === 'VIDEO') {
+                        new DXMediaPlayer(node);
+                    }
+                    node.querySelectorAll('audio, video').forEach(el => new DXMediaPlayer(el));
+                }
+            });
+        });
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
 });
