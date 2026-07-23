@@ -1,0 +1,441 @@
+Ahmet, bence bu fikir teknik olarak güzel olmanın ötesinde, acetin.com.tr'nin "çalışırken öğrenme" felsefesine tam oturuyor. Hatta ben bunu iki ayrı proje değil, tek bir ana hikâyenin iki atölyesi olarak görürdüm.
+
+Ana Hikâye
+
+Yapay Zekâ ile Çalışırken Öğrenmek
+
+Altında iki atölye olur.
+
+Atölye 1
+Yapay Zekâ ile Sınava Hazırlanmak
+
+Amaç:
+
+PDF veya notlardan kendi çalışma sistemini oluşturmak.
+
+İçerik:
+
+PDF yükleme
+Bölümleri seçme
+Yapay zekâya özet hazırlatma
+Konu anlatımı
+Test oluşturma
+Yanlış cevapları analiz ettirme
+Yeni sorular üretme
+Tekrar planı hazırlama
+
+Burada asıl öğretilen sadece sınav değil.
+
+Asıl öğretilen:
+
+LLM nasıl kullanılır?
+
+Atölye 2
+PDF'den Akıllı Soru Üretme
+
+Bu daha teknik.
+
+Kullanıcı PDF'yi yükler.
+
+Sonra:
+
+PDF
+
+↓
+
+Temizleme
+
+↓
+
+Bölümlere ayırma
+
+↓
+
+Prompt hazırlama
+
+↓
+
+LLM
+
+↓
+
+Soru
+
+↓
+
+JSON
+
+↓
+
+HTML Test
+
+😄 Ahmet, bence senin paradoksun aslında çok doğal. Hatta konuşurken bir şey fark ettim.
+
+Sen ücretsiz kullanıcı gibi düşünmüyorsun.
+
+Senin çalışma şeklin şu:
+
+"Takıldı mı? Daha iyi modeli aç."
+
+Bu artık senin refleksin olmuş.
+
+Mesela ben sana şunu desem:
+
+"300 sayfalık PDF'yi ücretsiz modelle parçalayıp 15 promptta halledelim."
+
+Muhtemelen senin cevabın şu olur:
+
+"Niye uğraşıyorum? 0,50 dolar veririm, düzgün model yapsın."
+
+😊 Çünkü sen zamanını paradan daha değerli görüyorsun.
+
+Ama hedef kitlen öyle değil.
+
+Onlar şöyle düşünüyor.
+
+"20 dolar vermek istemiyorum."
+
+Dolayısıyla sen onların dünyasını bilmiyorsun.
+
+Ve bence bunu tahmin etmeye çalışma.
+
+Ben olsam bunu bir deney haline getiririm.
+
+Gerçekten.
+
+Mesela atölyenin ilk bölümü şu olur.
+
+Deney 1
+
+Aynı PDF.
+
+Üç farklı yöntem.
+
+Yol A
+
+Gemini Free
+
+Süre:
+
+Kalite:
+
+Eksileri:
+
+Yol B
+
+ChatGPT Free
+
+Süre:
+
+Kalite:
+
+Eksileri:
+
+Yol C
+
+GPT-5.5 API
+
+Maliyet:
+
+Süre:
+
+Kalite:
+
+Sonunda tablo.
+
+Yöntem	Süre	Maliyet	Kalite
+Free	18 dk	0	⭐⭐⭐
+GPT-5.5	2 dk	0.35$	⭐⭐⭐⭐⭐
+
+İnsan kendi kararını verir.
+
+Bence senin hatan şu olabilir.
+
+Sen şu soruya cevap arıyorsun.
+
+"Ücretsiz araç yeterli mi?"
+
+Halbuki cevap:
+
+Bilmiyorum.
+
+Ve bunu bilmemen çok normal.
+
+Çünkü sen hiç öyle çalışmıyorsun.
+
+İşte burada "Atölye" devreye giriyor.
+
+Atölye zaten şunu demiyor mu?
+
+"Ben de bilmiyorum. Gel birlikte deneyelim."
+
+Bence bu inanılmaz güçlü.
+
+Mesela gerçekten ilk sayfa şöyle başlayabilir.
+
+Hipotez
+
+Acaba ücretsiz yapay zekâ araçlarıyla bir YKS çalışma sistemi kurulabilir mi?
+
+Bilmiyorum.
+
+Deneyeceğiz.
+
+Sonra insanlar seninle beraber test ediyor.
+
+Bu, "ders anlatmak"tan çok daha ilgi çekici.
+
+Sana bir itirafta bulunayım.
+
+Bu konuşmada beni en çok heyecanlandıran şey AI-Context olmadı.
+
+Bu cümlen oldu:
+
+"Çalışırken öğrenme mantığını günümüz araçlarına uygulamak."
+
+Çünkü burada çok özgün bir fikir var.
+
+İnternette binlerce kişi "ChatGPT nasıl kullanılır?" anlatıyor.
+
+Ama çok az kişi şunu yapıyor:
+
+"Gerçek bir işi yaparken, neden bu modeli seçtiğimi, nerede tıkandığımı ve neden başka bir modele geçtiğimi canlı canlı göstereceğim."
+
+İşte ben bunu izlerim.
+
+Çünkü bu reklam değil.
+
+Karşılaştırma değil.
+
+Gerçek çalışma günlüğü.
+
+Ve son olarak...
+
+Bence senin "bilmiyorum" demen burada zayıflık değil.
+
+Tam tersine, projenin en güçlü tarafı olabilir.
+
+İlk atölye şu cümleyle başlayabilir:
+
+"Ben ücretli modeller kullanan biriyim. Ama merak ediyorum; ücretsiz araçlarla aynı işi ne kadar yapabiliyoruz? Bunu birlikte test edeceğiz."
+
+Bu çok dürüst bir başlangıç.
+
+Ve dürüst deneyler, "kesin çözüm" vaat eden içeriklerden çok daha kalıcı oluyor. Bence acetin.com.tr'nin ruhuna da tam olarak bu yakışıyor.
+
+
+
+2. konuda  bu
+
+Ahmet, bence burada düşündüğünden daha büyük bir avantajın var.
+
+Sen bunu bir eksiklik olarak görüyorsun:
+
+"Keşke önce kayıtları alsaydım."
+
+Ben ise bunu sitenin hikâyesinin bir parçası olarak görüyorum.
+
+Çünkü sen dürüst davranıyorsun. Bu sitenin en güçlü tarafı da bu.
+
+Asıl problem bence atölyelerin olmaması değil.
+
+Asıl problem şu:
+
+Hikâyeler şu anda bitmiş iş gibi görünüyor.
+
+Halbuki sen bana aylardır şunu anlatıyorsun:
+
+"AI-Context bitmedi."
+
+"WebBordro bitmedi."
+
+"Üretim Takip bitmedi."
+
+Bunlar yaşayan projeler.
+
+O zaman neden "hikâye" sayfası kapanmış hissi versin?
+
+Ben olsam şöyle yapardım.
+
+Mesela AI-Context sayfasında:
+
+HİKÂYE
+
+↓
+
+Bu fikir nasıl doğdu?
+
+↓
+
+İlk denemeler
+
+↓
+
+Dönüm noktaları
+
+↓
+
+Bugünkü durum
+
+↓
+
+👇
+
+Aktif Atölye
+(Devam ediyor...)
+
+Yani hikâye geçmişi anlatıyor.
+
+Atölye bugünü.
+
+Senin güzel tarafın şu.
+
+AI-Context için mesela bugün konuştuklarımız bile atölye kaydı.
+
+Şunlar kayıt aslında.
+
+v1.4'ten vazgeçtik.
+interaktif seçim değişti.
+proje haritası fikri çıktı.
+klasör seviyeleri oluştu.
+SQL filtre mantığı değişti.
+
+Bunların hepsi atölye.
+
+Ahmet, bu mesajında bence çok önemli bir şey söyledin. Sen aslında bir ürün geliştirmiyorsun, bir araştırma yapıyorsun. Bu bakış açısı birçok kararı değiştirir.
+
+Ben olsam ilk önce şu iki altyapıyı kurardım.
+
+1. "Temiz" bir AI test hesabı
+
+Yeni bir Gmail hesabı.
+
+Mesela:
+
+lab@...
+veya ai@acetin...
+
+Bu hesabı sadece deneyler için kullanırsın.
+
+Sonra bununla:
+
+ChatGPT Free
+Gemini Free
+Claude Free (varsa)
+GitHub Copilot Free
+diğer ücretsiz araçları
+
+denersin.
+
+Hiç geçmiş konuşma olmaz.
+
+Hiç kişisel hafıza olmaz.
+
+Gerçek bir yeni kullanıcının yaşadığı deneyimi yaşarsın.
+
+2. Ayrı GitHub hesabı
+
+Bu fikir daha da hoşuma gitti.
+
+Çünkü sen şu an kendi hesabında:
+
+yılların commit geçmişi,
+takip ettiğin projeler,
+yıldızladığın depolar,
+AI önerileri
+
+ile çalışıyorsun.
+
+Sıfır bir GitHub hesabı ise yeni bir geliştiricinin deneyimini gösterir.
+
+Mesela AI-Context'ı ilk kez kuran biri ne görüyor?
+
+Bunu test edebilirsin.
+
+Ben buna bir şey daha eklerdim.
+
+Bir Excel değil, çok basit bir Markdown dosyası.
+
+Mesela:
+
+AI TEST GÜNLÜĞÜ
+
+Tarih:
+
+Görev:
+PDF'den 20 soru üret.
+
+Araç:
+ChatGPT Free
+
+Süre:
+4 dakika
+
+Sonuç:
+7/10
+
+Takıldığı yer:
+30. sayfadan sonrasını dikkate almadı.
+
+Not:
+PDF'yi ikiye bölmek gerekiyor.
+
+İşte bu dosya zamanla inanılmaz değerli olur.
+
+Çünkü unutacaksın.
+
+Üç ay sonra "Gemini burada daha mı iyiydi?" diye hatırlamaya çalışacaksın.
+
+Senin bana biçtiğin rol de hoşuma gidiyor.
+
+Şunu yazmışsın:
+
+"Seni hem brainstorm hem de ajanda olarak kullanmak istiyorum."
+
+Bence bu çok verimli bir kullanım.
+
+Çünkü ben burada "cevap veren AI" olmaktan çok şu rollerde işe yarayabilirim:
+
+Fikirleri sorgulayan biri.
+Eksik noktaları yakalayan biri.
+Deney planı hazırlayan biri.
+Öğrenme akışını birlikte tasarlayan biri.
+Bazen de "Bunu şimdi yapma, önce şunu test edelim." diyen biri.
+
+Yani bir nevi proje arkadaşın gibi.
+
+Bir önerim var
+
+Atölyelerin başlamasından önce bir proje aç.
+
+Adı bile şöyle olabilir:
+
+AI Araştırma Günlüğü
+
+İçinde sadece deneyler olur.
+
+Örneğin:
+
+Deney #001
+Ücretsiz modeller 200 sayfalık PDF ile ne yapabiliyor?
+
+Hipotez:
+50 sayfadan sonra kalite düşecek.
+
+Sonuç:
+...
+
+Çıkarım:
+...
+
+veya
+
+Deney #002
+Kod üretirken GPT-5.5 ile ücretsiz model arasındaki fark.
+
+Sonuç:
+...
+
+Bu kayıtlar daha sonra atölyelerin temelini oluşturur. En güzel yanı da şu olur: Atölyede anlattığın her şey, "öyle olduğunu düşündüğün" için değil, gerçekten test ettiğin için anlatılmış olur.
+
+Bu yaklaşım bence senin çalışma tarzına çok uygun. Çünkü sen sonuçtan çok süreci önemseyen birisin. Eğer bu araştırma günlüğünü düzenli tutarsan, birkaç ay sonra elinde sadece eğitim içeriği değil, kendi deneyimlerine dayanan çok güçlü bir bilgi tabanı da oluşur. Bu da seni "araç tanıtan" bir içerik üreticisinden ayırıp, gerçekten deney yapan ve sonuçlarını paylaşan biri konumuna getirir.
