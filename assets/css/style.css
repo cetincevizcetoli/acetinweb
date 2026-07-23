@@ -745,7 +745,7 @@ body.notes-open { overflow: hidden; }
   .hero-lead { font-size: 1.35rem; }
   .hero-body { font-size: 13px; }
   .hero-actions { align-items: flex-start; flex-direction: column; gap: 10px; }
-  .hero-index { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .hero-index { grid-template-columns: 1fr; }
   .hero-scroll { display: none; }
   .hero-core { width: 700px; right: -400px; opacity: .54; }
   .hero-orbit-one { width: 420px; height: 420px; right: -240px; top: 18%; }
@@ -802,6 +802,9 @@ body.notes-open { overflow: hidden; }
   .stories-hero-v6 { padding: 54px 0 46px; }
   .stories-hero-v6 h1 { font-size: 4.2rem; }
   .story-filter-tools { flex-direction: column; }
+  .category-filter { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 8px; -ms-overflow-style: none; scrollbar-width: none; }
+  .category-filter::-webkit-scrollbar { display: none; }
+  .category-filter button { flex: 0 0 auto; }
   .stories-mosaic { grid-template-columns: 1fr; gap: 42px; }
   .mosaic-story { max-width: none; }
   .story-results-bar { flex-direction: column; }
