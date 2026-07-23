@@ -494,6 +494,7 @@ body.atelier-page {
   }
 
   .atelier-page .atelier-archive-layout,
+  .atelier-page .atelier-archive-entry,
   .atelier-page .atelier-rule-grid,
   .atelier-page .atelier-phase-list > article {
     grid-template-columns: 1fr;
