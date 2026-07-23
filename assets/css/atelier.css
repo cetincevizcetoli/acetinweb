@@ -270,6 +270,32 @@ body.atelier-page {
   box-shadow: 0 10px 26px rgba(34, 24, 14, .08);
 }
 
+:root[data-theme="dark"] .atelier-page .atelier-log-entry {
+  color: var(--muted);
+  background: rgba(255, 255, 255, .04);
+  border-color: var(--line);
+}
+:root[data-theme="dark"] .atelier-page .atelier-log-entry:last-child {
+  border-bottom-color: var(--line);
+}
+:root[data-theme="dark"] .atelier-page .atelier-log-entry strong {
+  color: var(--ink);
+}
+:root[data-theme="dark"] .atelier-page .atelier-log-entry small {
+  color: rgba(255, 255, 255, .4);
+}
+:root[data-theme="dark"] .atelier-page .atelier-log-entry.is-active {
+  background: rgba(255, 255, 255, .08);
+  border-left-color: var(--rust);
+}
+:root[data-theme="dark"] .atelier-page .atelier-log-entry span b {
+  color: var(--rust);
+  background: rgba(255, 246, 229, .1);
+}
+:root[data-theme="dark"] .atelier-page .atelier-log-entry em {
+  color: var(--rust-dark);
+}
+
 .atelier-page .atelier-phase {
   background: rgba(255, 255, 255, .22);
 }

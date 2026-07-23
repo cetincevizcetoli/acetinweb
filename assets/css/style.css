@@ -1008,8 +1008,8 @@ body.atelier-widget-open { overflow: hidden; }
 @media (max-width: 900px) {
   .origin-visual { grid-column: 1; }
   .origin-copy { grid-column: 2; }
-  .atelier-workbench { grid-template-columns: 1fr; }
-  .atelier-workbench .atelier-stage-sticky { position: static; }
+  .atelier-workbench, .atelier-console { grid-template-columns: 1fr; }
+  .atelier-workbench .atelier-stage-sticky, .atelier-console .atelier-stage-sticky { position: static; }
   .atelier-archive-layout { grid-template-columns: 1fr; gap: 36px; }
   .atelier-archive header { position: static; }
 }
@@ -1400,6 +1400,8 @@ body.atelier-widget-open { overflow: hidden; }
   .process-map h3 {
     overflow-wrap: anywhere;
   }
+  .story-block-copy,
+  .story-block-heading,
   .story-extra-media,
   .story-video-media,
   .story-section-body,
