@@ -528,3 +528,8 @@ body.atelier-page {
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
 }
 
+/* Smart layout for 2x2 grids: if the last element is odd, span both columns to avoid empty space */
+.atelier-page .atelier-artifacts > .atelier-artifact:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+}
+
