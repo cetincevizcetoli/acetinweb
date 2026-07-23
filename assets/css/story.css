@@ -414,8 +414,12 @@ body.story-note-open {
     grid-column: 1 / -1;
   }
 
-  .story-page .timeline-track {
+  .story-page .timeline-track,
+  .story-page .timeline-track:not(.timeline-track--compact),
+  .story-page .status-orbit,
+  .story-page .compare-plane {
     grid-column: 1 / -1;
+    grid-template-columns: 1fr;
   }
 
   .story-page .story-section-note {
