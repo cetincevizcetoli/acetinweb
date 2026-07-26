@@ -576,3 +576,5 @@ body.atelier-page {
 :root[data-theme='dark'] .atelier-page .atelier-media-grid figure::before {
   background: rgba(255, 255, 255, 0.1);
 }
+
+.atelier-page .atelier-artifact p { overflow-wrap: anywhere; }

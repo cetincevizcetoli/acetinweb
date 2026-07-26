@@ -42,7 +42,7 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; overflow-x: hidden; }
+html, body { scroll-behavior: smooth; overflow-x: hidden; }
 [id] { scroll-margin-top: calc(var(--header-h) + 22px); }
 body {
   margin: 0;
@@ -1080,7 +1080,7 @@ body.atelier-widget-open { overflow: hidden; }
 .atelier-phase-list h3 { margin: 4px 0 10px; font: 600 clamp(1.35rem,2.4vw,2.2rem)/1.08 var(--serif); }
 .atelier-phase-list small { font: 600 .72rem var(--mono); letter-spacing: .08em; color: #9a652a; }
 .atelier-phase-list p { color: #5f554b; }
-.atelier-entry-media,.atelier-media-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 12px; }
+.atelier-entry-media,.atelier-media-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%, 180px),1fr)); gap: 12px; }
 .atelier-entry-media figure,.atelier-media-grid figure { margin: 0; background: rgba(255,255,255,.5); border: 1px solid rgba(41,31,22,.14); border-radius: 10px; overflow: hidden; }
 .atelier-entry-media img,.atelier-media-grid img,.atelier-entry-media video,.atelier-media-grid video { width: 100%; aspect-ratio: 16/10; object-fit: cover; display: block; background: #111; }
 .atelier-entry-media audio,.atelier-media-grid audio { width: 100%; margin: 30px 0; }
@@ -1088,7 +1088,7 @@ body.atelier-widget-open { overflow: hidden; }
 .content-links { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 14px; }
 .content-links a { display: inline-flex; align-items: center; gap: 7px; padding: 8px 11px; border: 1px solid currentColor; border-radius: 999px; text-decoration: none; font: 600 .73rem var(--mono); }
 .content-links svg { width: 14px; height: 14px; }
-.content-link-cards { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 12px; margin-top: 16px; }
+.content-link-cards { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%, 240px),1fr)); gap: 12px; margin-top: 16px; }
 .content-link-card { overflow: hidden; border: 1px solid rgba(41,31,22,.18); background: rgba(255,255,255,.46); }
 .content-link-player { aspect-ratio: 16 / 9; background: #080a0d; }
 .content-link-player iframe,
