@@ -84,7 +84,7 @@ final class LinkRenderer
         echo '<span>' . e(self::providerLabel($model)) . '</span>';
         echo '<strong>' . e($model->title) . '</strong>';
         echo '<small>' . e($model->displayUrl) . '</small>';
-        echo '<em>Baglantiyi ac ' . icon('arrow') . '</em>';
+        echo '<em>Bağlantıyı aç ' . icon('arrow') . '</em>';
         echo '</a>';
         echo '</article>';
     }

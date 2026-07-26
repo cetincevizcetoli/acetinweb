@@ -187,7 +187,7 @@ function atelier_legacy_update_blocks(array $update): array
 {
     $kind = atelier_entry_kind($update);
     $labels = atelier_work_field_labels($update);
-    $fields = ['summary' => 'Kisa is ozeti'] + $labels;
+    $fields = ['summary' => 'Kısa iş özeti'] + $labels;
     $blocks = [];
     $sort = 1;
 
