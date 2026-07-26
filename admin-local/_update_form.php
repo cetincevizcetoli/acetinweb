@@ -90,6 +90,22 @@ function render_update_form(array $project, array $update = [], array $attached 
         <section class="panel">
             <h2>Atölye kaydı</h2>
             <p class="help">Atölye ham çalışma masasıdır. Prompt, komut, kod parçası, çıktı, hata, medya ve bağlantı burada tutulur. Hikâye sonra bu kayıtlardan seçilerek kurulur.</p>
+            <details class="help-accordion" style="margin-bottom: 24px; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                <summary style="cursor: pointer; font-weight: 600; color: #a19a93;">💡 Somut Bir Kayıt Örneği & Hızlı Rehber</summary>
+                <div style="margin-top: 12px; font-size: 0.9em; line-height: 1.5; color: #a19a93;">
+                    <p>Soyut tanımları boşverip gerçek bir kayda bakalım. Örneğin: <em>"AI-Context GUI'ye geçiş"</em>.</p>
+                    <ul style="padding-left: 20px; margin-top: 8px;">
+                        <li><strong>Kayıt Türü:</strong> <code>Karar / not</code> (Mimari karar alındı)</li>
+                        <li><strong>Hikâyedeki Rolü:</strong> <code>Açılış sahnesi</code> (Bu karar projenin neden başladığını anlatıyor)</li>
+                        <li><strong>İş Blokları:</strong> 
+                            <br>1. <strong>Saha notu:</strong> "Projeler büyüdükçe CLI zorlaştı..."
+                            <br>2. <strong>Net karar:</strong> "PyQt6 ile GUI yazmaya karar verdik."
+                        </li>
+                        <li><strong>Dönüm Noktası:</strong> <code>İşaretli</code> (Çünkü hikâyenin omurgası)</li>
+                    </ul>
+                    <p style="margin-top: 8px;">Daha detaylı bilgi için <a href="../docs/FikrimVar_Kullanim_Rehberi.md" target="_blank" style="color: #efb443; text-decoration: underline;">Kullanım Rehberini (Markdown)</a> inceleyebilirsin.</p>
+                </div>
+            </details>
             <div class="form-grid">
                 <div class="field full">
                     <label>Kayıt türü</label>
