@@ -553,3 +553,26 @@ body.atelier-page {
   background: rgba(0, 0, 0, 0.4);
   border-color: rgba(255, 255, 255, 0.1);
 }
+
+/* --- ADDITIONAL DARK MODE FIXES (FOUND VIA CSS SCAN) --- */
+:root[data-theme='dark'] .atelier-page .atelier-stage-copy dd {
+  color: var(--muted);
+}
+:root[data-theme='dark'] .atelier-page .atelier-story-seed {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+:root[data-theme='dark'] .atelier-page .atelier-story-seed p {
+  color: rgba(255, 255, 255, 0.75);
+}
+:root[data-theme='dark'] .atelier-page .atelier-phase {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+:root[data-theme='dark'] .atelier-page .atelier-artifact--decision {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+:root[data-theme='dark'] .atelier-page .atelier-media-grid figure::before {
+  background: rgba(255, 255, 255, 0.1);
+}

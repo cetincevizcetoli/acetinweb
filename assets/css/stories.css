@@ -85,3 +85,74 @@
 .story-no-results h3 { font-family: var(--serif); font-size: 1.5rem; color: var(--ink); margin-bottom: 10px; }
 .story-no-results p { color: var(--muted); font-size: 1rem; line-height: 1.6; }
 @keyframes float { 0% { transform: translateY(0); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0); } }
+
+/* --- LIVING PROJECT DOORS --- */
+.living-project-doors {
+  margin: 60px auto 40px;
+  padding-top: 40px;
+  border-top: 1px solid var(--line);
+}
+.living-status-head {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.living-status-head .eyebrow {
+  margin-bottom: 8px;
+}
+.living-status-head h2 {
+  font-family: var(--serif);
+  font-size: 2.2rem;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.living-status-head p {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+.doors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+.door-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  text-decoration: none;
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+.door-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--ink);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+:root[data-theme="dark"] .door-card:hover {
+  box-shadow: 0 4px 12px rgba(255,255,255,0.05);
+}
+.door-icon {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+.door-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.door-content strong {
+  color: var(--ink);
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+.door-content small {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+@media (max-width: 600px) {
+  .doors-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -139,6 +139,8 @@ if ($project && $hasWorkshopPage) {
         ? 'Canlı Atölye'
         : ($project['workshop_status'] === 'closed' ? 'Atölye Arşivi' : 'Atölye Kayıtları');
 }
+$links = $project ? owner_links('project', (int)$project['id']) : [];
+$atelierCount = $project ? count(project_updates((int)$project['id'])) : 0;
 ?>
 <!doctype html>
 <html lang="tr">
@@ -237,10 +239,59 @@ if ($project && $hasWorkshopPage) {
             ]); ?>
         <?php endforeach; ?>
     </div>
+
+    <section class="living-project-doors shell" id="bugunku-durum" data-reveal>
+        <div class="living-status-head">
+            <p class="eyebrow">Bugünkü Durum</p>
+            <?php 
+                $vStr = '';
+                if (!empty($project['version_major']) || !empty($project['version_minor']) || !empty($project['version_patch'])) {
+                    $vStr = ' (v' . (int)$project['version_major'] . '.' . (int)$project['version_minor'] . '.' . (int)$project['version_patch'] . ')';
+                }
+            ?>
+            <h2>Hikâye burada bitiyor ama proje yaşıyor.<?= $vStr ?></h2>
+            <?php if (!empty($project['last_activity_at'])): ?>
+                <p>Son Güncelleme: <time><?= date('d M Y', strtotime($project['last_activity_at'])) ?></time></p>
+            <?php endif; ?>
+        </div>
+        
+        <div class="doors-grid">
+            <?php if ($hasWorkshopPage): ?>
+                <a href="atolye.php?slug=<?= e(rawurlencode($slug)) ?>" class="door-card door-atelier">
+                    <span class="door-icon">🚧</span>
+                    <div class="door-content">
+                        <strong>Çalışmaya Devam Et</strong>
+                        <small>Atölye · <?= $atelierCount ?> kayıt</small>
+                    </div>
+                </a>
+            <?php endif; ?>
+            
+            <?php foreach ($links as $link): 
+                $icon = match($link['link_type']) {
+                    'github' => '💻',
+                    'demo', 'website' => '▶️',
+                    'report' => '🤖',
+                    'figma' => '🎨',
+                    'video', 'youtube', 'vimeo' => '🎥',
+                    'download' => '📥',
+                    default => '📄'
+                };
+            ?>
+                <a href="<?= e($link['url']) ?>" class="door-card door-<?= e($link['link_type']) ?>" target="_blank" rel="noopener">
+                    <span class="door-icon"><?= $icon ?></span>
+                    <div class="door-content">
+                        <strong><?= e($link['title'] ?: 'Bağlantıya Git') ?></strong>
+                        <small><?= e(ucfirst($link['link_type'])) ?></small>
+                    </div>
+                </a>
+            <?php endforeach; ?>
+        </div>
+    </section>
     <section class="story-signature">
         <div class="shell story-signature-grid" data-reveal>
-            <p class="eyebrow">#FikrimVar</p>
-            <blockquote>Kusursuz olmak değil; denemek, yanılmak, öğrenmek ve fikri hayata geçirmek.</blockquote>
+            <p class="eyebrow">Proje Notu</p>
+            <?php $closingNote = trim((string)($project['closing_note'] ?? '')); ?>
+            <blockquote><?= e($closingNote !== '' ? $closingNote : 'Bir fikri hayata geçirme serüveni.') ?></blockquote>
             <nav>
                 <a href="hikayeler.php">Bütün hikâyeler <?= icon('arrow') ?></a>
                 <?php if ($workshopLinkLabel !== ''): ?>
