@@ -52,7 +52,7 @@ function atelier_is_story_restore_copy(array $u): bool
     $next = (string)($u['next_step'] ?? '');
 
     return str_starts_with($slug, 'hikaye-')
-        && ($phase === 'Hikayeden gelen' || str_contains($next, 'eski hikaye bolumunden Atolye akisine geri alindi'));
+        && ($phase === 'Hikayeden gelen' || str_contains($next, 'eski hikâye bölümünden Atölye akışına geri alındı') || str_contains($next, 'eski hikaye bolumunden Atolye akisine geri alindi'));
 }
 
 function atelier_story_excerpt(array $section): string
@@ -343,8 +343,6 @@ function render_atelier_gallery(array $update): void
             <div class="atelier-log">
                 <header>
                     <p class="eyebrow">ÇALIŞMA AKIŞI</p>
-                    <h2>İş kayıtları hikâyeyi besleyen malzemedir.</h2>
-                    <p>Her kayıt yapılan işe ait blokları taşır: saha notu, prompt, kod, çıktı, hata, medya, bağlantı ve karar. Dönüm noktası olanlar hikâye taslağına seçilir; ham kalanlar çalışma kanıtı olarak kalır.</p>
                 </header>
                 <?php foreach ($updates as $u): $sm = first_stage_media($u); $bridge = atelier_story_bridge($u); ?>
                     <button class="atelier-log-entry <?= $u['id'] === $active['id'] ? 'is-active' : '' ?>" id="update-<?= e($u['slug']) ?>" type="button" data-atelier-entry data-media="<?= e($sm ? media_url($sm['relative_path']) : $project['cover']) ?>" data-media-type="<?= e($sm['media_type'] ?? 'image') ?>" data-alt="<?= e($sm['alt_text'] ?? '') ?>" data-update-id="<?= e($u['slug']) ?>" data-day="<?= e(trim((string)$u['date_label'] . ' · ' . atelier_kind_label($u), ' ·')) ?>" data-title="<?= e($u['title']) ?>" data-summary="<?= e($u['summary']) ?>" data-seed-label="<?= e(atelier_kind_short($u) . ' · ' . $bridge['reader_label']) ?>" data-seed-text="<?= e(atelier_story_bridge_text($u)) ?>"<?= atelier_work_data_attrs($u) ?><?= atelier_gallery_data_attrs($u) ?><?= atelier_links_data_attrs($u) ?>>

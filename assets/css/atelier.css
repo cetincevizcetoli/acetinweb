@@ -533,3 +533,23 @@ body.atelier-page {
     grid-column: 1 / -1;
 }
 
+
+/* --- DARK MODE FIXES FOR ATELIER ARTIFACTS --- */
+:root[data-theme='dark'] .atelier-page .atelier-artifact {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: none;
+}
+:root[data-theme='dark'] .atelier-page .atelier-artifact p {
+  color: rgba(255, 255, 255, 0.75);
+}
+:root[data-theme='dark'] .atelier-page .atelier-artifact h4 {
+  color: #fff;
+}
+:root[data-theme='dark'] .atelier-page .atelier-artifact span {
+  color: var(--gold);
+}
+:root[data-theme='dark'] .atelier-page .atelier-artifact pre {
+  background: rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.1);
+}
