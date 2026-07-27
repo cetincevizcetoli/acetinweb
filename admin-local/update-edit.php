@@ -146,6 +146,9 @@ if (is_post()) {
 $st = db()->prepare('SELECT * FROM updates WHERE id = ?');
 $st->execute([$id]);
 $update = $st->fetch();
+if ($update) {
+    $update['blocks'] = UpdateBlockRepository::forUpdate((int)$update['id']);
+}
 $attached = update_media($id);
 $links = owner_links('update', $id);
 
