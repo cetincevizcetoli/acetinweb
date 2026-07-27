@@ -100,3 +100,26 @@ Soyut tanımları bir kenara bırakıp gerçek bir kaydı nasıl doldurduğumuza
 - **Dönüm Noktası:** `İşaretli` (Çünkü bu karar hikâyenin omurgasını oluşturuyor).
 
 İşte bu kadar! Bu kayıt kaydedildiğinde; Atölye'de bir karar logu olarak dururken, Hikâye tarafında güçlü bir "Açılış sahnesi" olarak okuyucuyu karşılamaya hazır hale gelir.
+
+---
+
+## 7. Projeyi Kapatmak ve Hikâyeyi Sonlandırmak (Bitiş Alanı)
+
+Proje tamamlandığında (veya bir aşaması bittiğinde), Hikâye sayfasının en altında okuyucuyu bilgilendiren bir **Bitiş Alanı (Bugünkü Durum)** bulunur. Bu alan, projenin sadece geçmişini değil, *şu an ne durumda olduğunu* gösterir.
+
+Bu alanı düzenlemek için Yönetim Paneli'nde **"Hikayeyi Düzenle"** sayfasına girin. Sayfanın en altındaki **HİKAYE SONU / Bitiş Alanı** panelinde şu 3 kritik veriyi tek bir yerden yönetebilirsiniz:
+
+1. **Sürüm (SemVer):** Projenin güncel versiyonu (Örn: v1.0.0). Buradaki değişiklikler otomatik olarak Proje ayarlarıyla eşitlenir.
+2. **Bugünkü Durum Başlığı:** Okuyucuya veda edilen ana başlık. Boş bırakırsanız sistem standart olarak *"Hikâye burada bitiyor ama proje yaşıyor."* yazar. İsterseniz *"Yolculuk GUI Mimarisiyle Devam Ediyor"* gibi projeye özel, dinamik bir başlık atabilirsiniz.
+3. **Bugünkü Durum / Kapanış Notu:** Projenin geleceği hakkında bilgi verdiğiniz alandır. 
+   > [!TIP]
+   > Bu alan özel bir **Markdown okuyucusuna** sahiptir. Düz metin yazabileceğiniz gibi aşağıdaki basit kuralları kullanarak zengin içerikler ekleyebilirsiniz:
+   > 
+   > *   **Kalın Yazı:** `**Vurgulanacak Metin**`
+   > *   **İtalik Yazı:** `_Eğik Metin_`
+   > *   **İç/Dış Bağlantı (Link):** `[Atölyeye Git](atolye.php?slug=proje-adi)` veya `[Siteye Git](https://google.com)`
+   > *   **Görsel Eklemek:** `![Görsel Açıklaması](/assets/resim.jpg)` (Tam genişlikte, köşeleri yumuşatılmış olarak görünür)
+   > *   **YouTube Videosu:** `[youtube](https://www.youtube.com/embed/VİDEO_ID_BURAYA)` (Tam genişlikte duyarlı / responsive video kutusu oluşturur)
+
+> [!NOTE]
+> Sayfada büyük butonlar halinde görünen *"Çalışmaya Devam Et"* (Atölye) veya dış bağlantılar (*"Proje Raporunu Oku"*) gibi eylem butonları (Call to Action), **Projeyi Düzenle** sayfasındaki **Proje Bağlantıları** kısmından yönetilir. Hikaye Bitiş Alanı, bu butonlarla entegre şekilde çalışır.
