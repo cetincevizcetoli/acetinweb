@@ -411,6 +411,27 @@ body.atelier-page {
   background: rgba(255, 249, 238, .62);
 }
 
+.atelier-page .atelier-artifact--lab_note {
+  background: rgba(255, 253, 235, 0.85);
+  border: 1px solid rgba(239, 180, 67, 0.4);
+  border-left: 4px solid #efb443;
+  box-shadow: 0 4px 12px rgba(239, 180, 67, 0.08);
+}
+
+.atelier-page .atelier-artifact--lab_note span {
+  color: #c98e1f;
+  font-weight: 700;
+}
+
+.atelier-page .atelier-artifact--lab_note span::before {
+  content: "💡 ";
+  font-size: 1.1em;
+}
+
+.atelier-page .atelier-artifact--lab_note h4 {
+  color: #8c5b05;
+}
+
 .atelier-page .atelier-artifact--evidence,
 .atelier-page .atelier-artifact--source {
   border-left-color: rgba(185, 129, 46, .7);

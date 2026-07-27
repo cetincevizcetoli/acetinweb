@@ -18,6 +18,7 @@ final class UpdateBlockRepository
             'evidence' => 'Kanıt',
             'next' => 'Sonraki iş',
             'story_note' => 'Hikâye notu',
+            'lab_note' => 'Laboratuvar Notu',
             'source' => 'Kaynak / bağlantı',
         ];
     }

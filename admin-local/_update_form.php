@@ -24,6 +24,7 @@ function update_block_recipe(string $entryKind): array
             ['type' => 'output', 'title' => 'YZ cevabı / çıktı', 'help' => 'Alınan cevap, terminal çıktısı, ekran sonucu veya üretilen dosya.'],
             ['type' => 'error', 'title' => 'Hata / beklenmeyen sonuç', 'help' => 'Başarısızsa belirtiyi, başarılıysa kontrol edilen sınırı yaz.'],
             ['type' => 'decision', 'title' => 'Teknik karar', 'help' => 'Bu denemeden sonra ne değişti, ne sabit kaldı?'],
+            ['type' => 'lab_note', 'title' => 'Laboratuvar notu / keşif', 'help' => 'Eğer bu deneme genel bir metodoloji dersi verdiyse buraya yaz.'],
         ],
         'problem' => [
             ['type' => 'error', 'title' => 'Hata / belirti', 'help' => 'Hata mesajı, bozuk davranış veya ekranda görülen sorun.'],
@@ -35,6 +36,7 @@ function update_block_recipe(string $entryKind): array
             ['type' => 'field_note', 'title' => 'Masadaki seçenekler', 'help' => 'Hangi yollar vardı, neden karar gerekti?'],
             ['type' => 'evidence', 'title' => 'Kararı zorlayan kanıt', 'help' => 'Veri, ekran, kullanıcı yorumu, hata veya sınır.'],
             ['type' => 'decision', 'title' => 'Net karar', 'help' => 'Bundan sonra sistem nasıl davranacak?'],
+            ['type' => 'lab_note', 'title' => 'Laboratuvar notu / keşif', 'help' => 'Bu karardan genel bir mühendislik veya AI çalışma dersi çıktı mı?'],
             ['type' => 'next', 'title' => 'Uygulanacak iş', 'help' => 'Bu karardan sonra yapılacak somut adım.'],
         ],
         'media' => [
@@ -51,6 +53,7 @@ function update_block_recipe(string $entryKind): array
             ['type' => 'field_note', 'title' => 'Saha / çalışma notu', 'help' => 'Bugün görülen gerçek durum veya iş akışı.'],
             ['type' => 'observation', 'title' => 'Gözlem / eksik veri', 'help' => 'Neyi fark ettin, hangi bilgi eksik kaldı?'],
             ['type' => 'decision', 'title' => 'Kayıttan çıkan not', 'help' => 'Bu kayıttan sonra yön, kapsam veya öncelik değişti mi?'],
+            ['type' => 'lab_note', 'title' => 'Bugünkü keşif', 'help' => 'Bugün süreç, metodoloji veya AI etkileşimi hakkında ne öğrendik?'],
             ['type' => 'next', 'title' => 'Sıradaki iş', 'help' => 'Bir sonraki somut kontrol veya üretim adımı.'],
         ],
     };
