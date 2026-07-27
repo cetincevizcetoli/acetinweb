@@ -417,5 +417,5 @@ admin_head($id ? 'Bölümü düzenle' : 'Yeni bölüm');
     </div>
 </template>
 
-<template id="link-template"><div class="repeat-row"><select name="links[__INDEX__][type]"><option>youtube</option><option>vimeo</option><option>soundcloud</option><option>instagram</option><option>github</option><option>website</option><option>download</option><option>external</option></select><input name="links[__INDEX__][title]" placeholder="Başlık"><input name="links[__INDEX__][url]" placeholder="https://"><button class="danger" type="button" data-repeat-remove>Sil</button></div></template>
+<template id="link-template"><div class="repeat-row"><select name="links[__INDEX__][type]"><option>internal</option><option>youtube</option><option>vimeo</option><option>soundcloud</option><option>instagram</option><option>github</option><option>internal</option><option>website</option><option>download</option><option>external</option></select><input name="links[__INDEX__][title]" placeholder="Başlık"><input name="links[__INDEX__][url]" placeholder="https://"><button class="danger" type="button" data-repeat-remove>Sil</button></div></template>
 <?php admin_foot(); ?>

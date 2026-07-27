@@ -249,9 +249,42 @@ $atelierCount = $project ? count(project_updates((int)$project['id'])) : 0;
                     $vStr = ' (v' . (int)$project['version_major'] . '.' . (int)$project['version_minor'] . '.' . (int)$project['version_patch'] . ')';
                 }
             ?>
-            <h2>Hikâye burada bitiyor ama proje yaşıyor.<?= $vStr ?></h2>
+            <?php 
+                $statusTitle = trim((string)($story['status_title'] ?? ''));
+                if ($statusTitle === '') {
+                    $statusTitle = 'Hikâye burada bitiyor ama proje yaşıyor.';
+                }
+            ?>
+            <h2><?= e($statusTitle) ?><?= $vStr ?></h2>
+            
+            <?php if (!empty($story['status_note'])): ?>
+                <div class="story-block-copy" style="margin-top: 24px;">
+                    <?php
+                        $noteText = trim((string)$story['status_note']);
+                        // Very simple regex-based parser for basic markdown needs
+                        $noteText = htmlspecialchars($noteText, ENT_QUOTES, 'UTF-8');
+                        // Bold
+                        $noteText = preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', $noteText);
+                        // Italic
+                        $noteText = preg_replace('/\_(.*?)\_/', '<em>$1</em>', $noteText);
+                        // Images: ![alt](url)
+                        $noteText = preg_replace('/\!\[(.*?)\]\((.*?)\)/', '<img src="$2" alt="$1" style="max-width:100%; height:auto; margin:16px 0; border-radius:8px;">', $noteText);
+                        // Links: [text](url)
+                        $noteText = preg_replace('/\[(.*?)\]\((.*?)\)/', '<a href="$2" style="color:var(--c-accent); text-decoration:underline;">$1</a>', $noteText);
+                        // YouTube: [youtube](url)
+                        $noteText = preg_replace('/\[youtube\]\((.*?)\)/', '<div style="position:relative; padding-bottom:56.25%; height:0; margin:16px 0;"><iframe src="$1" style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;" allowfullscreen></iframe></div>', $noteText);
+                        
+                        // Render paragraphs
+                        foreach (preg_split('/\R{2,}/u', $noteText) ?: [] as $p) {
+                            $p = trim($p);
+                            if ($p !== '') echo '<p>' . $p . '</p>';
+                        }
+                    ?>
+                </div>
+            <?php endif; ?>
+
             <?php if (!empty($project['last_activity_at'])): ?>
-                <p>Son Güncelleme: <time><?= date('d M Y', strtotime($project['last_activity_at'])) ?></time></p>
+                <p style="margin-top: 16px;">Son Güncelleme: <time><?= date('d M Y', strtotime($project['last_activity_at'])) ?></time></p>
             <?php endif; ?>
         </div>
         

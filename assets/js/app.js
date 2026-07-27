@@ -639,3 +639,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     observer.observe(document.body, { childList: true, subtree: true });
 });
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleBtn = document.querySelector('[data-log-toggle]');
+    const closeBtns = document.querySelectorAll('[data-log-close]');
+    const drawer = document.querySelector('[data-log-drawer]');
+    const backdrop = document.querySelector('.atelier-log-backdrop');
+
+    if (!toggleBtn || !drawer || !backdrop) return;
+
+    const openDrawer = () => {
+        drawer.classList.add('is-open');
+        backdrop.classList.add('is-open');
+        document.body.style.overflow = 'hidden'; // prevent background scrolling
+    };
+
+    const closeDrawer = () => {
+        drawer.classList.remove('is-open');
+        backdrop.classList.remove('is-open');
+        document.body.style.overflow = '';
+    };
+
+    toggleBtn.addEventListener('click', openDrawer);
+    closeBtns.forEach(btn => btn.addEventListener('click', closeDrawer));
+
+    // Also close drawer when an entry is clicked
+    const entries = document.querySelectorAll('.atelier-log-entry');
+    entries.forEach(entry => entry.addEventListener('click', closeDrawer));
+});

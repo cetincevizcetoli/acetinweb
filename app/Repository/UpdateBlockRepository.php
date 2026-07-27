@@ -42,7 +42,11 @@ final class UpdateBlockRepository
         foreach ($rows as $i => $row) {
             if (!is_array($row)) continue;
 
-            $type = self::validType((string)($row['block_type'] ?? 'field_note'));
+            $rawType = (string)($row['block_type'] ?? 'field_note');
+            $type = self::validType($rawType);
+            if ($rawType === 'lab_note') {
+                error_log("NORMALIZE ROW rawType=lab_note -> type=$type");
+            }
             $title = trim((string)($row['title'] ?? ''));
             $body = trim((string)($row['body'] ?? ''));
             if ($title === '' && $body === '') continue;

@@ -236,6 +236,7 @@ function render_atelier_gallery(array $update): void
 </header>
 
 <main id="atelier-main">
+    <button type="button" class="atelier-log-toggle" data-log-toggle>&#128194; Tüm Kayıtlar</button>
 <?php if (!$atelierAvailable): ?>
     <section class="not-found"><div class="shell"><p class="eyebrow">404</p><h1>Atölye kaydı bulunamadı.</h1><a class="button button-rust" href="hikayeler.php">Hikâyelere dön <?= icon('arrow') ?></a></div></section>
 <?php else: ?>
@@ -340,9 +341,11 @@ function render_atelier_gallery(array $update): void
                     </div>
                 </div>
             </div>
-            <div class="atelier-log">
-                <header>
-                    <p class="eyebrow">ÇALIŞMA AKIŞI</p>
+            <div class="atelier-log-backdrop" data-log-close></div>
+            <div class="atelier-log" data-log-drawer>
+                <header style="display:flex; justify-content:space-between; align-items:center;">
+                    <p class="eyebrow">TÜM KAYITLAR</p>
+                    <button type="button" class="atelier-log-close" data-log-close>&times;</button>
                 </header>
                 <?php foreach ($updates as $u): $sm = first_stage_media($u); $bridge = atelier_story_bridge($u); ?>
                     <button class="atelier-log-entry <?= $u['id'] === $active['id'] ? 'is-active' : '' ?>" id="update-<?= e($u['slug']) ?>" type="button" data-atelier-entry data-media="<?= e($sm ? media_url($sm['relative_path']) : $project['cover']) ?>" data-media-type="<?= e($sm['media_type'] ?? 'image') ?>" data-alt="<?= e($sm['alt_text'] ?? '') ?>" data-update-id="<?= e($u['slug']) ?>" data-day="<?= e(trim((string)$u['date_label'] . ' · ' . atelier_kind_label($u), ' ·')) ?>" data-title="<?= e($u['title']) ?>" data-summary="<?= e($u['summary']) ?>" data-seed-label="<?= e(atelier_kind_short($u) . ' · ' . $bridge['reader_label']) ?>" data-seed-text="<?= e(atelier_story_bridge_text($u)) ?>"<?= atelier_work_data_attrs($u) ?><?= atelier_gallery_data_attrs($u) ?><?= atelier_links_data_attrs($u) ?>>

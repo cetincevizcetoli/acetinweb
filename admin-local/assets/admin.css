@@ -10,3 +10,24 @@
 .settings-head{align-items:stretch}.settings-summary{min-width:280px;max-width:390px;padding:18px;background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:14px}.settings-summary span{display:block;margin-bottom:8px;color:var(--accent);font:700 .68rem var(--mono);letter-spacing:.12em;text-transform:uppercase}.settings-summary strong{display:block;margin-bottom:7px}.settings-summary small{display:block;color:var(--muted);line-height:1.45}.settings-form{display:grid;gap:18px}.settings-section{display:grid;grid-template-columns:minmax(220px,320px) minmax(0,1fr);gap:20px;align-items:start}.settings-section-title{position:sticky;top:96px;padding:18px 0}.settings-section-title h2{margin:.15em 0 .35em;font-size:1.7rem}.settings-section-title p:not(.eyebrow){margin:0;color:var(--muted)}.settings-panel{min-width:0}.settings-panel .form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.settings-narrow{max-width:320px;margin-top:18px}.settings-channel-list{display:grid;gap:12px}.settings-channel-row{display:grid;grid-template-columns:minmax(160px,.8fr) minmax(260px,1.5fr) 90px 90px;gap:12px;align-items:end;padding:14px;background:#10161d;border:1px solid var(--line);border-radius:10px}.settings-channel-active{padding-bottom:12px}.settings-actions{position:sticky;bottom:0;z-index:20;margin-top:8px;padding:16px 0;background:linear-gradient(180deg,rgba(13,17,22,0),var(--bg) 35%)}@media(max-width:1050px){.settings-section{grid-template-columns:1fr}.settings-section-title{position:static;padding:6px 0}.settings-head{align-items:flex-start}.settings-summary{max-width:none}.settings-channel-row{grid-template-columns:1fr 1fr}}@media(max-width:640px){.settings-panel .form-grid,.settings-channel-row{grid-template-columns:1fr}.settings-channel-active{padding-bottom:0}.settings-actions{position:static}}
 .update-block-list{gap:12px}.update-block-row{display:grid;grid-template-columns:160px minmax(180px,1fr) auto;align-items:start;gap:10px}.update-block-row textarea{grid-column:1/-2;min-height:92px}.update-block-row button{grid-column:3;grid-row:1/span 2}@media(max-width:720px){.update-block-row{grid-template-columns:1fr}.update-block-row textarea,.update-block-row button{grid-column:auto;grid-row:auto}}
 .update-block-guide{display:grid;gap:12px;margin:10px 0 14px;padding:14px;background:#0f151b;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:10px}.update-block-guide>strong{font:700 .75rem var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}.update-block-guide>div{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}.update-block-guide span{display:grid;gap:4px;padding:10px;background:#101820;border:1px solid var(--line);border-radius:8px;color:var(--text)}.update-block-guide b{font:700 .68rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.update-block-guide small{color:var(--muted);line-height:1.35}.legacy-work-fields{margin-top:4px}.legacy-work-fields .help{margin:0}
+
+/* Fix for link url input being too small */
+.repeat-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+.repeat-row select {
+    flex: 0 0 auto;
+    width: 140px;
+}
+.repeat-row input[name$="[title]"] {
+    flex: 1 1 120px;
+}
+.repeat-row input[name$="[url]"] {
+    flex: 2 1 200px; /* Give URL field much more space */
+}
+.repeat-row button.danger {
+    flex: 0 0 auto;
+}

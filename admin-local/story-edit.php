@@ -100,7 +100,7 @@ if (is_post()) {
         }
 
         $status = (string)($_POST['status'] ?? 'draft');
-        $st = db()->prepare("UPDATE stories SET title=?,question=?,summary=?,reading_time=?,status=?,visibility=?,show_on_home=?,show_in_archive=?,is_pinned=?,sort_order=?,published_at=CASE WHEN ?='published' AND published_at IS NULL THEN CURRENT_TIMESTAMP ELSE published_at END,updated_at=CURRENT_TIMESTAMP WHERE id=?");
+        $st = db()->prepare("UPDATE stories SET title=?,question=?,summary=?,reading_time=?,status=?,visibility=?,show_on_home=?,show_in_archive=?,is_pinned=?,sort_order=?,status_title=?,status_note=?,published_at=CASE WHEN ?='published' AND published_at IS NULL THEN CURRENT_TIMESTAMP ELSE published_at END,updated_at=CURRENT_TIMESTAMP WHERE id=?");
         $st->execute([
             trim((string)($_POST['title'] ?? '')),
             trim((string)($_POST['question'] ?? '')),
@@ -112,6 +112,8 @@ if (is_post()) {
             checkbox('show_in_archive'),
             checkbox('is_pinned'),
             (float)($_POST['sort_order'] ?? 999),
+            trim((string)($_POST['status_title'] ?? '')),
+            trim((string)($_POST['status_note'] ?? '')),
             $status,
             $story['id'],
         ]);
@@ -147,40 +149,97 @@ admin_head('Hikayeyi duzenle');
 <?php if ($error): ?><div class="flash flash-error"><?= e($error) ?></div><?php endif; ?>
 <?php admin_render_visibility_summary($project, $story); ?>
 
-<form class="panel" method="post">
+<form method="post">
     <input type="hidden" name="project_id" value="<?= $projectId ?>">
     <?= csrf_field() ?>
-    <div class="form-grid">
-        <div class="field">
-            <label>Hikaye basligi</label>
-            <input name="title" value="<?= e($story['title']) ?>">
-            <small>Buyuk gorunen anlati basligidir; proje adi kartlarda ayrica gosterilir.</small>
+    
+    <div class="panel">
+        <div class="page-head" style="margin-top:0">
+            <div>
+                <h2>Hikaye Genel Ayarları</h2>
+            </div>
         </div>
-        <div class="field">
-            <label>Okuma suresi</label>
-            <input name="reading_time" value="<?= e($story['reading_time']) ?>" placeholder="3-6 dk">
+        <div class="form-grid">
+            <div class="field">
+                <label>Hikaye basligi</label>
+                <input name="title" value="<?= e($story['title']) ?>">
+                <small>Buyuk gorunen anlati basligidir; proje adi kartlarda ayrica gosterilir.</small>
+            </div>
+            <div class="field">
+                <label>Okuma suresi</label>
+                <input name="reading_time" value="<?= e($story['reading_time']) ?>" placeholder="3-6 dk">
+            </div>
+            <div class="field full">
+                <label>Merak sorusu</label>
+                <input name="question" value="<?= e($story['question']) ?>">
+                <small>Doluysa kartlarda ana buyuk baslik olarak bu soru kullanilir.</small>
+            </div>
+            <div class="field full">
+                <label>Ozet</label>
+                <textarea name="summary"><?= e($story['summary']) ?></textarea>
+            </div>
+            <div class="field">
+                <label>Durum</label>
+                <select name="status">
+                    <option value="draft" <?= $story['status'] === 'draft' ? 'selected' : '' ?>>Taslak</option>
+                    <option value="published" <?= $story['status'] === 'published' ? 'selected' : '' ?>>Yayimlandi</option>
+                    <option value="archived" <?= $story['status'] === 'archived' ? 'selected' : '' ?>>Arsivde</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Gorunurluk</label>
+                <select name="visibility">
+                    <option value="private" <?= $story['visibility'] === 'private' ? 'selected' : '' ?>>Gizli</option>
+                    <option value="unlisted" <?= $story['visibility'] === 'unlisted' ? 'selected' : '' ?>>Baglantiya sahip olanlar</option>
+                    <option value="public" <?= $story['visibility'] === 'public' ? 'selected' : '' ?>>Herkese acik</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Sira (eski story alani)</label>
+                <input type="number" step="0.1" name="sort_order" value="<?= e((string)$story['sort_order']) ?>">
+            </div>
+            <div class="field full check-row">
+                <label class="check"><input type="checkbox" name="show_on_home" <?= $story['show_on_home'] ? 'checked' : '' ?>> Story ana sayfa bayragi</label>
+                <label class="check"><input type="checkbox" name="show_in_archive" <?= $story['show_in_archive'] ? 'checked' : '' ?>> Story arsiv bayragi</label>
+                <label class="check"><input type="checkbox" name="is_pinned" <?= $story['is_pinned'] ? 'checked' : '' ?>> Sabitle</label>
+            </div>
+            <p class="help">Public ana sayfa ve Hikayeler sayfasindaki yerlesimi Projeyi yonet ekranindaki alanlar belirler. Bu story bayraklari eski uyumluluk icin tutulur.</p>
         </div>
-        <div class="field full">
-            <label>Merak sorusu</label>
-            <input name="question" value="<?= e($story['question']) ?>">
-            <small>Doluysa kartlarda ana buyuk baslik olarak bu soru kullanilir.</small>
+    </div>
+    
+    <div class="panel" style="margin-top:24px;">
+        <div class="page-head" style="margin-top:0">
+            <div>
+                <p class="eyebrow">HİKAYE SONU</p>
+                <h2>Bitiş Alanı (Bugünkü Durum)</h2>
+                <p>Hikâyenin en altında yer alan ve projenin güncel durumunu özetleyen alan.</p>
+            </div>
         </div>
-        <div class="field full">
-            <label>Ozet</label>
-            <textarea name="summary"><?= e($story['summary']) ?></textarea>
+        <div class="form-grid">
+            <div class="field">
+                <label>Sürüm (SemVer)</label>
+                <div style="display:flex;gap:4px;">
+                    <input type="number" name="version_major" value="<?= (int)$project['version_major'] ?>" placeholder="Major" style="width:60px" min="0">
+                    <input type="number" name="version_minor" value="<?= (int)$project['version_minor'] ?>" placeholder="Minor" style="width:60px" min="0">
+                    <input type="number" name="version_patch" value="<?= (int)$project['version_patch'] ?>" placeholder="Patch" style="width:60px" min="0">
+                </div>
+                <small>Projeyi Düzenle sayfasıyla senkrondur.</small>
+            </div>
+            <div class="field">
+                <label>Bugünkü Durum Başlığı</label>
+                <input name="status_title" value="<?= e($story['status_title'] ?? '') ?>" placeholder="Hikâye burada bitiyor ama proje yaşıyor.">
+            </div>
+            <div class="field full">
+                <label>Bugünkü Durum / Kapanış Notu</label>
+                <textarea name="status_note" placeholder="Örn: CLI'dan GUI'ye geçiş kararı..."><?= e($story['status_note'] ?? '') ?></textarea>
+            </div>
+            <p class="help">"Çalışmaya devam et" veya "Rapor Oku" gibi dış bağlantılar (Proje Bağlantıları) <a href="project-edit.php?id=<?= $projectId ?>#project-links" style="color:var(--c-accent);text-decoration:underline;">Projeyi Düzenle</a> sayfasından yönetilir.</p>
         </div>
-        <div class="field">
-            <label>Durum</label>
-            <select name="status">
-                <option value="draft" <?= $story['status'] === 'draft' ? 'selected' : '' ?>>Taslak</option>
-                <option value="published" <?= $story['status'] === 'published' ? 'selected' : '' ?>>Yayimlandi</option>
-                <option value="archived" <?= $story['status'] === 'archived' ? 'selected' : '' ?>>Arsivde</option>
-            </select>
+        <div class="form-actions" style="margin-top:16px;">
+            <button class="accent" type="submit" name="action" value="save">Tüm Ayarları Kaydet</button>
         </div>
-        <div class="field">
-            <label>Gorunurluk</label>
-            <select name="visibility">
-                <option value="private" <?= $story['visibility'] === 'private' ? 'selected' : '' ?>>Gizli</option>
+    </div>
+</form>e' ? 'selected' : '' ?>>Gizli</option>
                 <option value="unlisted" <?= $story['visibility'] === 'unlisted' ? 'selected' : '' ?>>Baglantiya sahip olanlar</option>
                 <option value="public" <?= $story['visibility'] === 'public' ? 'selected' : '' ?>>Herkese acik</option>
             </select>

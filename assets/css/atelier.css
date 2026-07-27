@@ -321,8 +321,8 @@ body.atelier-page {
 }
 
 .atelier-page .atelier-artifacts {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: grid;
+    grid-template-columns: 1fr;
   gap: 14px;
   margin: 18px 0 0;
 }
@@ -424,8 +424,8 @@ body.atelier-page {
 }
 
 .atelier-page .atelier-artifact--lab_note span::before {
-  content: "🧪 ";
-  font-size: 1.1em;
+    content: "\1F9EA ";
+    font-size: 1.1em;
 }
 
 .atelier-page .atelier-artifact--lab_note h4 {
@@ -599,3 +599,133 @@ body.atelier-page {
 }
 
 .atelier-page .atelier-artifact p { overflow-wrap: anywhere; }
+
+/* Prevent horizontal scrollbar caused by off-canvas elements */
+body.atelier-page {
+  overflow-x: hidden;
+}
+
+/* Off-canvas Drawer styles for .atelier-log */
+.atelier-page .atelier-log {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 460px;
+  max-width: 92vw;
+  z-index: 1000;
+  background: var(--paper-2);
+  border-left: 1px solid var(--line);
+  padding: 40px 30px;
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: -10px 0 40px rgba(0,0,0,0.1);
+}
+
+:root[data-theme="dark"] .atelier-page .atelier-log {
+  background: var(--night-2);
+  border-left-color: var(--line-dark);
+  box-shadow: -10px 0 40px rgba(0,0,0,0.5);
+}
+
+.atelier-page .atelier-log.is-open {
+  transform: translateX(0);
+}
+
+/* Backdrop */
+.atelier-log-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(2px);
+}
+
+.atelier-log-backdrop.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Toggle button styling (Floating Pill) */
+.atelier-log-toggle {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 998;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 24px;
+  background: var(--ink);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 40px;
+  color: #fff;
+  font: 600 0.95rem/1 var(--sans);
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.atelier-log-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
+  background: var(--night);
+}
+
+:root[data-theme="dark"] .atelier-log-toggle {
+  background: var(--paper-2);
+  color: var(--ink);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+:root[data-theme="dark"] .atelier-log-toggle:hover {
+  background: #fff;
+}
+
+:root[data-theme="dark"] .atelier-log-toggle {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--line-dark);
+  color: #fff;
+}
+
+.atelier-log-toggle:hover {
+  background: var(--paper);
+}
+
+:root[data-theme="dark"] .atelier-log-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Close button inside drawer */
+.atelier-log-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 4px 8px;
+}
+.atelier-log-close:hover {
+  color: var(--ink);
+}
+:root[data-theme="dark"] .atelier-log-close:hover {
+  color: #fff;
+}
+
+/* Remove internal scrolling for the main body since it's a single column now */
+.atelier-page .atelier-console .atelier-stage-sticky {
+  position: static;
+  max-height: none;
+  overflow: visible;
+  padding-right: 0;
+}
