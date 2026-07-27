@@ -424,7 +424,7 @@ body.atelier-page {
 }
 
 .atelier-page .atelier-artifact--lab_note span::before {
-  content: "💡 ";
+  content: "🧪 ";
   font-size: 1.1em;
 }
 
